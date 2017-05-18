@@ -229,7 +229,7 @@ def posterior2d(means, amps, covs, xbins, ybins, nperGauss=100000., plot=False):
     Z, xedges, yedges = np.histogram2d(samplesX, absMagKinda2absMag(samplesY), bins=[xbins, ybins], normed=True)
     return xedges, yedges, Z, samplesY
 
-def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None):
+def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None, dataColor='black', posteriorColor='blue', truthColor='red', likeLabel=None, postLabel=None):
     """
     plot the posterior of each star into example.png and feed it axAll to put it on another plot
     """
@@ -251,8 +251,11 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
         else:
             #plot each individual gaussian of the posterior weighted by its amplitdue
             points = drawEllipse.plotvector(meanPost[gg], covPost[gg])
-            ax[0].plot(points[0, :], absMagKinda2absMag(points[1,:]), 'k', alpha=ampPost[gg]/np.max(ampPost), lw=0.5)
-            if axAll is not None: axAll[3].plot(points[0, :], absMagKinda2absMag(points[1,:]), 'k', alpha=ampPost[gg]/np.max(ampPost), lw=0.5)
+            ax[0].plot(points[0, :], absMagKinda2absMag(points[1,:]), posteriorColor, alpha=ampPost[gg]/np.max(ampPost), lw=0.5)
+            if axAll is not None:
+                if ampPost[gg] == np.max(ampPost): label=postLabel
+                else: label=None
+                axAll[2].plot(points[0, :], absMagKinda2absMag(points[1,:]), posteriorColor, alpha=ampPost[gg]/np.max(ampPost), lw=0.5, label=label)
 
         #plot the prior
         points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
@@ -262,18 +265,18 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     pointsData = drawEllipse.plotvector(meanLike, covLike)
     ax[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), 'g', lw=2)
     if axAll is not None:
-        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), 'g', lw=2)
-        axAll[3].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), 'g', alpha=0.5, lw=2)
+        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
+        axAll[2].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
 
     #plot the posterior in parallax space
     parallaxLikelihood = st.gaussian(meanLike[1], np.sqrt(covLike[1,1]), xabsMagKinda)
     parallaxPosterior = summedPosterior*10.**(0.2*apparentMagnitude)
     ampRatio = np.max(parallaxPosterior)/np.max(parallaxLikelihood)
-    ax[1].plot(xparallaxMAS, parallaxPosterior, 'k', lw=2)
-    ax[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, 'g', lw=2)
+    ax[1].plot(xparallaxMAS, parallaxPosterior, posteriorColor, lw=2)
+    ax[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, dataColor, lw=2)
     if axAll is not None:
-        axAll[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, 'g', lw=2, alpha=0.5)
-        axAll[4].plot(xparallaxMAS, parallaxPosterior, 'k', lw=2, alpha=0.5)
+        axAll[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, dataColor, lw=2, alpha=0.5)
+        axAll[3].plot(xparallaxMAS, parallaxPosterior, posteriorColor, lw=2, alpha=0.5)
 
     #plot historgram of y samples vs true distribution to check my sampling is correct
     if plot2D: ax[1].hist(absMagKinda2Parallax(samplesY, apparentMagnitude), color='black', bins=100, histtype='step', normed=True)
@@ -282,8 +285,8 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     distancePosterior = summedPosterior[positive]*xparallaxMAS[positive]**2.*10.**(0.2*apparentMagnitude)
     parallaxLikelihood_positive = st.gaussian(meanLike[1], np.sqrt(covLike[1,1]), xabsMagKinda)[positive]
     ampRatio = np.max(distancePosterior)/np.max(parallaxLikelihood_positive)
-    ax[2].plot(1./xparallaxMAS[positive], distancePosterior, 'k', lw=2)
-    ax[2].plot(1./xparallaxMAS[positive], parallaxLikelihood_positive*ampRatio, 'g', lw=2)
+    #ax[2].plot(1./xparallaxMAS[positive], distancePosterior, 'k', lw=2)
+    #ax[2].plot(1./xparallaxMAS[positive], parallaxLikelihood_positive*ampRatio, 'g', lw=2)
 
 
     #plot the posterior in log distance space
@@ -291,9 +294,9 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     ampRatio = np.max(logdistancePosterior)/np.max(parallaxLikelihood_positive)
     ax[3].plot(np.log10(1./xparallaxMAS[positive]), logdistancePosterior, 'k', lw=2)
     ax[3].plot(np.log10(1./xparallaxMAS[positive]), parallaxLikelihood_positive*ampRatio, 'g', lw=2, label='likelihood')
-    if axAll is not None:
-        axAll[2].plot(np.log10(1./xparallaxMAS[positive]), parallaxLikelihood_positive*ampRatio, 'g', lw=2, alpha=0.5)
-        axAll[5].plot(np.log10(1./xparallaxMAS[positive]), logdistancePosterior, 'k', lw=2, alpha=0.5)
+    #if axAll is not None:
+        #axAll[2].plot(np.log10(1./xparallaxMAS[positive]), parallaxLikelihood_positive*ampRatio, 'g', lw=2, alpha=0.5)
+        #axAll[5].plot(np.log10(1./xparallaxMAS[positive]), logdistancePosterior, 'k', lw=2, alpha=0.5)
 
     ax[0].set_xlim(xlim)
     ax[0].set_ylim(ylim)
@@ -304,7 +307,7 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     ax[1].set_xlim(-1, 6)
     ax[1].set_ylabel(ylabel_posterior_parallax)
 
-    #ax[2].set_xscale('log')
+    ax[2].set_xscale('log')
     ax[2].set_xlim(0.01, 3)
     ax[2].set_xlabel('Distance [kpc]', fontsize=18)
     ax[2].set_ylabel(ylabel_posterior_d)
@@ -317,19 +320,20 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     fig.savefig('example.png')
 
 
-def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim, plot2DPost=False):
+def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim, plot2DPost=False, dataColor='black', priorColor='green', truthColor='red', posteriorColor='blue'):
     """
     test posterior accuracy using distances to cluster M67
     """
     indicesM67 = m67indices(tgas, plot=False, db=0.5, dl=0.5)
 
     #all the plot stuff
-    figDist, axDist = plt.subplots(2, 3, figsize=(20, 15))
+    figDist, axDist = plt.subplots(2, 2, figsize=(14, 14))
     figPaper, axPaper = plt.subplots(1, 2, figsize=(10, 7))
     axDist = axDist.flatten()
     ylabel_posterior_logd = r'P(log d | y, $\sigma_{y}$)'
-    ylabel_posterior_d = r'P(d | y, $\sigma_{y}$)'
-    ylabel_posterior_parallax = r'P($\varpi | y, \sigma_{y}$)'
+    ylabel_posterior_d = r'$P(d | y, \sigma_{y}$)'
+    ylabel_posterior_parallax = r'$P(\varpi_{\mathrm{true}} | \varpi, \sigma_{\varpi})$'
+    ylabel_likelihood_parallax = r'$P(\varpi | \varpi_{\mathrm{true}}, \sigma_{\varpi})$'
     ylabel_likelihood_d = r'Likelihood P(y | d, $\sigma_{y}$)'
     ylabel_likelihood_logd = r'Likelihood P(y | log d, $\sigma_{y}$)'
 
@@ -374,16 +378,19 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
         else:
             X = Y = Z = samplesY = None
         #plot the posterior of each star in example.png and feed it the ax for all the stars to accumualte into one plot
-        plotPosteriorEachStar(allMeans, allCov, allAmps, summedPosterior[k,:], meanData, covData, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=X, Y=Y, Z=Z, samplesY=samplesY, axAll=axDist, plot2D=plot2DPost)
+        if k ==0:
+            likeLabel = 'likelihood'
+            postLabel = 'posterior'
+        else:
+            likeLabel = None
+            postLabel = None
+        plotPosteriorEachStar(allMeans, allCov, allAmps, summedPosterior[k,:], meanData, covData, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=X, Y=Y, Z=Z, samplesY=samplesY, axAll=axDist, plot2D=plot2DPost, dataColor=dataColor, posteriorColor=posteriorColor, truthColor=truthColor, likeLabel=likeLabel, postLabel=postLabel)
         os.rename('example.png', 'example.' + str(k) + '.png')
 
         #plot prior on plot of all stars but only first loop
         if k == 0:
-            for gg in range(xdgmm.n_components):
-                points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
-                axDist[0].plot(points[0,:],absMagKinda2absMag(points[1,:]), 'r', lw=0.5, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights))
-                axDist[3].plot(points[0,:],absMagKinda2absMag(points[1,:]), 'r', lw=0.5, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights))
-
+            plotPrior(xdgmm, axDist[0], c=priorColor, lw=2, label='prior')
+            plotPrior(xdgmm, axDist[2], c=priorColor, lw=2, label='prior')
         #check that things seem right
         normalization_parallaxPosterior = scipy.integrate.cumtrapz(summedPosterior[k,:]*10.**(0.2*apparentMagnitude), xparallaxMAS)[-1]
         normalization_distancePosterior = scipy.integrate.cumtrapz(summedPosterior[k,:][positive]*xparallaxMAS[positive]**2.*10.**(0.2*apparentMagnitude), 1./xparallaxMAS[positive])[-1]
@@ -400,45 +407,52 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
     axDist[0].set_ylabel(ylabel, fontsize=18)
     axDist[0].set_xlim(xlim)
     axDist[0].set_ylim(ylim)
-    axDist[3].set_xlabel(xlabel, fontsize=18)
-    axDist[3].set_ylabel(ylabel, fontsize=18)
-    axDist[3].set_xlim(xlim)
-    axDist[3].set_ylim(ylim)
+    axDist[2].set_xlabel(xlabel, fontsize=18)
+    axDist[2].set_ylabel(ylabel, fontsize=18)
+    axDist[2].set_xlim(xlim)
+    axDist[2].set_ylim(ylim)
 
 
-    axDist[1].axvline(1./0.8, color="b", lw=2)
-    axDist[1].axvline(1./0.9, color="b", lw=2)
-    axDist[4].axvline(1./0.8, color="b", lw=2)
-    axDist[4].axvline(1./0.9, color="b", lw=2)
+    axDist[1].axvline(1./0.8, color=truthColor, lw=2)
+    axDist[1].axvline(1./0.9, color=truthColor, lw=2)
+    axDist[3].axvline(1./0.8, color=truthColor, lw=2)
+    axDist[3].axvline(1./0.9, color=truthColor, lw=2)
 
 
     axDist[1].set_xlabel('Parallax [mas]')
-    axDist[4].set_xlabel('Parallax [mas]')
-    axDist[1].set_ylabel(ylabel_likelihood_d, fontsize=18)
-    axDist[4].set_ylabel(ylabel_posterior_d, fontsize=18)
+    axDist[3].set_xlabel('Parallax [mas]')
+    axDist[1].set_ylabel(ylabel_likelihood_parallax, fontsize=18)
+    axDist[3].set_ylabel(ylabel_posterior_parallax, fontsize=18)
     axDist[1].set_xlim(-1, 6)
-    axDist[4].set_xlim(-1, 6)
+    axDist[3].set_xlim(-1, 6)
 
-    axDist[2].axvline(np.log10(0.8), color="b", lw=2)
-    axDist[2].axvline(np.log10(0.9), color="b", lw=2)
-    axDist[5].axvline(np.log10(0.8), color="b", lw=2)
-    axDist[5].axvline(np.log10(0.9), color="b", lw=2)
+    axDist[0].legend(loc='best')
+    axDist[2].legend(loc='best')
+
+    #axDist[2].axvline(np.log10(0.8), color="b", lw=2)
+    #axDist[2].axvline(np.log10(0.9), color="b", lw=2)
+    #axDist[5].axvline(np.log10(0.8), color="b", lw=2)
+    #axDist[5].axvline(np.log10(0.9), color="b", lw=2)
 
 
-    axDist[2].set_xlabel('log Distance [kpc]')
-    axDist[5].set_xlabel('log Distance [kpc]')
-    axDist[2].set_ylabel(ylabel_likelihood_d, fontsize=18)
-    axDist[5].set_ylabel(ylabel_posterior_logd, fontsize=18)
-    axDist[2].set_xlim(np.log10(0.1),np.log10(3))
-    axDist[5].set_xlim(np.log10(0.1),np.log10(3))
+    #axDist[2].set_xlabel('log Distance [kpc]')
+    #axDist[5].set_xlabel('log Distance [kpc]')
+    #axDist[2].set_ylabel(ylabel_likelihood_d, fontsize=18)
+    #axDist[5].set_ylabel(ylabel_posterior_logd, fontsize=18)
+    #axDist[2].set_xlim(np.log10(0.1),np.log10(3))
+    #axDist[5].set_xlim(np.log10(0.1),np.log10(3))
 
     plt.tight_layout()
     figDist.savefig('distancesM67.png')
 
-def plotPrior(xdgmm, ax, c='k', lw=1):
+def plotPrior(xdgmm, ax, c='k', lw=1, label='prior'):
     for gg in range(xdgmm.n_components):
+        if xdgmm.weights[gg] == np.max(xdgmm.weights):
+            label = 'prior'
+        else:
+            label = None
         points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
-        ax.plot(points[0,:], absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights))
+        ax.plot(points[0,:], absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights), label=label)
 
 
 def calcPosterior(color, absMagKinda, color_err, absMagKinda_err, apparentMagnitude, xdgmm, nPosteriorPoints=1000, xarray=np.linspace(-2, 2, 1000), debug=False, ndim=1):
@@ -1090,8 +1104,8 @@ if __name__ == '__main__':
     absMagKinda_err = tgas['parallax_error']*10.**(0.2*bandDictionary[absmag]['array'][bandDictionary[absmag]['key']])
 
     #check it's working by inferring distances to M67
-    #distanceTest(xdgmm, tgas, nPosteriorPoints, color, absMagKinda, color_err, absMagKinda_err, xlim, ylim, plot2DPost=False)
-
+    distanceTest(tgas, xdgmm, nPosteriorPoints, color, absMagKinda, color_err, absMagKinda_err, xlim, ylim, plot2DPost=False, dataColor='black', truthColor='darkred', posteriorColor='royalblue', priorColor='darkgreen')
+    print 'distances plotted'
     #calculate parallax-ish posterior for each star
     #set indexArray to boolean array of sources you want to calculate otherwise calculatese all stars
     xparallaxMAS = np.logspace(-2, 2, nPosteriorPoints)

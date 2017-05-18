@@ -42,6 +42,11 @@ if survey == '2MASS':
     ylim = [6, -6]
 
 
+trueColor = 'darkred'
+priorColor = 'darkgreen'
+posteriorColor='royalblue'
+#posteriorMap = mpl.cm.get_cmap('Blues')
+dataColor = 'black'
 
 tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
 
@@ -70,12 +75,17 @@ xparallaxMAS = np.linspace(0, 10, nPosteriorPoints)
 y = absMagKinda
 yplus  = y + absMagKinda_err
 yminus = y - absMagKinda_err
-parallaxErrGoesNegative = yminus < 0
+#parallaxErrGoesNegative = yminus < 0
 absMagYMinus = testXD.absMagKinda2absMag(yminus)
-absMagYMinus[parallaxErrGoesNegative] = -50.
-yerr_minus = testXD.absMagKinda2absMag(y) - absMagYMinus
-yerr_plus = testXD.absMagKinda2absMag(yplus) - testXD.absMagKinda2absMag(y)
+absMagYPlus = testXD.absMagKinda2absMag(yplus)
+absMag = testXD.absMagKinda2absMag(y)
+yerr_minus = absMag - absMagYMinus
+yerr_plus = absMagYPlus - absMag
 
+yerr_minus[y < 0] = 100.
+yerr_plus[y < 0] = 100.
+yerr_minus[np.isnan(yerr_minus)] = 100.
+import pdb; pdb.set_trace()
 
 #plot likelihood and posterior in each axes
 for iteration in np.arange(20, 40):
@@ -88,7 +98,7 @@ for iteration in np.arange(20, 40):
     #plot prior in upper left
     xdgmmFilename = 'xdgmm.' + str(ngauss) + 'gauss.dQ' + str(quantile) + '.' + iter + '.2MASS.All.npz.fit'
     xdgmm = XDGMM(filename=xdgmmFilename)
-    testXD.plotPrior(xdgmm, ax[0], c='k', lw=1)
+    testXD.plotPrior(xdgmm, ax[0], c=priorColor, lw=1)
     ax[0].set_xlim(xlim)
     ax[0].set_ylim(ylim)
     ax[0].set_xlabel('$(J-K)^C$', fontsize=18)
@@ -99,8 +109,8 @@ for iteration in np.arange(20, 40):
         index = currentInd[np.random.randint(0, high=len(currentInd))]
 
         print 'yerr minus: ' + str(yerr_minus[index]) + ' yerr plus: ' + str(yerr_plus[index])
-        ax[0].scatter(color[index], testXD.absMagKinda2absMag(absMagKinda[index]), c='black')
-        ax[0].errorbar(color[index], testXD.absMagKinda2absMag(absMagKinda[index]), xerr=[[color_err[index], color_err[index]]], yerr=[[yerr_minus[index], yerr_plus[index]]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color='black', ecolor='black')
+        ax[0].scatter(color[index], testXD.absMagKinda2absMag(absMagKinda[index]), c=dataColor)
+        ax[0].errorbar(color[index], testXD.absMagKinda2absMag(absMagKinda[index]), xerr=[[color_err[index], color_err[index]]], yerr=[[yerr_minus[index], yerr_plus[index]]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=dataColor, ecolor=dataColor)
         ax[0].annotate(str(i+1), (color[index]+0.05, testXD.absMagKinda2absMag(absMagKinda[index])+0.15), fontsize=18)
         meanData, covData = testXD.matrixize(color[index], absMagKinda[index], color_err[index], absMagKinda_err[index])
         meanPrior, covPrior = testXD.matrixize(color[index], absMagKinda[index], color_err[index], 1e5)
@@ -124,14 +134,14 @@ for iteration in np.arange(20, 40):
             logDistance = np.log10(1./xparallaxMAS[positive])
         allMeans, allAmps, allCovs, summedPosteriorAbsmagKinda = testXD.absMagKindaPosterior(xdgmm, ndim, meanData, covData, xabsMagKinda, projectedDimension=1, nPosteriorPoints=nPosteriorPoints)
         allMeansPrior, allAmpsPrior, allCovsPrior, summedPriorAbsMagKinda = testXD.absMagKindaPosterior(xdgmm, ndim, meanPrior, covPrior, xabsMagKinda, projectedDimension=1, nPosteriorPoints=nPosteriorPoints)
-        print np.min(summedPriorAbsMagKinda), np.max(summedPriorAbsMagKinda)
+        #print np.min(summedPriorAbsMagKinda), np.max(summedPriorAbsMagKinda)
         posteriorParallax = summedPosteriorAbsmagKinda*10.**(0.2*apparentMagnitude[index])
         priorParallax = summedPriorAbsMagKinda*10.**(0.2*apparentMagnitude[index])
         likeParallax = st.gaussian(absMagKinda[index]/10.**(0.2*apparentMagnitude[index]), absMagKinda_err[index]/10.**(0.2*apparentMagnitude[index]), xparallaxMAS)
 
-        l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), alpha=0.5, lw=2, color='black')
-        l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color='black')
-        l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color='black')
+        l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=2, color=dataColor)
+        l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
+        l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
         ax[i+1].set_title(str(i+1))
         ax[i+1].set_xlabel(r'$\varpi$ [mas]', fontsize=18)
         ax[i+1].tick_params(

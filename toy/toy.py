@@ -1,7 +1,7 @@
 import numpy as np
 import scipy.optimize as op
 import sys
-
+import matplotlib as mpl
 
 def make_fake_data(parsTrue, N=512):
     np.random.seed(42)
@@ -41,42 +41,38 @@ def denoise_one_datum(xn, yn, sigman, m, b, t):
     return (yn * s2inv + (m * xn + b) * t2inv) / (s2inv + t2inv), \
         np.sqrt(1. / (s2inv + t2inv))
 
-def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=5):
+def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=5, dataColor='k', priorColor='g', posteriorColor='b', trueColor='r', posteriorMap = 'Blues'):
 
     alpha_all = 0.05
     alpha_chosen = 1.0
     xlim = (-1, 1)
     ylim = (-5, 5)
 
-    dataMap = mpl.cm.get_cmap('Blues')
-    dataColor = dataMap(0.75)
-    trueMap = mpl.cm.get_cmap('Reds')
-    trueColor = trueMap(0.75)
-
     for ax in axes[1:-1]:
-        ax.errorbar(xns, yns, yerr=sigmans, fmt="o", color="k", alpha=alpha_all ,mew=0)
-        ax.errorbar(xns[0:nexamples], yns[0:nexamples], yerr=sigmans[0:nexamples], fmt="o", color="k", zorder=37, alpha=alpha_chosen, mew=0)
+        ax.errorbar(xns, yns, yerr=sigmans, fmt="o", color=dataColor, alpha=alpha_all ,mew=0)
+        ax.errorbar(xns[0:nexamples], yns[0:nexamples], yerr=sigmans[0:nexamples], fmt="o", color=dataColor, zorder=37, alpha=alpha_chosen, mew=0)
 
     xp = np.array(xlim)
-    axes[0].plot(xp, mtrue*xp + btrue + ttrue, color='red', linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
-    axes[0].plot(xp, mtrue*xp + btrue - ttrue, color='red', linewidth=2, alpha=0.75)
-    axes[0].scatter(xns, yntrues, c='red', lw=0, alpha=0.5, label=r'$y_{true,n}$')
+    axes[0].plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
+    axes[0].plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, linewidth=2, alpha=0.75)
+    axes[0].scatter(xns, yntrues, c=trueColor, lw=0, alpha=0.5, label=r'$y_{true,n}$')
     axes[0].legend(loc='best', fontsize=15)
 
-    axes[2].plot(xp, m * xp + b + t, color=dataColor)
-    axes[2].plot(xp, m * xp + b - t, color=dataColor)
+    axes[2].plot(xp, m * xp + b + t, color=priorColor)
+    axes[2].plot(xp, m * xp + b - t, color=priorColor)
     axes[2].scatter(xns[0:nexamples], yntrues[0:nexamples], c=trueColor, lw=2, zorder=36, alpha=alpha_chosen, facecolors='None')
     axes[2].plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, zorder=35)
     axes[2].plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, zorder=34)
-    r1 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color='black', alpha=alpha_chosen))
+    r1 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=dataColor, alpha=alpha_chosen))
     r2 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=trueColor, alpha=alpha_chosen))
-    r3 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=dataColor, alpha=alpha_chosen))
-    axes[2].legend((r1,r2,r3), ('data', 'truth', 'denoised'), loc='best', fontsize=12)
+    r3 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=posteriorColor, alpha=alpha_chosen))
+    r4 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=priorColor, alpha=alpha_chosen))
+    axes[2].legend((r2,r1,r4,r3), ('truth', 'data', 'prior',  'denoised'), loc='best', fontsize=12)
 
-    axes[2].errorbar(xns[0:nexamples], ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color=dataColor, zorder=37, alpha=alpha_chosen, mew=0)
+    axes[2].errorbar(xns[0:nexamples], ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color=posteriorColor, zorder=37, alpha=alpha_chosen, mew=0)
 
     norm = mpl.colors.Normalize(vmin=0, vmax=9)
-    im = axes[3].scatter(xns,  ydns,  c=sigmans**2., cmap='Blues', norm=norm, alpha=0.5, lw=0)
+    im = axes[3].scatter(xns,  ydns,  c=sigmans**2., cmap=posteriorMap, norm=norm, alpha=0.5, lw=0)
     fig.subplots_adjust(left=0.1, right=0.89)
     cbar_ax = fig.add_axes([0.9, 0.1, 0.02, 0.35])
     cb = fig.colorbar(im, cax=cbar_ax)
@@ -85,7 +81,7 @@ def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mt
     cb.set_clim(-4, 9)
 
 
-    axes[3].errorbar(xns, ydns, yerr=sigmadns, fmt="None", mew=0, color='black', alpha=0.25, elinewidth=0.5)
+    axes[3].errorbar(xns, ydns, yerr=sigmadns, fmt="None", mew=0, color=dataColor, alpha=0.25, elinewidth=0.5)
     #axes[2].errorbar(xns[0:nexamples], ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color="b", zorder=37, alpha=alpha_chosen, mew=0)
     for ax in axes:
         ax.set_xlabel('X')
@@ -163,6 +159,11 @@ if __name__ == "__main__":
     import matplotlib as mpl
     xlim = (-1, 1)
     ylim = (-5, 5)
+    trueColor = 'darkred'
+    priorColor = 'darkgreen'
+    posteriorColor='royalblue'
+    posteriorMap = mpl.cm.get_cmap('Blues')
+    dataColor = 'black'
 
     nexamples =  np.int(sys.argv[1])
     mtrue, btrue, ttrue = -1.37, 0.2, 0.8
@@ -191,13 +192,13 @@ if __name__ == "__main__":
         figTrue, axesTrue = plt.subplots(1, 2, figsize=(15, 5))
         xp = np.array(xlim)
         for ax in axesTrue:
-            ax.plot(xp, mtrue*xp + btrue + ttrue, color='red', linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
-            ax.plot(xp, mtrue*xp + btrue - ttrue, color='red', linewidth=2, alpha=0.75)
+            ax.plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
+            ax.plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, linewidth=2, alpha=0.75)
             ax.set_xlabel('X')
             ax.set_ylabel('Y')
             ax.set_xlim(xlim)
             ax.set_ylim(ylim)
-        axesTrue[0].scatter(xns, yntrues, c='red', lw=0, alpha=0.5, label=r'$y_{true,n}$: true y values')
+        axesTrue[0].scatter(xns, yntrues, c=trueColor, lw=0, alpha=0.5, label=r'$y_{true,n}$: true y values')
         axesTrue[1].scatter(xns, yns, c='black', lw=0, alpha=0.5, label=r'$y_n$: noisy y values')
         axesTrue[1].errorbar(xns, yns, yerr=sigmans, c='black', fmt='None', alpha=0.5)
         axesTrue[0].legend(loc='best', fontsize=15)
@@ -205,7 +206,7 @@ if __name__ == "__main__":
         figTrue.tight_layout()
         figTrue.savefig('toyTrue.png')
 
-        fig, axes, figNoise, axesNoise = plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=nexamples)
+        fig, axes, figNoise, axesNoise = plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=nexamples, dataColor=dataColor, priorColor=priorColor, posteriorColor=posteriorColor, trueColor=trueColor, posteriorMap=posteriorMap)
         figNoise.tight_layout()
         figNoise.savefig('toyNoise.' + label + '.png')
         #fig.tight_layout()

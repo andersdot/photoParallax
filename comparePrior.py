@@ -14,6 +14,7 @@ import scipy.integrate
 import corner
 from astroML.plotting import setup_text_plots
 from astropy.io import ascii
+import corner
 
 def prior(xdgmm, ax):
     for gg in range(xdgmm.n_components):
@@ -128,7 +129,7 @@ def dustViz(ngauss=128, quantile=0.5, iter='8th', survey='2MASS', dataFilename='
     cb.set_label(r'E($B-V$ )')
     fig.savefig('dustViz.dQ' + str(quantile) + '.png')
 
-def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', iter='10th', Nsamples=3e5, contourColor='k', dustFile='dust.npz', sdss5=False):
+def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', iter='10th', Nsamples=3e5, contourColor='k', dustFile='dust.npz', sdss5=False, whatsThatFeature=False):
 
     if survey == 'APASS':
         mag1 = 'B'
@@ -191,6 +192,7 @@ def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', i
     testax[2].set_ylabel('absMag Plus')
     plt.show()
     """
+
     dp.plot_sample(color[positive], testXD.absMagKinda2absMag(y), sample[:,0], testXD.absMagKinda2absMag(sample[:,1]),
                 xdgmm, xerr=color_err[positive], yerr=[yerr_minus, yerr_plus], xlabel=xlabel, ylabel=ylabel, xlim=xlim, ylim=ylim, errSubsample=2.4e3, thresholdScatter=2., binsScatter=200, contourColor=contourColor)
     dataFile = 'data_noDust.pdf'
@@ -205,7 +207,7 @@ def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', i
 
     cNorm  = plt.matplotlib.colors.Normalize(vmin=-6, vmax=2)
     posteriorFile = 'posteriorParallax.' + str(ngauss) + 'gauss.dQ' + str(quantile) + '.' + iter + '.' + survey + '.' + dataFilename
-    for file in [posteriorFile, 'posteriorSimple.npz']:
+    for file in [posteriorFile]:#, 'posteriorSimple.npz']:
         data = np.load(file)
         parallax = data['mean']
         parallax_err = np.sqrt(data['var'])
@@ -228,14 +230,77 @@ def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', i
         #notnan = ~np.isnan(color[notnans]) & ~np.isnan(absMag)
         contourColor = 'k'
         ascii.write([color[notnans], absMag, color_err[notnans], yerr_minus, yerr_plus, c[notnans]], 'cmdExpectation.txt', names=['color', 'absMag', 'color_err', 'absMag_errMinus', 'absMag_errPlus', 'logDeltaVar'])
-        dp.plot_sample(color[notnans], absMag, sample[:,0], testXD.absMagKinda2absMag(sample[:,1]),
-                    xdgmm, xerr=color_err[notnans], yerr=[yerr_minus, yerr_plus], xlabel=xlabel, ylabel=ylabel, xlim=xlim,
-                    ylim=ylim, errSubsample=1.2e3, thresholdScatter=2., binsScatter=200, c=c, norm=cNorm, cmap='Blues', contourColor=contourColor, posterior=True, sdss5=sdss5, rasterized=False)
+        if whatsThatFeature & (file == posteriorFile):
+            figFeature, axFeature = plt.subplots()
+            x = color[notnans]
+            y = absMag
+            #levels = 1.0 - np.exp(-0.5 * np.arange(1.0, 2.1, 1.0) ** 2)
+            im = corner.hist2d(x, y, ax=axFeature, levels=None, bins=200, no_fill_contours=True, plot_density=False, color=contourColor, rasterized=True, plot_contours=False)
+            axFeature.set_xlim(xlim)
+            axFeature.set_ylim(ylim)
+            axFeature.set_xlabel(xlabel)
+            axFeature.set_ylabel(ylabel)
+            lowerMainSequence = (0.45, 5.5)
+            upperMainSequence = (-0.225, 2)
+            binarySequence = (0.75, 4)
+            redClump = (0.35, -2)
+            redGiantBranch = (1.0, -2)
+            turnOff = (0.0, 3.5)
+            features = [lowerMainSequence, upperMainSequence, binarySequence, redClump, redGiantBranch, turnOff]
+            labels = ['lower MS', 'upper MS', 'binary sequence', 'red clump', 'RGB', 'MS turn off']
+            for l, f in zip(labels, features): axFeature.text(f[0], f[1], l, fontsize=15)
+            figFeature.savefig('whatsThatFeature.pdf', format='pdf')
 
-        dataFile = 'inferredDistances_data_' + file.split('.')[0] + '.pdf'
-        priorFile = 'prior_' + str(ngauss) +'gauss.pdf'
-        os.rename('plot_sample.data.pdf', dataFile)
-        os.rename('plot_sample.prior.pdf', priorFile)
+
+        #dp.plot_sample(color[notnans], absMag, sample[:,0], testXD.absMagKinda2absMag(sample[:,1]),
+        #            xdgmm, xerr=color_err[notnans], yerr=[yerr_minus, yerr_plus], xlabel=xlabel, ylabel=ylabel, xlim=xlim,
+        #            ylim=ylim, errSubsample=1.2e3, thresholdScatter=2., binsScatter=200, c=c, norm=cNorm, cmap='Blues', contourColor=contourColor, posterior=True, sdss5=sdss5, rasterized=True, whatsThatFeature=whatsThatFeature)
+
+        #dataFile = 'inferredDistances_data_' + file.split('.')[0] + '.pdf'
+        #priorFile = 'prior_' + str(ngauss) +'gauss.pdf'
+        #os.rename('plot_sample.data.pdf', dataFile)
+        #os.rename('plot_sample.prior.pdf', priorFile)
+
+def whatsThatFeature(survey='2MASS', quantile=0.05, dataFilename='All.npz', iter='10th', ngauss=128):
+    if survey == '2MASS':
+        mag1 = 'J'
+        mag2 = 'K'
+        absmag = 'J'
+        xlabel = r'$(J-K)^C$'
+        ylabel = r'$M_J^C$'
+        xlim = [-0.25, 1.25]
+        ylim = [6, -6]
+    dustEBV = 0.0
+    tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
+    color = testXD.colorArray(mag1, mag2, dustEBV, bandDictionary)
+    file = 'posteriorParallax.' + str(ngauss) + 'gauss.dQ' + str(quantile) + '.' + iter + '.' + survey + '.' + dataFilename
+    data = np.load(file)
+    parallax = data['mean']
+    notnans = ~np.isnan(parallax)
+    parallax = parallax[notnans]
+    absMagKinda, apparentMagnitude = testXD.absMagKindaArray(absmag, dustEBV, bandDictionary, tgas['parallax'])
+    apparentMagnitudeGood = apparentMagnitude[notnans]
+    absMagKinda = parallax*10.**(0.2*apparentMagnitudeGood)
+    figFeature, axFeature = plt.subplots()
+    x = color[notnans]
+    y = testXD.absMagKinda2absMag(absMagKinda)
+    im = corner.hist2d(x, y, ax=axFeature, levels=None, bins=200, no_fill_contours=True, plot_density=False, color=contourColor, rasterized=True, plot_contours=False)
+    axFeature.set_xlim(xlim)
+    axFeature.set_ylim(ylim)
+    axFeature.set_xlabel(xlabel)
+    axFeature.set_ylabel(ylabel)
+    lowerMainSequence = (0.45, 5.5)
+    upperMainSequence = (-0.225, 2)
+    binarySequence = (0.75, 4)
+    redClump = (0.35, -2)
+    redGiantBranch = (1.0, -2)
+    turnOff = (0.0, 3.5)
+    features = [lowerMainSequence, upperMainSequence, binarySequence, redClump, redGiantBranch, turnOff]
+    labels = ['lower MS', 'upper MS', 'binary sequence', 'red clump', 'RGB', 'MS turn off', 'subgiant branch']
+    for l, f in zip(labels, features): axFeature.text(f[0], f[1], l, fontsize=15)
+    figFeature.savefig('whatsThatFeature.pdf', format='pdf')
+
+
 
 def comparePosterior():
     ngauss = 128
@@ -517,5 +582,5 @@ if __name__ == '__main__':
     #compareSimpleGaia(contourColor=contourColor)
     #examplePosterior(postFile=postFile, nexamples=20, dustFile=dustFile, xdgmmFilename=xdgmmFilename)
 
-
-    dataViz(ngauss=ngauss, quantile=quantile, iter=iter, Nsamples=Nsamples, contourColor=contourColor, dustFile=dustFile, sdss5=True)
+    whatsThatFeature(ngauss=ngauss, quantile=quantile, iter=iter)
+    #dataViz(ngauss=ngauss, quantile=quantile, iter=iter, Nsamples=Nsamples, contourColor=contourColor, dustFile=dustFile, sdss5=True, whatsThatFeature=True)

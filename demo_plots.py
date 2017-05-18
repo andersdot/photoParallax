@@ -105,7 +105,7 @@ def kdeDensity(ax, x, y, threshold=0.01, bins=100, s=1, lw=0, alpha=1):
     return ax
 
 
-def plot_sample(x, y, samplex, sampley, xdgmm, xlabel='x', ylabel='y', xerr=None, yerr=None, ylim=(6, -6), xlim=(0.5, 1.5), errSubsample=1.2e6, thresholdScatter=0.1, binsScatter=200, c='black',  norm=None, cmap=None, contourColor='k', posterior=False, ind=None, plot_contours=True, sdss5=False):
+def plot_sample(x, y, samplex, sampley, xdgmm, xlabel='x', ylabel='y', xerr=None, yerr=None, ylim=(6, -6), xlim=(0.5, 1.5), errSubsample=1.2e6, thresholdScatter=0.1, binsScatter=200, c='black',  norm=None, cmap=None, contourColor='k', posterior=False, ind=None, plot_contours=True, sdss5=False, whatsThatFeature=False, rasterized=False):
 
     prng = np.random.RandomState(1234567890)
     setup_text_plots(fontsize=16, usetex=True)
@@ -203,7 +203,6 @@ def plot_sample(x, y, samplex, sampley, xdgmm, xlabel='x', ylabel='y', xerr=None
         cb.set_label(r'$ln \, \tilde{\sigma}_{\varpi}^2 - ln \, \sigma_{\varpi}^2$', fontsize=20)
         cb.set_clim(-7, 2)
     """
-
     figData.savefig('plot_sample.data.pdf', format='pdf')
     figPrior.savefig('plot_sample.prior.pdf', format='pdf')
 
