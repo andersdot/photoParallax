@@ -11,8 +11,12 @@
 
 \documentclass[modern]{aastex61}
 \usepackage{amsmath}
+\usepackage{color}
 \setlength{\parindent}{\baselineskip} % trust me!
 \renewcommand{\twocolumngrid}{} % trust me!
+
+\newcommand\BLedit[1]{{\color{blue}{#1}}}
+\newcommand\BLcomment[1]{{\color{cyan}{[BL: #1]}}}
 
 % text macros
 \newcommand{\foreign}[1]{\textsl{#1}}
@@ -120,7 +124,7 @@ models of stars:
 The distance to a star is a latent variable, and the nearby
 stars constitute a high signal-to-noise ``training set''.
 These nearby stars can be used to anchor empirical models that can
-then be applied to the more distant stars.
+then be applied to the more distant stars\BLedit{, thanks to the simple physical relations connecting the measurements (apparent magnitudes, parallaxes) to some of the physical parameters of interest (absolute magnitudes, distances).}
 
 Here we deliver a demonstration-of-concept that shows that a
 data-driven model of the \gaia\ data could in principle deliver very
@@ -196,7 +200,7 @@ inference.
 Exploration of that possibility, and its computational tractability,
 is among our long-term goals and motivations.
 Along those lines, this paper can be seen as a companion to a related
-project (Leistedt et al. in preparation), in which we use a slightly less appropriate
+project \citep{leistedtHogg2017}, in which we use a slightly less appropriate
 model for the \cmd, but in which we take a much more principled
 approach to the inference.
 
@@ -263,12 +267,14 @@ The upper left shows 1024 realizations of the true values, and the upper right, 
 To infer a pdf of the true y value for each measured y value we need a prior. For our prior we will use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy y data themselves.
 We learn the noise-deconvolved function using marginalized maximum likelihood estimation (MML), which marginalizes over the true data values (we never need to know them) and maximizes the likelihood of the data. Here our likelihood for each individual datum is
 
-\begin{equation}
-p(y_n \given m, b, t^2, \sigma_n^2) = \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2)
+\BLedit{
+\begin{eqnarray}
+p(y_n \given m, b, t^2, \sigma_n^2) \ &=& \ \int \mathcal{N}(y_n \given y_{\true,n}, \sigma_n^2) \, \mathcal{N}(y_{\true,n} \given m\,x_n + b, t^2 ) \, \mathrm{d}y_{\true, n} \\
+&=&  \ \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2)
 \label{eq:toyLike}
-\end{equation}
+\end{eqnarray}
 
-It is a Gaussian because the noise model is a Gaussian. The likelihood of the full data set is then the product of the individual likelihoods
+where we have marginalized over the true sample $y_{\true, n}$.} The resulting likelihood is a Gaussian because the noise model is a Gaussian. \BLcomment{should all these equations have $x_n$ on the right hand side? I don't have a strong opinion about that.} The likelihood of the full data set is then the product of the individual likelihoods
 
 \begin{equation}
 \prod_n\, p(y_n \given m, b, t^2, \sigma_n^2).
@@ -278,7 +284,7 @@ It is a Gaussian because the noise model is a Gaussian. The likelihood of the fu
 Maximizing this joint likelihood of all the data is the same as minimizing
 
 \begin{equation}
-\chi^2 = \sum_n \frac{[y_n - [m\,x_n + b]]^2}{[\sigma_n^2 + t_n^2]} + \sum_n\,ln(2\pi\,[\sigma_n^2 + t^2])
+\chi^2 = \sum_n \frac{[y_n - [m\,x_n + b]]^2}{[\sigma_n^2 + t_n^2]} + \sum_n\,\ln(2\pi\,[\sigma_n^2 + t^2])
 \label{eq:chisq}
 \end{equation}
 
@@ -340,7 +346,7 @@ method that flows from them---in the discussion section below.
   as there is support in the high signal-to-noise stars for the types
   of stars seen at low signal-to-noise, the results will not be
   strongly biased. Although a weak assumption, it is deep and fundamental to this
-  work.
+  work. \BLcomment{Isn't that assumption made conditionally on color and magnitude in the CMD? In other words, isn't the assumption that there are low- and high-SNR stars (and that those are statistically drawn from the same distribution of physical parameters) in any color--magnitude cell?}
 \item[big data] We assume that we have large numbers of stars, large enough that
   empirical Bayes, or maximum-marginalized likelihood, is a safe
   approximation to full Bayesian inference. This assumption will be
@@ -353,7 +359,7 @@ method that flows from them---in the discussion section below.
   correctly known variances. In detail, we assume that the [INSERT
     CORRECT TERMINOLOGY FROM GAIA HERE] parallax uncertainty estimates
   are correct. Here we are making use of the fact that, for
-  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution.
+  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. \BLedit{In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.} \BLcomment{please rephrase if this is unclear. I think it is worth clarifying this "under-deconvolution". I noticed people don't typically understand this when they hear/read it, and it is an important aspect of this paper.}
 \item[dust] We treat the \panstarrs-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -368,21 +374,34 @@ method that flows from them---in the discussion section below.
   \cmd\ is somehow smooth and compact).
 \end{description}
 
+\BLcomment{Is it the right place to comment that this whole approach also assumes that 1) the selection function is totally known (and neglected here), 2) all measurements and their errors are correct (unbiased and statistically representative)? This could also go in the discussion, but I personally see those as fundamental assumptions.}
+
 \subsection{Setting up the Inference}
  \emph{Think about presentation, prioritizing/highlighting prior but logically building it from an full inference perspective and needing a prior, then dive into prior stuff. It's confusing right now jumping between inference and prior building !!}
 
+\BLcomment{This whole section is highlighted because I have moved paragraphs around and also added small clauses here and there. I've tried to improve the logical motivation and presentation using the (great) paragraphs you wrote. Feel free to revert if you don't like it.}\BLedit{
+
 Under these assumptions, we would like to infer the true parallax, $\varpi_{\true}$, for each star given its measured parallax, $\varpi$, and associated uncertainty, $\sigma_{\varpi}$, from \tgas.
+A first application of Bayes theorem leads to
+\begin{equation}
+p(\varpi_{\true} \given \varpi, \sigma^2_{\varpi}) = \frac{1}{Z}\,p(\varpi \given \varpi_{\true}, \sigma^2_{\varpi}) \, p(\varpi_{\true}) \quad ,
+\label{eq:bayes}
+\end{equation}
+where $p(\varpi \given \varpi_{\true}, \sigma^2_{\varpi})$ is the likelihood of the observed parallax, $p(\varpi_{\true})$ is a prior pdf for the
+parallax, and $Z$ is a normalization constant \BLedit{(the model evidence of marginalized likelihood)}.
 The strength of our inference lies in how we generate our prior information of $\varpi_{\true}$.
-Supplementary to the trigonometric measure of distance, the photometry of stars is also informative of their distances.
-The intrinsic temperatures and luminosities of stars tightly correlate leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
-The tight correlation of the \cmd\ benefits our inference because the luminosity or absolute magnitude of a star, when compared with its brightness or apparent magnitude, contains distance information.
-We include this distance information in the inference of t$\varpi_{\true}$ by using the \cmd\ as our prior.
-Specifically, we use the \cmd\ generated from the data themselves as our prior.
 Instead of assuming a functional form for the spatial distribution of stars in the Milky Way (\citealt{astraatmadja16b}), or relying on stellar models (\citealt{gaia16}), we build a noise-deconvolved estimate of the \cmd\ from the observed colors and absolute magnitudes of our full set of stars.
-This \cmd\ model becomes, for each star---given its observed color and magnitude (and uncertainties on those)---a prior pdf for the parallax of that star.
+This is because supplementary to the trigonometric measure of distance, the photometry of stars is also informative of their distances.
+The intrinsic temperatures and luminosities of stars tightly correlate leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
+The tight correlation of the \cmd\ benefits our inference because the luminosity or absolute magnitude of a star $M$, when compared with its brightness or apparent magnitude $m$, contains distance information $d$ via the fundamental relation $m=M+5\log(d/10\, \mathrm{pc})$.
+We include this distance information in the inference of $\varpi_{\true}$ by using the \cmd\ as our prior.
+Specifically, we use the \cmd\ generated from the data themselves as our prior.
 
-Because our prior is the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. For inferring $\varpi_{\true}$, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{true}_n$ color and the $J$ band absolute magnitude $M^{true}_{J,n}$ for each star, which we encapsulate in the true vector $\mathbf{Y}$. The observed data is the dust corrected color $(J-K)^c_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^c_n$, which we encapsulate in the data vector $\mathbf{y}$. Instead of transforming the parallax and apparent magnitude into an absolute magnitude, the data vector $\mathbf{y}$ contains a transformation of the dust corrected absolute magnitude
+In this context, equation~\ref{eq:bayes} is significantly complexified.
+Because our prior is the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. For inferring $\varpi_{\true}$, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{true}_n$ color and the $J$ band absolute magnitude $M^{true}_{J,n}$ for each star, which we encapsulate in the true vector $\mathbf{Y}$. The observed data is the dust corrected color $(J-K)^c_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^c_n$, which we encapsulate in the data vector $\mathbf{y}$.
 
+We now describe a particularity of our method, which will allow us to conservatively deconvolve the data into a \cmd\ prior without requiring a full hierarchical inference framework (which was explored in \citealt{leistedtHogg2017}).
+Instead of transforming the parallax and apparent magnitude into an absolute magnitude, the data vector $\mathbf{y}$ contains a transformation of the dust corrected absolute magnitude
 \begin{equation}
 y_0 = \varpi\,10^{0.2J^c_n} = 10^{0.2\,M^c_{J,n} + 2}
 \label{eq:transform}
@@ -393,7 +412,7 @@ Our prior assumptions $I$ are the uncertainties in each of these measurements, a
 \begin{equation}
 \begin{aligned}
 \mathrm{true \, vector} \quad &\mathbf{Y}_n = [10^{0.2\,M^{true}_{J,n} + 2}, (J-K)^{true}_n] \\
-\mathrm{data \, vector} \quad &\mathbf{y}_n = [\varpi_n\,10^{0.2J^c_n}, (J- K)^c_n] \;  n \in \mathrm{stars} \\
+\mathrm{data \, vector} \quad &\mathbf{y}_n = [\varpi_n\,10^{0.2J^c_n}, (J- K)^c_n] \;\hspace*{15mm}  n \in \mathrm{stars} \\
 \mathrm{with \; apparent \; magnitude} \quad &J^c_n = J_n - Q_J\,E(B-V)_n \\
 \mathrm{and \; color} \quad &(J - K)^c_n = J_n - K_n - Q_{JK}\,E(B-V)_n \\
 \mathrm{assumptions} \quad &I_n = \left\{\left\{\sigma^2_{\varpi, n}\right\}, \left\{\sigma^2_{J,n}\right\}, \left\{\sigma^2_{K,n}\right\}, \mathrm{Dust \, Map}\right\}
@@ -402,14 +421,6 @@ Our prior assumptions $I$ are the uncertainties in each of these measurements, a
 \end{equation}
 where $E(B-V)_n$ is the output of the Green et al dust model, and $Q_{\lambda}$ is the correction factor for a photometric band assuming some reddening law.
 
-If life were simple, our inference would be a 1D problem using Bayes theorem and look something like:
-\begin{equation}
-p(\varpi_{\true} \given \varpi, \sigma^2_{\varpi}) = \frac{1}{Z}\,p(\varpi \given \varpi_{\true}, \sigma^2_{\varpi}) \, p(\varpi_{\true}) \quad ,
-\label{eq:bayes}
-\end{equation}
-where $p(\varpi \given \varpi_{\true}, \sigma^2_{\varpi})$ is the likelihood of the observed parallax, $p(\varpi_{\true})$ is a prior pdf for the
-parallax, and $Z$ is a normalization constant.
-But life isn't simple, and our prior is a 2D function in color and transformed absolute magnitude space, so our full inference in done in 2D space as well.
 We assume (as \gaia\ suggests) that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood of the data is
 \begin{equation}
 p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) = \mathcal{N}(\mathbf{y}_n \given \mathbf{Y}_n, V_n)
@@ -425,39 +436,35 @@ $V_n = $
 where $\mathcal{N}$ is a 2D Gaussian function with mean $\mathbf{Y}$ and variance $V_n$.
 Here we have assumed that the parallax uncertainty is significantly larger than the $J$ band uncertainty, and therefore the dominant uncertainty in the transformed absolute magnitude. So we take $J_n^C$ as a point estimate and only propagate the parallax uncertainty. Again, this is to keep our uncertainties Gaussian so we can use \xd\ generate our prior below.
 
-This likelihood is the probability of the data vector given the true vector, but we
-want to flip it around and infer the true vector and therefore the true parallax, or distance. We do this
-analogous to Equation \ref{eq:bayes}.
 
-
+We can now write the multidimensional analogous to Equation \ref{eq:bayes},
 \begin{equation}
-p(\mathbf{Y}_n \given \mathbf{y}_n, I_n) = p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) \, p(\mathbf{Y}_n)
+p(\mathbf{Y}_n \given \mathbf{y}_n, I_n) = p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) \, p(\mathbf{Y}_n) \label{eq:posterior}
 \end{equation}
 where $p(\mathbf{y}_n \given \mathbf{Y}_n, I_n)$ is the likelihood of the data vector, and $p(\mathbf{Y}_n)$ is our prior.
+Before we describe how this can be turned into a posterior belief on the true parallax, we turn our attention to the prior.
+}
 
 \subsection{Generating the Prior}
 
-To generate our prior, we fit the data in the slightly transformed \cmd\ space, using Equation \ref{eq:transform} instead of absolute magnitude. We fit this transfromed \cmd\ using \xd\ which deconvolves the data with its uncertainties, which are heterogeneous measurement uncertainties. It generates an estimate of the underlying distribution from which the uncertain data were drawn from. \xd\ generates a represention of the distribution as a mixture of Gaussians which maximizes the marginalized likelihood of the data, marginalizing over the true data.
-
-\xd\ generates the gaussian parameters
-
+To generate our prior $p(\mathbf{Y}_n)$, we fit the data in the slightly transformed \cmd\ space, using Equation \ref{eq:transform} instead of absolute magnitude. We fit this transformed \cmd\ using \xd\ which deconvolves the data $\{ \mathbf{Y}_n \}$ with its uncertainties $\{ V_n\}$, which are heterogeneous measurement uncertainties. It generates an estimate of the underlying distribution from which the uncertain data were drawn from. \xd\ generates a representation of the distribution as a $K$-mixture of Gaussians. In other words, the prior reads
+\BLedit{
+\begin{equation}
+	p\bigl(\mathbf{Y} \given  \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K \mathrm{amp}_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
+\end{equation}
+where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$ component, which is a Gaussian in our transformed \cmd\ space. The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$. 
+}
+Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelihood of the data, marginalizing over the true data, \textit{i.e.}, finds the coefficients
 \begin{eqnarray}
-\alpha &=& \left\{\mathrm{amp}_k, \mu_k, V_k\right\}_{k=1}^K \; k \in \mathrm{Gaussians} \nonumber\\
+\alpha &=& \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \; k \in \mathrm{Gaussians} \nonumber\\
        &=& \argmax_{\alpha} \, \Pi_n \, p(\mathbf{y}_n \given \alpha) \nonumber\\
        &=& \argmax_{\alpha} \, \Pi_n \, \int p(\mathbf{y}_n \given \mathbf{Y}_n) \, p(\mathbf{Y}_n \given \alpha)\mathrm{d\mathbf{Y}_n}
 \label{eq:xdmml}
 \end{eqnarray}
-where $\alpha$ encapsulates the parameters of each Gaussian in the mixture of Gaussians that defines our \cmd\ prior.
 
 \subsection{Back to the Inference}
 
-To infer $\varpi_{\true}$, we first do the inference in the 2D space of the \cmd. Using Bayes theorem,
-
-\begin{equation}
-p(\mathbf{Y} \given \mathbf{y}, \alpha) = \frac{1}{Z} \, p(\mathbf{y} \given \mathbf{Y}) \, p(\mathbf{Y} \given \alpha)
-\label{eq:posterior}
-\end{equation}
-We then project the 2D posterior into the 1D transformed absolute magnitude space, and do a little algebra to solve for $\varpi_{\true}$
+\BLedit{To infer $\varpi_{\true}$, we first do the inference in the 2D space of the \cmd\ prior $p(\mathbf{Y} \given \alpha)$, using Equation \ref{eq:posterior}.} We then need to project the 2D posterior into the 1D transformed absolute magnitude space, and do a little algebra to solve for $\varpi_{\true}$
 
 \begin{eqnarray}
 p(\mathbf{Y}_0 \given \mathbf{y}, \alpha) &\rightarrow& p(\varpi_{\true} \given y, \alpha) \, f(\varpi_{\true}) \\
@@ -491,7 +498,7 @@ We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observ
 \end{figure}
 
 
-We need to correct the photometry used in our method, both for the generation of the prior and the likelihood, for dust. With the emergence of 3D dust maps, it is now possible to estimate dust corrections to stars within the Milky Way. The challenge is getting a proper estimate of the distance to the star before inferring $\varpi_{\true}$, since we need a dust correction prior to doing our inference. Dust corrections are particularly non trivial for stars with poor parallax signal to noise. Stars with poor signal to noise have a likelihood that is consistent with infinite distance and can therefore have severe dust corrections. This is most obvious in the giant stars, which tend to have the lowest signal to noise, and can therefore have dust corrections $> 2$ magnitudes. Although the dust model is probabilistic, as well as our distance inference, to move forward, we break from a fully Bayesian framework, in which we might infer the distance and the dust simultaneously (more about this in the discussion). Instead, we correct for dust using a point estimate from the 3D dust map (Schlafly+Finkbeiner) sampled at a distance estimated from iteratively inferring and then sampling our posterior pdf over $\varpi_{\true}$. In more detail, to apply a dust correction to the \tmass\ photometry, we first generate our prior using the observed, attenuated photometry. Using this raw prior, we infer more precise parallaxes to all the stars in our sample. We then use this more precise parallax posterior to get a measurement of dust in the 3D dust map for each star. And repeat. This approach minimizes severe distances, and their associated severe dust corrections, which would occur if using the likelihoods alone. In detail, we take the $5\%$ quantile of each distance posterior, so the closest bit of the posterior, and sample the 3D dust map at that distance. We take the $5\%$ quantile, as apposed to the median, for example, to do a light dust correction, because over correcting for dust can shoot the likelihood into an unphysical, different space of the \cmd and bias the parallax inference. For each distance, we sample the median of the probabilistic dust model. We apply each light dust correction to our \tmass\ photometry given by Equation \ref{eq:data} where $Q_{\lambda}$ = [0.709, 0.302] for bands [J, K] respectively, taken from table (REF TABLE SFD). We then regenerate our prior using the lightly dust corrected photometry. We do not update the errors, but keep them the same as before the dust correction, which is wrong and under representing our errors but this leads, again, to a lighter deconvolution. We could add the covariance of the dust to our likelihoods, but this is beyond the scope of this demonstration of concept. We iterate this process 10 times, however the dust values seem to converge after about 2-3 iterations. The iterative process allows for slight variations in distance and corresponding dust to become more consistent with the \cmd.
+We need to correct the photometry used in our method, both for the generation of the prior and the likelihood, for dust. With the emergence of 3D dust maps, it is now possible to estimate dust corrections to stars within the Milky Way. The challenge is getting a proper estimate of the distance to the star before inferring $\varpi_{\true}$, since we need a dust correction prior to doing our inference. Dust corrections are particularly non trivial for stars with poor parallax signal to noise. Stars with poor signal to noise have a likelihood that is consistent with infinite distance and can therefore have severe dust corrections. This is most obvious in the giant stars, which tend to have the lowest signal to noise, and can therefore have dust corrections $> 2$ magnitudes. Although the dust model is probabilistic, as well as our distance inference, to move forward, we break from a fully Bayesian framework, in which we might infer the distance and the dust simultaneously (more about this in the discussion). Instead, we correct for dust using a point estimate from the 3D dust map (Schlafly+Finkbeiner) sampled at a distance estimated from iteratively inferring and then sampling our posterior pdf over $\varpi_{\true}$. In more detail, to apply a dust correction to the \tmass\ photometry, we first generate our prior using the observed, attenuated photometry. Using this raw prior, we infer more precise parallaxes to all the stars in our sample. We then use this more precise parallax posterior to get a measurement of dust in the 3D dust map for each star. And repeat. This approach minimizes severe distances, and their associated severe dust corrections, which would occur if using the likelihoods alone. In detail, we take the $5\%$ quantile of each distance posterior, so the closest bit of the posterior, and sample the 3D dust map at that distance. We take the $5\%$ quantile, as apposed to the median, for example, to do a light dust correction, because over correcting for dust can shoot the likelihood into an unphysical, different space of the \cmd\ and bias the parallax inference. For each distance, we sample the median of the probabilistic dust model. We apply each light dust correction to our \tmass\ photometry given by Equation \ref{eq:data} where $Q_{\lambda}$ = [0.709, 0.302] for bands [J, K] respectively, taken from table (REF TABLE SFD). We then regenerate our prior using the lightly dust corrected photometry. We do not update the errors, but keep them the same as before the dust correction, which is wrong and under representing our errors but this leads, again, to a lighter deconvolution. We could add the covariance of the dust to our likelihoods, but this is beyond the scope of this demonstration of concept. We iterate this process 10 times, however the dust values seem to converge after about 2-3 iterations. The iterative process allows for slight variations in distance and corresponding dust to become more consistent with the \cmd.
 
 Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
 
@@ -608,7 +615,7 @@ and other classes (like bright red giant branch stars) have few to no exemplars
 in the data set at high signal-to-noise (in parallax).
 For all these reasons, we do think that this approximation is not perfectly
 safe, and it is a goal to explore full hierarchical modeling in the coming
-years (and see, for example, Leistedt et al. in preparation).
+years (and see, for example, \citealt{leistedtHogg2017}).
 
 Transition clause/sentence. The biggest limitation of our method for generating the \cmd\ from the data is that we made no use of any kind of \tgas\ selection
 function or completeness estimate or inverse-selection-volume corrections.
@@ -652,7 +659,7 @@ We have (in previous work)
 given examples of correct uses of posterior samplings or pdfs
 for subsequent inferences (\citealt{hogg08}; \citealt{dfm14}); we
 encourage power-users to consult those methodological
-contributions before engaging with these outputs.
+contributions before engaging with these outputs. 
 
 \subsection{Comparison with other priors}
 \begin{figure}
