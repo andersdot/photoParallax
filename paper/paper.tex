@@ -271,7 +271,7 @@ p(y_n \given m, b, t^2, \sigma_n^2) \ &=& \ \int \mathcal{N}(y_n \given y_{\true
 &=&  \ \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2) \quad,
 \label{eq:toyLike}
 \end{eqnarray}
-where we have marginalized over the true sample $y_{\true, n}$. The resulting likelihood is a Gaussian because the noise model is a Gaussian. \BLcomment{should all these equations have $x_n$ on the right hand side? I don't have a strong opinion about that.} The likelihood of the full data set is then the product of the individual likelihoods
+where we have marginalized over the true sample $y_{\true, n}$. The resulting likelihood is a Gaussian because the noise model is a Gaussian. The likelihood of the full data set is then the product of the individual likelihoods
 \begin{equation}
 \prod_n\, p(y_n \given m, b, t^2, \sigma_n^2) \quad .
 \label{eq:toyLikeFull}
