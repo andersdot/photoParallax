@@ -561,9 +561,56 @@ def compareSimpleGaia(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
 
         figVarDiff.savefig('denoisedVarianceSamples_' + file.split('.')[0] + '.png')
 
+def paperComparePrior(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', dataFilename='All.npz', contourColor='k', posteriorColor='royalblue'):
+    setup_text_plots(fontsize=16, usetex=True)
+    tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
+    xdgmm = XDGMM(filename=xdgmmFilename)
+    absmag = 'J'
+    mag1 = 'J'
+    mag2 = 'K'
+    xlabel = '$(J-K)^C$'
+    ylabel = r'$M_J^C$'
+    xlim = [-0.25, 1.25]
+    ylim = [6, -6]
+
+    ndim = 2
+    data = np.load(dustFile)
+    dustEBV = data['ebv']
+    absMagKinda, apparentMagnitude = testXD.absMagKindaArray(absmag, dustEBV, bandDictionary, tgas['parallax'])
+
+    color = testXD.colorArray(mag1, mag2, dustEBV, bandDictionary)
+    color_err = np.sqrt(bandDictionary[mag1]['array'][bandDictionary[mag1]['err_key']]**2. + bandDictionary[mag2]['array'][bandDictionary[mag2]['err_key']]**2.)
+
+    postFile = 'posteriorParallax.' + str(ngauss) + 'gauss.dQ' + str(quantile) + '.' + iter + '.' + survey + '.' + dataFilename
+    yim = (-1, 5)
+
+    indices = np.random.randint(0, high=len(color), size=1024)
+
+    fig, ax = plt.subplots(1, 2)
+    for i, file in enumerate(['posteriorSimple.npz', postFile]):
+        data = np.load(file)
+        posterior = data['posterior']
+        sigma = np.sqrt(data['var'])
+        mean = data['mean']
+        absMag = testXD.absMagKinda2absMag(mean*10.**(0.2*apparentMagnitude))
+        absMagSigma = testXD.absMagKinda2absMag(sigma*10.**(0.2*apparentMagnitude))
+        ax[0].scatter(color[indices], absMag[indices])
+        ax[0].errorbar(color[indices], absMag[indices], xerr=color_err[inidces], yerr=[absMag/absMagSigma, absMag*absMagSigma], fmt=None, zorder=0, lw=0.5, mew=0, color=posteriorColor))
+
+        ax[0].set_xlabel(xlabel, fontsize=18)
+        ax[0].set_ylabel(ylabel, fontsize=18)
+        plt.tight_layout()
+        #if file == 'posteriorSimple.npz':
+        ax[0].set_ylim(ylim)
+        ax[0].set_xlim(xlim)
+    fig.savefig('comparePriorPaper.png')
+
+
+def compareSimple
 
 if __name__ == '__main__':
     #comparePrior()
+    posteriorColor = 'royalblue'
     quantile = np.float(sys.argv[1])
     ngauss = np.int(sys.argv[2])
     try: contourColor = sys.argv[3]
