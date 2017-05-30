@@ -72,7 +72,7 @@ This data-driven model contains no knowledge of the physics of stellar interiors
 We use the Extreme Deconvolution (\xd) algorithm, which is an Empirical Bayes approximation to a full hierarchical model of the true parallax and photometry of every star.
 The algorithm is run not in absolute-magnitude space but in a transformed space where the measurement uncertainty is closer to Gaussian.
 The \xd-optimized prior is used to perform parallax inferences for every star, yielding a precise photometric parallax estimate and uncertainty (and full posterior) for every star.
-Our posterior photometric parallax estimates are more precise than the \tgas\ catalog entries by a median factor of [XXX]; and more precise than previous examples of Bayesian distance estimates by a factor of [YYY].
+Our posterior photometric parallax estimates are more precise than the \tgas\ catalog entries by a median factor of 1.2, and a 75, 90, and 99 percentile factor of 1.6, 2.3, and 4.9, respectively; and more precise than previous examples of Bayesian distance estimates by a median factor of 1.2, and a 75, 90 and 99 percentile factor of 1.5, 1.6, and 2.1, respectively.
 %The precision can be attributed to the statistics concept of shrinkage.
 We independently validate our distances by looking at members of a Milky Way star cluster M67, which is not visible as a cluster in the \tgas\ parallax estimates, but appears clearly as a cluster in our posterior parallax estimates.
 All our results, including a posterior parallax and distance sampling for [ZZZ] \tgas\ stars, are available in companion electronic tables.
@@ -448,7 +448,7 @@ To generate our prior $p(\mathbf{Y}_n)$, we fit our data in the slightly transfo
 \begin{equation}
 	p\bigl(\ \mathbf{Y} \given  \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K \mathrm{amp}_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
 \end{equation}
-where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$. 
+where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$.
 }
 Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelihood of the data, marginalizing over the true data. In equations, it finds the coefficients
 \begin{eqnarray}
@@ -507,14 +507,14 @@ Should I quote some statistics about the dust corrections? mostly small? maybe d
 \BLedit{
 \subsection{Shrinkage of parallax uncertainties}
 
-Figure~\ref{fig:posterior} shows the end result of our inference for a few randomly-chosen objects: the posterior pdf on the true parallaxes. 
-We also show the likelihood and the prior. 
+Figure~\ref{fig:posterior} shows the end result of our inference for a few randomly-chosen objects: the posterior pdf on the true parallaxes.
+We also show the likelihood and the prior.
 In all cases, the prior information brought by the \cmd\ is significant, and leads to a compelling decrease in the parallax uncertainty.
 The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact strongly depend on the location of each object in \cmd\ space.
 
 Figure~\ref{fig:posteriorCMD} shows the distribution of the parallaxes derived with our \cmd\ prior.
 This is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes, and highlight the regions of \cmd\ space with the greatest improvement.
-Those typically are the regions with the largest photometric and parallax errors, for the faintest objects. 
+Those typically are the regions with the largest photometric and parallax errors, for the faintest objects.
 This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 
 }
@@ -678,7 +678,7 @@ We have (in previous work)
 given examples of correct uses of posterior samplings or pdfs
 for subsequent inferences (\citealt{hogg08}; \citealt{dfm14}); we
 encourage power-users to consult those methodological
-contributions before engaging with these outputs. 
+contributions before engaging with these outputs.
 
 \subsection{Comparison with other priors}
 \begin{figure}
@@ -753,7 +753,7 @@ detail.
   underrepresented in the prior, the amplitudes of the gaussians
   representing them is very small, so the WDs are more likely to be
   pulled to mimic a much farther away MS star.
-\item[big data] HOGG 
+\item[big data] HOGG
 \item[noise model] HOGG
 \item[dust] Within our probabilistic framework, we improperly handle
   dust. We are taking a point estimate of the probabilistic dust model
