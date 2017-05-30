@@ -121,14 +121,16 @@ In general, data-driven models contain fewer assumptions than
 physics-driven models, but they are also usually less interpretable.
 However, the \gaia\ data set is ideal for thinking about purely statistical
 models of stars:
-The distance to a star is a latent variable, and the nearby
-stars constitute a high signal-to-noise ``training set''.
-These nearby stars can be used to anchor empirical models that can
-then be applied to the more distant stars\BLedit{, thanks to the simple physical relations connecting the measurements (apparent magnitudes, parallaxes) to some of the physical parameters of interest (absolute magnitudes, distances).}
+The different stars observed by \gaia\ are measured at very different
+signal-to-noise ratios.
+A data-driven model of the stellar color--magnitude distribution can capitalize
+on the precise information coming from the high signal-to-noise stars
+and deliver valuable information about the low signal-to-noise stars,
+which in turn will deliver precise parallax (or distance or absolute magnitude) inferences.
 
 Here we deliver a demonstration-of-concept that shows that a
 data-driven model of the \gaia\ data could in principle deliver very
-precise parallaxes, without any input of the physics or numerical models of stellar
+precise parallax measurements, without any input of the physics or numerical models of stellar
 evolution, interiors, or photospheres.
 That is, this is a data-driven or purely empirical \emph{photometric
   parallax} method.
@@ -253,38 +255,31 @@ Similarly, noisy samples from this distribution are shown in the upper right pan
 Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample of the distribution, from $y_n$, a noisy sample of the distribution.
 
 Setting up the problem in more detail, we have the true samples from the underlying distribution and the noisy samples
-
 \begin{eqnarray}
 y_{\true, n} \, &=& \, m_{\true}\,x_n + b_{\true} + \Delta_n \\
-y_n \, &=& \, y_{\true,n} + \epsilon_n
+y_n \, &=& \, y_{\true,n} + \epsilon_n \quad,
 \label{eq:ytrue}
 \end{eqnarray}
-
 where $\Delta_n$ is drawn from the Gaussian function $\mathcal{N}(\Delta_n \given 0, t^2)$, and $\epsilon_n$ is drawn from the Gaussian function $\mathcal{N}(\epsilon_n \given 0, \sigma_n^2)$, so $\sigma_n$ is the measurement uncertainty.
 These represent true and noisy draws from a distribution that is a straight line with some thickness $t$, and are visualized in the upper panels of Figure \ref{fig:toy}
 The upper left shows 1024 realizations of the true values, and the upper right, as well as lower left, show 1024 realizations of the noisy values $y_n$ and their associated measurement uncertainties $\sigma_n$ as the grey points. Here we highlight 5 random points in black to highlight the method, but the same method is being applied to all the data.
 
 To infer a pdf of the true y value for each measured y value we need a prior. For our prior we will use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy y data themselves.
 We learn the noise-deconvolved function using marginalized maximum likelihood estimation (MML), which marginalizes over the true data values (we never need to know them) and maximizes the likelihood of the data. Here our likelihood for each individual datum is
-
-\BLedit{
 \begin{eqnarray}
 p(y_n \given m, b, t^2, \sigma_n^2) \ &=& \ \int \mathcal{N}(y_n \given y_{\true,n}, \sigma_n^2) \, \mathcal{N}(y_{\true,n} \given m\,x_n + b, t^2 ) \, \mathrm{d}y_{\true, n} \\
-&=&  \ \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2)
+&=&  \ \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2) \quad,
 \label{eq:toyLike}
 \end{eqnarray}
-
-where we have marginalized over the true sample $y_{\true, n}$.} The resulting likelihood is a Gaussian because the noise model is a Gaussian. \BLcomment{should all these equations have $x_n$ on the right hand side? I don't have a strong opinion about that.} The likelihood of the full data set is then the product of the individual likelihoods
-
+where we have marginalized over the true sample $y_{\true, n}$. The resulting likelihood is a Gaussian because the noise model is a Gaussian. \BLcomment{should all these equations have $x_n$ on the right hand side? I don't have a strong opinion about that.} The likelihood of the full data set is then the product of the individual likelihoods
 \begin{equation}
-\prod_n\, p(y_n \given m, b, t^2, \sigma_n^2).
+\prod_n\, p(y_n \given m, b, t^2, \sigma_n^2) \quad .
 \label{eq:toyLikeFull}
 \end{equation}
-
 Maximizing this joint likelihood of all the data is the same as minimizing
-
 \begin{equation}
 \chi^2 = \sum_n \frac{[y_n - [m\,x_n + b]]^2}{[\sigma_n^2 + t_n^2]} + \sum_n\,\ln(2\pi\,[\sigma_n^2 + t^2])
+\quad .
 \label{eq:chisq}
 \end{equation}
 
