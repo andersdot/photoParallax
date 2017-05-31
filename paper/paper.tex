@@ -72,10 +72,10 @@ This data-driven model contains no knowledge of the physics of stellar interiors
 We use the Extreme Deconvolution (\xd) algorithm, which is an Empirical Bayes approximation to a full hierarchical model of the true parallax and photometry of every star.
 The algorithm is run not in absolute-magnitude space but in a transformed space where the measurement uncertainty is closer to Gaussian.
 The \xd-optimized prior is used to perform parallax inferences for every star, yielding a precise photometric parallax estimate and uncertainty (and full posterior) for every star.
-Our posterior photometric parallax estimates are more precise than the \tgas\ catalog entries by a median factor of [XXX]; and more precise than previous examples of Bayesian distance estimates by a factor of [YYY].
+Our posterior photometric parallax estimates are more precise than the \tgas\ catalog entries by a median factor of 1.2, and a 75, 90, and 99 percentile factor of 1.6, 2.3, and 4.9, respectively; and more precise than previous examples of Bayesian distance estimates by a median factor of 1.2, and a 75, 90 and 99 percentile factor of 1.5, 1.6, and 2.1, respectively.
 %The precision can be attributed to the statistics concept of shrinkage.
 We independently validate our distances by looking at members of a Milky Way star cluster M67, which is not visible as a cluster in the \tgas\ parallax estimates, but appears clearly as a cluster in our posterior parallax estimates.
-All our results, including a posterior parallax and distance sampling for [ZZZ] \tgas\ stars, are available in companion electronic tables.
+All our results, including a posterior parallax and distance sampling for 1.4 million \tgas\ stars, are available in companion electronic tables.
 \end{abstract}
 
 \keywords{
@@ -448,7 +448,7 @@ To generate our prior $p(\mathbf{Y}_n)$, we fit our data in the slightly transfo
 \begin{equation}
 	p\bigl(\ \mathbf{Y} \given  \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K \mathrm{amp}_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
 \end{equation}
-where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$. 
+where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$.
 }
 Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelihood of the data, marginalizing over the true data. In equations, it finds the coefficients
 \begin{eqnarray}
@@ -507,14 +507,14 @@ Should I quote some statistics about the dust corrections? mostly small? maybe d
 \BLedit{
 \subsection{Shrinkage of parallax uncertainties}
 
-Figure~\ref{fig:posterior} shows the end result of our inference for a few randomly-chosen objects: the posterior pdf on the true parallaxes. 
-We also show the likelihood and the prior. 
+Figure~\ref{fig:posterior} shows the end result of our inference for a few randomly-chosen objects: the posterior pdf on the true parallaxes.
+We also show the likelihood and the prior.
 In all cases, the prior information brought by the \cmd\ is significant, and leads to a compelling decrease in the parallax uncertainty.
 The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact strongly depend on the location of each object in \cmd\ space.
 
 Figure~\ref{fig:posteriorCMD} shows the distribution of the parallaxes derived with our \cmd\ prior.
 This is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes, and highlight the regions of \cmd\ space with the greatest improvement.
-Those typically are the regions with the largest photometric and parallax errors, for the faintest objects. 
+Those typically are the regions with the largest photometric and parallax errors, for the faintest objects.
 This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 
 }
@@ -558,7 +558,7 @@ RA, DEC, l, b, tgas source ID, tycho-2 source ID, parallax samples, parallax pos
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{delta.png}
-\caption{Fractional Change in Variance: The left panel shows the natural log of the fractional change in the variance of the posterior relative to the likelihood as a function of the stellar color. The coloring of the points in both panels is by the fractional change in variance to guide the coloring of the right panel. The blue lines are the $1\sigma$ and $2\sigma$ contours. The median fractional change is XXX. Some posteriors have significantly smaller variances shown in black, but some actually increase in variance, shown as the yellow bump at $(J-K)^C$ about XXX. The right panel shows the posterior point estimates on the CMD colored by fraction change in variance. There is significant changes for the red giant branch stars, as well as some main sequence stars.}
+\caption{Fractional Change in Variance: The left panel shows the natural log of the fractional change in the variance of the posterior relative to the likelihood as a function of the stellar color. The coloring of the points in both panels is by the fractional change in variance to guide the coloring of the right panel. The blue lines are the $1\sigma$ and $2\sigma$ contours. The median fractional change is 1.2. Some posteriors have significantly smaller variances shown in black, but some actually increase in variance, shown as the yellow bump at $(J-K)^C$ of about 0.6. The right panel shows the posterior point estimates on the CMD colored by fraction change in variance. There is significant changes for the red giant branch stars, as well as some main sequence stars.}
 \label{fig:delta}
 \end{figure}
 
@@ -678,7 +678,7 @@ We have (in previous work)
 given examples of correct uses of posterior samplings or pdfs
 for subsequent inferences (\citealt{hogg08}; \citealt{dfm14}); we
 encourage power-users to consult those methodological
-contributions before engaging with these outputs. 
+contributions before engaging with these outputs.
 
 \subsection{Comparison with other priors}
 \begin{figure}
@@ -691,7 +691,7 @@ contributions before engaging with these outputs.
 %How this compares to other Bayesian attempts at inferring distances,
 %like, eg, the Tri--Coryn papers. Favorably! And with \emph{fewer}
 %assumptions, in fact! What form should this comparison be in?
-There are other options for prior information when inferring distances to stars. One option is the exponentially declining spatial density of stars (cite: Tri, CBJ). It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth. It is a fairly weak prior. It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax. It is a fairly broad prior so the median \gaia\ star has an increased posterior variance of XXX. It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes. Given this prior, what does the observed \cmd\ look like?  The \cmd\ is broad and the red clump highly stretched.
+There are other options for prior information when inferring distances to stars. One option is the exponentially declining spatial density of stars (cite: Tri, CBJ). It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth. It is a fairly weak prior. It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax. It is a fairly broad prior so the median \gaia\ star has a posterior variance equal to the likelihood variance. It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes. Given this prior, what does the observed \cmd\ look like?  The \cmd\ is broad and the red clump highly stretched.
 
 
 \subsection{What's That Feature?}
@@ -753,7 +753,7 @@ detail.
   underrepresented in the prior, the amplitudes of the gaussians
   representing them is very small, so the WDs are more likely to be
   pulled to mimic a much farther away MS star.
-\item[big data] HOGG 
+\item[big data] HOGG
 \item[noise model] HOGG
 \item[dust] Within our probabilistic framework, we improperly handle
   dust. We are taking a point estimate of the probabilistic dust model
