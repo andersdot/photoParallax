@@ -5,7 +5,7 @@
 
 % # To-do list
 % - We need a standard name for the \tgas--\tmass--\PanSTARRS\ Intersection.
-% - deal with all HOGG or Anderson or LMA in the text.
+% - deal with all DWH or LMA in the text.
 % - deal with everything in the google doc.
 % - are there any github issues?
 
@@ -54,16 +54,16 @@
 \author[0000-0002-3962-9274]{Boris Leistedt}
 \affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726 Broadway, room 1005, New York, NY 10003, USA}
 
+\author{Adrian Price-Whelan}
+\affil{Princeton University Observatory, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA}
+
 %\author{Jo Bovy}
 %\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA}
 %\affil{Department of Astronomy and Astrophysics, University of Toronto, 50 St. George Street, Toronto, ON M5S 3H4, Canada}
 
-%\author{Adrian Price-Whelan}
-%\affil{Princeton University Observatory, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA}
-
 \begin{abstract}\noindent % trust me
-
-Conversion of a noisy parallax measurement into a posterior belief over distances requires inference with a prior.
+Conversion of a noisy parallax measurement into a posterior
+belief over distances requires inference with a prior.
 Usually this prior represents some kind of belief about the Milky Way.
 However, there is multi-band photometry for a large fraction of the \gaia\ \tgas\ catalog from imaging surveys;
 this imaging is incredibly informative about stellar distances.
@@ -72,8 +72,10 @@ This data-driven model contains no knowledge of the physics of stellar interiors
 We use the Extreme Deconvolution (\xd) algorithm, which is an Empirical Bayes approximation to a full hierarchical model of the true parallax and photometry of every star.
 The algorithm is run not in absolute-magnitude space but in a transformed space where the measurement uncertainty is closer to Gaussian.
 The \xd-optimized prior is used to perform parallax inferences for every star, yielding a precise photometric parallax estimate and uncertainty (and full posterior) for every star.
-Our posterior photometric parallax estimates are more precise than the \tgas\ catalog entries by a median factor of 1.2, and a 75, 90, and 99 percentile factor of 1.6, 2.3, and 4.9, respectively; and more precise than previous examples of Bayesian distance estimates by a median factor of 1.2, and a 75, 90 and 99 percentile factor of 1.5, 1.6, and 2.1, respectively.
-%The precision can be attributed to the statistics concept of shrinkage.
+Our posterior photometric parallax estimates are more precise than the
+\tgas\ catalog entries by a median factor of 1.2, and 20 percent (LMA check)
+are more precise by a factor of two or more; they are also more precise than
+previous examples of Bayesian distance estimates using a spatial prior.
 We independently validate our distances by looking at members of a Milky Way star cluster M67, which is not visible as a cluster in the \tgas\ parallax estimates, but appears clearly as a cluster in our posterior parallax estimates.
 All our results, including a posterior parallax and distance sampling for 1.4 million \tgas\ stars, are available in companion electronic tables.
 \end{abstract}
@@ -521,7 +523,7 @@ This is a fairly standard result: the deconvolution of uncertainties is stronger
 
 \subsection{Output Data}
 Using a data driven model of the observed \cmd\ we inferred a posterior belief of the true parallax of each star. Given our method, we call our posterior parallax the photometric parallax.
-HOGG: Placeholder for the output format for our data products.
+DWH: Placeholder for the output format for our data products.
 RA, DEC, l, b, tgas source ID, tycho-2 source ID, parallax samples, parallax posterior, flag (some fraction of posterior not in window, negative gaia parallax, ...)
 
 \begin{figure}
@@ -719,7 +721,7 @@ the photometric parallax method in this project is based.
 Here we return to these assumptions, and discuss them critically in more
 detail.
 \begin{description}
-\item[stationarity] (HOGG needs to clean this paragraph)
+\item[stationarity] (DWH needs to clean this paragraph)
   We have assumed that (locally) the morphology of
   the \cmd\ is independent of signal-to-noise; that is, we have assumed that
   both the low and high
@@ -752,8 +754,8 @@ detail.
   underrepresented in the prior, the amplitudes of the gaussians
   representing them is very small, so the WDs are more likely to be
   pulled to mimic a much farther away MS star.
-\item[big data] HOGG
-\item[noise model] HOGG
+\item[big data] DWH
+\item[noise model] DWH
 \item[dust] Within our probabilistic framework, we improperly handle
   dust. We are taking a point estimate of the probabilistic dust model
   at a quantile of our distance posterior, correcting our photometry
@@ -766,8 +768,8 @@ detail.
   calculate this more complex dust distribution and estimate it as a
   Gaussian distribution to feed to \xd, however, this is beyond the
   scope of this paper.
-\item[mixture of Gaussians] HOGG
-\item[no physics] HOGG
+\item[mixture of Gaussians] DWH
+\item[no physics] DWH
 \end{description}
 
 \subsection{Cross Validation}
@@ -776,16 +778,15 @@ For generating our prior, we use a mixture of 128 Gaussians. This number, 128, w
 \BLcomment{it's weird to end with these subsections. Cross-validation should go in the methods part (I think there is a flag there already), and the discussion of assumptions should go in the discussion. There should be a conclusion and look towards the future.}
 
 \section{Conclusion}
-If you want a conclusion, re-read the abstract
+If you want to read a conclusion, re-read the abstract!
 
 
 \acknowledgments It is a pleasure to thank
   Ana Bonaca (Harvard),
   Andy Casey (Monash),
-  Dustin Lang (Toronto) for cross matched 2MASS-TGAS catalogue
+  Stephen Feeney (Flatiron),
+  Dustin Lang (Toronto),
   Jo Bovy (Toronto)
-  Boris Leistedt (NYU)
-  Adrian Price-Whelan (Princeton)
 and the attendees at the Stars Group Meeting at the Flatiron Institute
 Center for Computational Astrophysics for comments and input.
 This project was developed in part at the 2016 \acronym{NYC} Gaia Sprint, hosted
