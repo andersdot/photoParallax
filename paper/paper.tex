@@ -65,18 +65,24 @@
 Conversion of a noisy parallax measurement into a posterior
 belief over distances requires inference with a prior.
 Usually this prior represents some kind of belief about the Milky Way.
-However, there is multi-band photometry for a large fraction of the \gaia\ \tgas\ catalog from imaging surveys;
+However, there is multi-band photometry for a large fraction of the
+\gaia\ \tgas\ Catalog from imaging surveys;
 this imaging is incredibly informative about stellar distances.
-Here we use color information of $1.2$ million \tgas\ stars from \tmass\ to build a noise-deconvolved empirical prior distribution for stars in color--magnitude space.
+Here we use color information for $1.2$ million \tgas\ stars
+from \tmass\ to build a noise-deconvolved empirical prior distribution for stars in color--magnitude space.
 This data-driven model contains no knowledge of the physics of stellar interiors or photospheres, nor of the Milky Way, but rather derives its precision from its generative model of noisy parallax measurements and an assumption of stationarity.
 We use the Extreme Deconvolution (\xd) algorithm, which is an Empirical Bayes approximation to a full hierarchical model of the true parallax and photometry of every star.
-The algorithm is run not in absolute-magnitude space but in a transformed space where the measurement uncertainty is closer to Gaussian.
+The algorithm is run not in absolute-magnitude space but in a
+transformed space where the measurement uncertainty is close to Gaussian.
 The \xd-optimized prior is used to perform parallax inferences for every star, yielding a precise photometric parallax estimate and uncertainty (and full posterior) for every star.
 Our posterior photometric parallax estimates are more precise than the
 \tgas\ catalog entries by a median factor of 1.2, and 14 percent
-are more precise by a factor of two or more; they are also more precise than
+are more precise by a factor $>2$. They are also more precise than
 previous examples of Bayesian distance estimates using a spatial prior.
-We independently validate our distances by looking at members of a Milky Way star cluster M67, which is not visible as a cluster in the \tgas\ parallax estimates, but appears clearly as a cluster in our posterior parallax estimates.
+We independently validate our parallax inferences distances by looking
+at members of Milky Way star cluster M67, which is not visible as a
+cluster in the \tgas\ parallax estimates, but appears clearly as a
+cluster in our posterior parallax estimates.
 All our results, including a posterior parallax and distance sampling for 1.4 million \tgas\ stars, are available in companion electronic tables.
 \end{abstract}
 
