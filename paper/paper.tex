@@ -410,7 +410,6 @@ y_0 = \varpi\,10^{0.2J^c_n} = 10^{0.2\,M^c_{J,n} + 2}
 \end{equation}
 The transformation of the dust corrected absolute magnitude is required to to keep the uncertainties Gaussian, which, under some assumptions along with this transformation, we maintain. Gaussian uncertainties are required to generate our prior using \xd, but more about this and our dust corrections below.
 Our prior assumptions $I$ are the uncertainties in each of these measurements, as well as the 3D dust map. So our full terminology is
-
 \begin{equation}
 \begin{aligned}
 \mathrm{true \, vector} \quad &\mathbf{Y}_n = [10^{0.2\,M^{true}_{J,n} + 2}, (J-K)^{true}_n] \\
@@ -423,7 +422,7 @@ Our prior assumptions $I$ are the uncertainties in each of these measurements, a
 \end{equation}
 where $E(B-V)_n$ is the output of the dust model of \cite{green15}, and $Q_{\lambda}$ is the correction factor for a photometric band assuming some reddening law.
 
-We assume (as \gaia\ suggests) that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood of the $n$th star is
+We assume (as \gaia\ suggests LMA REFERENCE HERE) that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood of the $n$th star is
 \begin{equation}
 p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) = \mathcal{N}(\mathbf{y}_n \given \mathbf{Y}_n, V_n)
 \end{equation}
@@ -446,7 +445,7 @@ Before we describe how this can be turned into a posterior belief on the true pa
 
 \subsection{Generating the Prior}
 
-To generate our prior $p(\mathbf{Y}_n)$, we fit our data in the slightly transformed \cmd\ space using \xd, which deconvolves the data $\{ \mathbf{Y}_n \}$ with its uncertainties $\{ V_n\}$, which are Gaussian, heterogeneous measurement uncertainties. It generates an estimate of the underlying distribution from which the uncertain data were drawn from, modeled as a $K$-mixture of Gaussians:
+To generate our prior $p(\mathbf{Y}_n)$, we fit our data in the slightly transformed \cmd\ space using \xd, which deconvolves the data $\{ \mathbf{Y}_n \}$ with its uncertainties $\{ V_n\}$, which are Gaussian, heterogeneous measurement uncertainties. It generates an estimate of the underlying distribution from which the uncertain data were drawn from, modeled as a mixture of $K$ Gaussians:
 \BLedit{
 \begin{equation}
 	p\bigl(\ \mathbf{Y} \given  \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K \mathrm{amp}_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
@@ -460,8 +459,7 @@ Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelih
        &=& \argmax_{\alpha} \, \Pi_n \, \int p(\mathbf{y}_n \given \mathbf{Y}_n) \, p(\mathbf{Y}_n \given \alpha)\mathrm{d\mathbf{Y}_n}
 \label{eq:xdmml}
 \end{eqnarray}
-
-which is made analytically tractable with the Gaussian likelihood and prior \citep{bovy11}.
+which is made analytically tractable with the Gaussian likelihood and mixture-of-Gaussians prior \citep{bovy11}.
 
 \subsection{Back to the Inference}
 
@@ -476,10 +474,6 @@ p(\mathbf{Y}_0 \given \mathbf{y}, \alpha) &\rightarrow& p(\varpi_{\true} \given 
 \label{eq:parallaxPost}
 \end{eqnarray}
 with $f(\varpi_{true})$ being a window function to insure $\varpi_{\true}$ is positive and to put $\varpi_{\true}$ on a similar grid for all the posteriors.
-
-\subsection{Cross Validation}
-For generating our prior, we use a mixture of 128 Gaussians. This number, 128, was chosen heuristically. It makes the method computationally tractable, and is sufficient for this demonstration of concept, but more Gaussians might be desired for a more final data product. We would ideally use the optimal number of Gaussians determined by cross validation, but preliminary tests using cross validation suggest the optimal number of Gaussians is very large.
-
 
 \section{Data and results}
 \begin{figure}
@@ -500,7 +494,6 @@ We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observ
 \label{fig:dust}
 \end{figure}
 
-\BLcomment{Isn't this repeating what was described in the previous paragraph?}
 We need to correct the photometry used in our method, both for the generation of the prior and the likelihood, for dust. With the emergence of 3D dust maps, it is now possible to estimate dust corrections to stars within the Milky Way. The challenge is getting a proper estimate of the distance to the star before inferring $\varpi_{\true}$, since we need a dust correction prior to doing our inference. Dust corrections are particularly non trivial for stars with poor parallax signal to noise. Stars with poor signal to noise have a likelihood that is consistent with infinite distance and can therefore have severe dust corrections. This is most obvious in the giant stars, which tend to have the lowest signal to noise, and can therefore have dust corrections $> 2$ magnitudes. Although the dust model is probabilistic, as well as our distance inference, to move forward, we break from a fully Bayesian framework, in which we might infer the distance and the dust simultaneously (more about this in the discussion). Instead, we correct for dust using a point estimate from the 3D dust map \citep{green15} sampled at a distance estimated from iteratively inferring and then sampling our posterior pdf over $\varpi_{\true}$. In more detail, to apply a dust correction to the \tmass\ photometry, we first generate our prior using the observed, attenuated photometry. Using this raw prior, we infer more precise parallaxes to all the stars in our sample. We then use this more precise parallax posterior to get a measurement of dust in the 3D dust map for each star. And repeat. This approach minimizes severe distances, and their associated severe dust corrections, which would occur if using the likelihoods alone. In detail, we take the $5\%$ quantile of each distance posterior, so the closest bit of the posterior, and sample the 3D dust map at that distance. We take the $5\%$ quantile, as apposed to the median, for example, to do a light dust correction, because over correcting for dust can shoot the likelihood into an unphysical, different space of the \cmd\ and bias the parallax inference. For each distance, we sample the median of the probabilistic dust model. We apply each light dust correction to our \tmass\ photometry given by Equation \ref{eq:data} where $Q_{\lambda}$ = [0.709, 0.302] for bands [J, K] respectively, taken from table (LMA REF TABLE SFD). We then regenerate our prior using the lightly dust corrected photometry. The dust values we obtain in our final iteration, and which we apply to our photometry, are visualized in galactic coordinates in Figure \ref{fig:dust}. After applying a dust correction, we do not update the uncertainties, but keep them the same as before the dust correction, which is wrong and under representing our uncertainties but this leads, again, to a lighter deconvolution. \BLedit{In other words, the features of our inferred \cmd\ are conservatively broad (broader than if we over-estimated the errors which would have lead to excessive deconvolution and unrealistically narrow features).} We could add the covariance of the dust to our likelihoods, but this is beyond the scope of this demonstration of concept. We iterate this process 10 times, however the dust values seem to converge after about 2-3 iterations. The iterative process allows for slight variations in distance and corresponding dust to become more consistent with the \cmd.
 
 Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
@@ -513,10 +506,8 @@ Should I quote some statistics about the dust corrections? mostly small? maybe d
 \end{figure}
 
 \subsection{prior}
-Using \xd\ and the MML method described in the methods section, we generate our prior shown in Figure \ref{fig:prior}.
+Using \xd\ and the MML method described in the methods section, we generate the prior. This is shown in Figure \ref{fig:prior}.
 This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
-
-\BLcomment{Figure \ref{fig:prior} needs to be discussed here or in a separate subsection. I also find that it is the right place to discuss its features. I find it strange to discuss the posterior parallaxes without describing the prior.}
 
 \subsection{Shrinkage of parallax uncertainties}
 
@@ -748,8 +739,22 @@ detail, under the same set of assumption labels:
   calculate this more complex dust distribution and estimate it as a
   Gaussian distribution to feed to \xd, however, this is beyond the
   scope of this paper.
-\item[mixture of Gaussians] In everything in this project DWH
-\item[no physics] DWH
+\item[mixture of Gaussians] The \cmd\ model is a mixture of Gaussians,
+  and furthermore fixed at $K=128$ components. This setting was chosen
+  after some experimentation as being able to capture features but still
+  be easily optimized. We performed some experiments with
+  that suggest that larger $K$ would lead to better models, even in the
+  conservative sense of cross-validation score. Choosing an optimized or
+  optimal number for this mixture is a natural extension of this work.
+
+  Beyond this, the choice of the Gaussian form itself for the mixture is
+  questionable. The Gaussian has great properties, that we capitalize on
+  both at the prior-generation stage (with \xd), and at the photometric-parallax
+  stage (capitalizing on Gaussian product rules). We could move to other
+  forms, but they would be extremely expensive, computationally.
+\item[no physics] Although it is presented as an advantage of our
+  method that we never make any use of physical models, it is also
+  brings some significant disadvantages: For example, the DWH
 \end{description}
 
 The outputs of this project include posterior pdfs for stellar parallaxes.
