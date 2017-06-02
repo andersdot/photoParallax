@@ -331,7 +331,8 @@ We can get better estimates of the true parallax for each star by inferring the 
 
 \section{Assumptions and methods}\label{sec:method}
 
-To infer the true parallax to a star using the noise-deconvolved \cmd\ as a prior, we make the following assumptions. The method we present is correct
+To infer the true parallax to a star using the noise-deconvolved \cmd\ as
+a prior, we make the following assumptions. The method we present is correct
 and justifiable under these assumptions, each of which is questionable
 in its own right. We return to criticize these assumptions---and the
 method that flows from them---in the discussion section below.
@@ -347,6 +348,11 @@ method that flows from them---in the discussion section below.
   If this requirement is met, the results will not be
   strongly biased. Although this is a weak assumption, it is deep and fundamental to this
   work.
+\item[selection] We have no model for the selection function of \tgas,
+  nor selection volumes for any kinds of stars.
+  For this reason, we are building a model of \emph{the contents of \tgas}, not the
+  properties of the stars in the Milky Way (nor any volume-limited component or region
+  thereof).
 \item[big data] We assume that we have large numbers of stars, large enough that
   empirical Bayes, or maximum-marginalized likelihood, is a safe
   approximation to full Bayesian inference. This assumption will be
@@ -356,7 +362,8 @@ method that flows from them---in the discussion section below.
 \item[noise model] We assume that the \tgas\ parallax uncertainties dominate the
   noise in any estimates of absolute magnitude. We further assume that
   the parallax and color uncertainties are Gaussian in form with
-  correctly known variances. In detail, we assume that the parallax uncertainty estimates, the parallax{\_}error entry in the \gaia\ catalogue, are correct.
+  correctly known variances. In detail, we assume that the parallax uncertainty estimates,
+  (the \texttt{parallax{\_}error} entry in the \gaia\ catalog), are correct.
   Here we are making use of the fact that, for
   de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.
 \item[dust] We treat the \panstarrs-based three-dimensional dust maps (\citealt{green15})
@@ -372,8 +379,6 @@ method that flows from them---in the discussion section below.
   stellar physics are generic and implicit (for example, that the
   \cmd\ is somehow smooth and compact).
 \end{description}
-
-\BLcomment{Is it the right place to comment that this whole approach also assumes that 1) the selection function is totally known (and neglected here), 2) all measurements and their errors are correct (unbiased and statistically representative)? This could also go in the discussion, but I personally see those as fundamental assumptions.}
 
 \subsection{Setting up the Inference}
  \emph{Think about presentation, prioritizing/highlighting prior but logically building it from an full inference perspective and needing a prior, then dive into prior stuff. It's confusing right now jumping between inference and prior building !!}
@@ -773,6 +778,7 @@ detail.
   underrepresented in the prior, the amplitudes of the gaussians
   representing them is very small, so the WDs are more likely to be
   pulled to mimic a much farther away MS star.
+\item[selection] DWH
 \item[big data] DWH
 \item[noise model] DWH
 \item[dust] Within our probabilistic framework, we improperly handle
