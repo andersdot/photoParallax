@@ -483,7 +483,7 @@ TODO: talk about crossvalidation?
 \label{fig:data}
 \end{figure}
 
-We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observing footprint of \panstarrs\ to access the Greene 3D dust model. We require the photometry have real values, and nonzero, real errors, and remove a small selection of \tmass\ stars that have zero color and zero J band magnitude. The full data set is visualized in the \cmd\ in Figure \ref{fig:data}. The left panel shows the point estimates of the color and absolute magnitude, using the point estimate of the parallax from \gaia, and the $1\sigma$ and $2\sigma$ contours of the distribution. The right panel shows a subset of the data with it's associated error bars. The uncertainties in the colors are fairly well behaved, but the large uncertainties in the absolute magnitude are due to the large uncertainties in the parallax measurements. 
+We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observing footprint of \panstarrs\ to access the Greene 3D dust model. We require the photometry have real values, and nonzero, real errors, and remove a small selection of \tmass\ stars that have zero color and zero J band magnitude. The full data set is visualized in the \cmd\ in Figure \ref{fig:data}. The left panel shows the point estimates of the color and absolute magnitude, using the point estimate of the parallax from \gaia, and the $1\sigma$ and $2\sigma$ contours of the distribution. The right panel shows a subset of the data with it's associated error bars. The uncertainties in the colors are fairly well behaved, but the large uncertainties in the absolute magnitude are due to the large uncertainties in the parallax measurements.
 
 \BLcomment{Needs to say much more - unfortunately I cannot complete this part since I don't know what you've done in enough detail.}
 
@@ -500,6 +500,17 @@ We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observ
 We need to correct the photometry used in our method, both for the generation of the prior and the likelihood, for dust. With the emergence of 3D dust maps, it is now possible to estimate dust corrections to stars within the Milky Way. The challenge is getting a proper estimate of the distance to the star before inferring $\varpi_{\true}$, since we need a dust correction prior to doing our inference. Dust corrections are particularly non trivial for stars with poor parallax signal to noise. Stars with poor signal to noise have a likelihood that is consistent with infinite distance and can therefore have severe dust corrections. This is most obvious in the giant stars, which tend to have the lowest signal to noise, and can therefore have dust corrections $> 2$ magnitudes. Although the dust model is probabilistic, as well as our distance inference, to move forward, we break from a fully Bayesian framework, in which we might infer the distance and the dust simultaneously (more about this in the discussion). Instead, we correct for dust using a point estimate from the 3D dust map \citep{green15} sampled at a distance estimated from iteratively inferring and then sampling our posterior pdf over $\varpi_{\true}$. In more detail, to apply a dust correction to the \tmass\ photometry, we first generate our prior using the observed, attenuated photometry. Using this raw prior, we infer more precise parallaxes to all the stars in our sample. We then use this more precise parallax posterior to get a measurement of dust in the 3D dust map for each star. And repeat. This approach minimizes severe distances, and their associated severe dust corrections, which would occur if using the likelihoods alone. In detail, we take the $5\%$ quantile of each distance posterior, so the closest bit of the posterior, and sample the 3D dust map at that distance. We take the $5\%$ quantile, as apposed to the median, for example, to do a light dust correction, because over correcting for dust can shoot the likelihood into an unphysical, different space of the \cmd\ and bias the parallax inference. For each distance, we sample the median of the probabilistic dust model. We apply each light dust correction to our \tmass\ photometry given by Equation \ref{eq:data} where $Q_{\lambda}$ = [0.709, 0.302] for bands [J, K] respectively, taken from table (REF TABLE SFD). We then regenerate our prior using the lightly dust corrected photometry. The dust values we obtain in our final iteration, and which we apply to our photometry, are visualized in galactic coordinates in Figure \ref{fig:dust}. After applying a dust correction, we do not update the uncertainties, but keep them the same as before the dust correction, which is wrong and under representing our uncertainties but this leads, again, to a lighter deconvolution. \BLedit{In other words, the features of our inferred \cmd\ are conservatively broad (broader than if we over-estimated the errors which would have lead to excessive deconvolution and unrealistically narrow features).} We could add the covariance of the dust to our likelihoods, but this is beyond the scope of this demonstration of concept. We iterate this process 10 times, however the dust values seem to converge after about 2-3 iterations. The iterative process allows for slight variations in distance and corresponding dust to become more consistent with the \cmd.
 
 Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
+
+\begin{figure}
+\centering
+  \includegraphics[width=\textwidth]{prior_ngauss128.png}
+\caption{\BLedit{The \cmd\ prior, modeled as a Gaussian mixture inferred by running XD on all of the data. The left panel shows a sampling of the prior,  with the blue lines showing the $1\sigma$ and $2\sigma$ contours. The right panel shows the 1-$\sigma$ contours of the individual components. The latter are Gaussian in the transformed magnitude space to make the XD inference tractable. Thus, they appear non-Gaussian in the physical color--magnitude space.}}
+\label{fig:prior}
+\end{figure}
+
+\subsection{prior}
+Using \xd\ and the MML method described in the methods section, we generate our prior shown in Figure \ref{fig:prior}.
+This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution. 
 
 \BLcomment{Figure \ref{fig:prior} needs to be discussed here or in a separate subsection. I also find that it is the right place to discuss its features. I find it strange to discuss the posterior parallaxes without describing the prior.}
 
@@ -524,12 +535,6 @@ Using a data driven model of the observed \cmd\ we inferred a posterior belief o
 HOGG: Placeholder for the output format for our data products.
 RA, DEC, l, b, tgas source ID, tycho-2 source ID, parallax samples, parallax posterior, flag (some fraction of posterior not in window, negative gaia parallax, ...)
 
-\begin{figure}
-\centering
-  \includegraphics[width=\textwidth]{prior_ngauss128.png}
-\caption{\BLedit{The \cmd\ prior, modeled as a Gaussian mixture inferred by running XD on all of the data. The left panel shows a sampling of the prior,  with the blue lines showing the $1\sigma$ and $2\sigma$ contours. The right panel shows the 1-$\sigma$ contours of the individual components. The latter are Gaussian in the transformed magnitude space to make the XD inference tractable. Thus, they appear non-Gaussian in the physical color--magnitude space.}}
-\label{fig:prior}
-\end{figure}
 
 %\begin{figure}
 %\centering
