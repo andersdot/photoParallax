@@ -475,7 +475,9 @@ p(\mathbf{Y}_0 \given \mathbf{y}, \alpha) &\rightarrow& p(\varpi_{\true} \given 
 \end{eqnarray}
 with $f(\varpi_{true})$ being a window function to insure $\varpi_{\true}$ is positive and to put $\varpi_{\true}$ on a similar grid for all the posteriors.
 
-TODO: talk about crossvalidation?
+\subsection{Cross Validation}
+For generating our prior, we use a mixture of 128 Gaussians. This number, 128, was chosen heuristically. It makes the method computationally tractable, and is sufficient for this demonstration of concept, but more Gaussians might be desired for a more final data product. We would ideally use the optimal number of Gaussians determined by cross validation, but preliminary tests using cross validation suggest the optimal number of Gaussians is very large.
+
 
 \section{Data and results}
 \begin{figure}
@@ -788,11 +790,6 @@ detail.
 \item[mixture of Gaussians] DWH
 \item[no physics] DWH
 \end{description}
-
-\subsection{Cross Validation}
-For generating our prior, we use a mixture of 128 Gaussians. This number, 128, was chosen heuristically. It makes the method computationally tractable, and is sufficient for this demonstration of concept, but more Gaussians might be desired for a more final data product. We would ideally use the optimal number of Gaussians determined by cross validation, but preliminary tests using cross validation suggest the optimal number of Gaussians is very large.
-
-\BLcomment{it's weird to end with these subsections. Cross-validation should go in the methods part (I think there is a flag there already), and the discussion of assumptions should go in the discussion. There should be a conclusion and look towards the future.}
 
 \section{Conclusion}
 If you want to read a conclusion, re-read the abstract!
