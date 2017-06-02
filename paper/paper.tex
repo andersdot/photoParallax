@@ -354,9 +354,8 @@ method that flows from them---in the discussion section below.
 \item[noise model] We assume that the \tgas\ parallax uncertainties dominate the
   noise in any estimates of absolute magnitude. We further assume that
   the parallax and color uncertainties are Gaussian in form with
-  correctly known variances. In detail, we assume that the [INSERT
-    CORRECT TERMINOLOGY FROM GAIA HERE] parallax uncertainty estimates
-  are correct. Here we are making use of the fact that, for
+  correctly known variances. In detail, we assume that the parallax uncertainty estimates, the "parallax_error" entry in the \gaia\ catalogue, are correct. 
+  Here we are making use of the fact that, for
   de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.
 \item[dust] We treat the \panstarrs-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
@@ -777,7 +776,7 @@ For generating our prior, we use a mixture of 128 Gaussians. This number, 128, w
 \BLcomment{it's weird to end with these subsections. Cross-validation should go in the methods part (I think there is a flag there already), and the discussion of assumptions should go in the discussion. There should be a conclusion and look towards the future.}
 
 \section{Conclusion}
-If you want a conclusion, re-read the abstract 
+If you want a conclusion, re-read the abstract
 
 
 \acknowledgments It is a pleasure to thank
