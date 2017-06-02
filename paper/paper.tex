@@ -824,8 +824,19 @@ detail, under the same set of assumption labels:
   forms, but they would be extremely expensive, computationally.
 \item[no physics] Although it is presented as an advantage of our
   method that we never make any use of physical models, it is also
-  brings some significant disadvantages: For example, the 
+  brings some significant disadvantages: For example, the \cmd\ contains
+  features that are obvious products of stellar evolution, but doesn't in
+  itself inform the theory or models of stellar evolution, because our
+  mixture-of-Gaussian \cmd\ model is divorced from any theoretical ideas
+  about stars. For another, stellar evolution models are in fact very
+  predictive and successful; our model does not capitalize in any way on
+  those successes. A next-generation model might be designed to be data-driven
+  but nonetheless capitalize on physics-driven successes. One framework
+  for that would be to fit not the \cmd\ but rather deviations of the \cmd\ away
+  from a good physics-based model prediction.
 \end{description}
+
+
 
 The outputs of this project include posterior pdfs for stellar parallaxes.
 It is tempting to treat these outputs as equivalent to some kind of catalog of
