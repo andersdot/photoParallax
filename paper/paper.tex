@@ -683,9 +683,9 @@ contributions before engaging with these outputs.
 \subsection{Comparison with other priors}
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{deltaSimple.png}
-\caption{Other example prior: The same visualization as Figure \ref{fig:delta} of the change in the posterior, but here, if instead of prior information containing the \cmd\, the prior information is an exponentially declining spatial density of stars.  }
-\label{fig:otherPrior}
+  \includegraphics[width=\textwidth]{comparePrior.png}
+\caption{Comparison with common prior: A visualization of the posterior pdf for a subsection of TGAS stars, shown as the expectation value and the sqrt of the variance as the uncertainty. On the left is the posterior pdf using our \cmd\ prior, and on the right is the posterior pdf when using the exponentially declining spatial density, a common prior used when inferring parallaxes. The scale of the exponentially declining spatial density prior is XXX, the optimal value found in YYY. Using the \cmd\ as a prior generates a posterior pdf that has smaller variance.}
+\label{fig:comparePrior}
 \end{figure}
 
 %How this compares to other Bayesian attempts at inferring distances,
@@ -775,6 +775,10 @@ detail.
 For generating our prior, we use a mixture of 128 Gaussians. This number, 128, was chosen heuristically. It makes the method computationally tractable, and is sufficient for this demonstration of concept, but more Gaussians might be desired for a more final data product. We would ideally use the optimal number of Gaussians determined by cross validation, but preliminary tests using cross validation suggest the optimal number of Gaussians is very large.
 
 \BLcomment{it's weird to end with these subsections. Cross-validation should go in the methods part (I think there is a flag there already), and the discussion of assumptions should go in the discussion. There should be a conclusion and look towards the future.}
+
+\section{Conclusion}
+Data driven prior of \cmd\ in parallax inference is a good idea 
+
 
 \acknowledgments It is a pleasure to thank
   Ana Bonaca (Harvard),
