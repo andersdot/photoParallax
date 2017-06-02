@@ -510,7 +510,7 @@ Should I quote some statistics about the dust corrections? mostly small? maybe d
 
 \subsection{prior}
 Using \xd\ and the MML method described in the methods section, we generate our prior shown in Figure \ref{fig:prior}.
-This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution. 
+This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
 
 \BLcomment{Figure \ref{fig:prior} needs to be discussed here or in a separate subsection. I also find that it is the right place to discuss its features. I find it strange to discuss the posterior parallaxes without describing the prior.}
 
@@ -695,7 +695,18 @@ contributions before engaging with these outputs.
 %How this compares to other Bayesian attempts at inferring distances,
 %like, eg, the Tri--Coryn papers. Favorably! And with \emph{fewer}
 %assumptions, in fact! What form should this comparison be in?
-There are other options for prior information when inferring distances to stars. One option is the exponentially declining spatial density of stars (cite: Tri, CBJ). It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth. It is a fairly weak prior. It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax. It is a fairly broad prior so the median \gaia\ star has a posterior variance equal to the likelihood variance. It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes. Given this prior, what does the observed \cmd\ look like?  The \cmd\ is broad and the red clump highly stretched.
+There are other options for prior information to include when inferring distances to stars.
+One option is the exponentially declining spatial density (EDSD) of stars \citep{astraatmadja16a}.
+It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth.
+It is a fairly weak prior.
+It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax.
+A comparison of the posteriors using the two different priors, our \cmd\ prior and the EDSD, is shown in Figure \ref{fig:comparePrior}.
+Here the parallax posterior pdf expectation value and square root of the variance is converted into an absolute magnitude and visualized as the \cmd.
+The left panel visualizes results using our \cmd\ prior, and the right panel visualizes results using the EDSD prior. 
+The variance for the \cmd\ prior is significantly smaller than the variance for the EDSD prior.
+In general, it is a fairly broad prior so the median \gaia\ star has a posterior variance equal to the likelihood variance.
+It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes.
+%LMA: chat about bias?
 
 
 \subsection{What's That Feature?}
