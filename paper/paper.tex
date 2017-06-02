@@ -500,7 +500,7 @@ In other words, the features of our inferred \cmd\ are conservatively broad (bro
 
 LMA: Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
 
-\subsection{prior}
+\subsection{XD-generated Prior}
 Using \xd\ and the MML method described in the methods section, we generate the prior. This is shown in Figure \ref{fig:prior}.
 This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
 \begin{figure}
@@ -522,12 +522,20 @@ This is further illustrated in Figure~\ref{fig:delta}, where we show the fractio
 Those typically are the regions with the largest photometric and parallax errors, for the faintest objects.
 This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 
-%\begin{figure}
-%\centering
-%  \includegraphics[width=\textwidth]{priorNgaussComparison.png}
-%\caption{Prior: the XD generated mixture of gaussians we use as our prior. To determine the number of gaussians we used cross validation, using 70\% of our %sample as a training set and 30\% as the test set. Increasing the number of gaussians we used continued to increase the likelihood of the test set of data, %showing that we are no over fitting. Using more gaussians as our prior did not substantially change our posterior results, but it did start to highlight the %features of the CMD.}
-%\label{fig:priorCompare}
-%\end{figure}
+\subsection{Data products}
+
+The method produces a mixture-of-Gaussian parallax posterior pdf for every
+star in the intersection of \tgas, \tmass, and the dust map.
+Associated with this paper is an electronic table containing our results, and everything
+that is necessary to use them responsibly.
+It includes the \tgas\ identifier, the \gaia\ identifier, sky position, and dust-corrected
+photometry.
+It contains posterior expectations and variances for the stellar parallax.
+It also contains the full posterior pdf for each star, in the form of a set of pdf values,
+evaluated on a common grid in parallax.
+Because all of the data are public, and all of the code used for this project is available
+publicly under an open-source license, power users can generate any of the figures in this
+paper or any other data outputs straightforwardly.
 
 \begin{figure}
 \centering
