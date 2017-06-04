@@ -94,11 +94,12 @@ million \tgas\ stars, are available in companion electronic tables.
 
 \section{Introduction}
 
-The \gaia\ Mission (\citealt{gaia16}) will deliver more than a billion stellar parallax measurements.
+The \gaia\ Mission (\citealt{gaia16}) will soon deliver more than a billion
+stellar parallax measurements.
 Only a small fraction (but large number) of these
 measurements will be both precise and purely astrometric.
-\gaia\ will use astrometric parallax to determine the distances of the more precise
-stars, and then calibrate spectrophotometric models.
+\gaia\ will use astrometric parallaxes to determine the distances of the more
+precise stars, and then calibrate spectrophotometric models.
 These spectrophotometric models, in turn, along with \gaia's on-board
 low-resolution $B_p\,R_p$ spectrophotometry, are used to provide
 parallax estimates to less precise stars.
@@ -154,11 +155,10 @@ When using physical models, it is impossible to deliver photometric parallax est
 
 However, the use of physical models for distance estimation is not necessary.
 It is possible to build a stellar photometric model from the data themselves,
-because there are stars at all luminosities with useful parallax information,.
+because there are stars at all luminosities with useful parallax information.
 One challenge is that different stars are observed at different levels of parallax precision,
 so it requires relatively sophisticated technology to build this data-driven model
-using all the data available, fairly and responsibly.
-Luckily, we have this technology!
+using all of the data available, fairly and responsibly.
 
 Here we build and use just such a data-driven model to infer more precise parallaxes for each star.
 In particular, we use all of the \gaia\ \tgas\ data (\citealt{tgas};
@@ -194,11 +194,10 @@ Technically, since \xd\ produces a maximum-marginalized-likelihood estimator
 of the deconvolved distribution,
 its use as a prior is technically using the data twice and is therefore only approximately valid.
 However, since the data set is large, the \xd\ approximation is not bad; it is
-sometimes known as the ``empirical Bayes'' method, and is well studied\footnote{For a start, try \url{https://en.wikipedia.org/wiki/Empirical_Bayes_method}.}.
+sometimes known as the ``empirical Bayes'' method, and is well studied.\footnote{For a primer on ``empirical Bayes'', see \url{https://en.wikipedia.org/wiki/Empirical_Bayes_method}.}
 
-It wouldn't be using the data twice---that is, it would be valid from a
-probabilistic perspective---if we performed a full hierarchical Bayesian
-inference.
+A probabilistically valid approach that wouldn't re-use the data is to perform
+a full hierarchical Bayesian inference.
 Exploration of that possibility, and its computational tractability,
 is among our long-term goals and motivations.
 Along those lines, this paper can be seen as a companion to a related
@@ -232,7 +231,7 @@ We have to use photometry that is ground-based, rather than the full-precision,
 space-based photometry that the \gaia\ Mission will deliver.
 However, as we show below, we get very good results in terms of parallax precision.
 It is promising that we will be able to obtain even better results
-in later \gaia\ data releases, and eventually put distances on $>10^9$
+using later \gaia\ data releases, and eventually infer distances for $>10^9$
 \gaia\ stars using photometric parallax methodologies but without any
 commitment to---or even use of---physical models of stars or the Milky Way.
 
