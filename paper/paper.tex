@@ -239,19 +239,20 @@ commitment to---or even use of---physical models of stars or the Milky Way.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{toy.png}
-\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper right and lower left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower right panel shows the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
+\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
 \label{fig:toy}
 \end{figure}
 
-In this paper we use the noise deconvolved observed \cmd\ as a prior to infer more precise parallax pdfs from \gaia\ measurements.
-Understanding this method is challenging because we are using the data both for the prior and the likelihood in our inference.
-To ease understanding, here we will demonstrate this method with a simpler toy model.
-Instead of inferring more precise parallax pdfs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer more precise pdfs of the value $Y$.
-We will do this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the y-direction, with a running mean $\mu = mx + b$ and some thickness $t$.
-Here the thickness of the toy distribution mimics the true thickness of the \cmd\ due to age, mass and metallicity.
-The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in Figure \ref{fig:toy}, upper left panel.
-Similarly, noisy samples from this distribution are shown in the upper right panel.
-Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample of the distribution, from $y_n$, a noisy sample of the distribution.
+In this paper we use the noise-deconvolved \cmd\ as a prior to infer more precise parallax probability distribution functions (pdfs) from \gaia\ measurements.
+Understanding the validity of this method can be challenging because we are using the data both for the prior and the likelihood in our inference.
+To ease understanding, here we demonstrate the generaly methodology using a
+simpler toy model with simulated data.
+Instead of inferring parallax pdfs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior pdfs of the value $Y$.
+We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the y-direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
+Here the thickness of the toy distribution mimics the true thickness or intrinsic scatter of the \cmd\ due to age, mass, and metallicity.
+The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel.
+Similarly, noisy samples from this distribution are shown in the upper-right panel.
+Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample from the distribution, from $y_n$, a sample from the noise distribution.
 
 Setting up the problem in more detail, we have the true samples from the underlying distribution and the noisy samples
 \begin{eqnarray}
@@ -259,20 +260,20 @@ y_{\true, n} \, &=& \, m_{\true}\,x_n + b_{\true} + \Delta_n \\
 y_n \, &=& \, y_{\true,n} + \epsilon_n \quad,
 \label{eq:ytrue}
 \end{eqnarray}
-where $\Delta_n$ is drawn from the Gaussian function $\mathcal{N}(\Delta_n \given 0, t^2)$, and $\epsilon_n$ is drawn from the Gaussian function $\mathcal{N}(\epsilon_n \given 0, \sigma_n^2)$, so $\sigma_n$ is the measurement uncertainty.
-These represent true and noisy draws from a distribution that is a straight line with some thickness $t$, and are visualized in the upper panels of Figure \ref{fig:toy}
-The upper left shows 1024 realizations of the true values, and the upper right, as well as lower left, show 1024 realizations of the noisy values $y_n$ and their associated measurement uncertainties $\sigma_n$ as the grey points. Here we highlight 5 random points in black to highlight the method, but the same method is being applied to all the data.
+where $\Delta_n$ is drawn from the Gaussian function $\mathcal{N}(\Delta_n \given 0, t^2)$---which accounts for the intrinsic width---and $\epsilon_n$ is drawn from the Gaussian function $\mathcal{N}(\epsilon_n \given 0, \sigma_n^2)$---the noise distribution---so $\sigma_n$ is the measurement uncertainty.
+These represent true and noisy draws from a distribution that is a straight line with some thickness $t$, and are visualized in the upper panels of \figurename~\ref{fig:toy}.
+The upper-left shows 1024 realizations of the true values, and the upper-right, as well as lower-left, show 1024 realizations of the noisy values $y_n$ and their associated measurement uncertainties $\sigma_n$ as the grey points; we highlight 5 random points in black.
 
-To infer a pdf of the true y value for each measured y value we need a prior. For our prior we will use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy y data themselves.
-We learn the noise-deconvolved function using marginalized maximum likelihood estimation (MML), which marginalizes over the true data values (we never need to know them) and maximizes the likelihood of the data. Here our likelihood for each individual datum is
+To infer a posterior pdf of the true $y$ value for each measured $y$ value we need a prior. We use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy $y$ data themselves.
+We learn the noise-deconvolved function using marginalized, maximum-likelihood estimation (MMLE), which marginalizes over the true data values and maximizes the likelihood of the data. Here our likelihood for each individual datum is
 \begin{eqnarray}
 p(y_n \given m, b, t^2, \sigma_n^2) \ &=& \ \int \mathcal{N}(y_n \given y_{\true,n}, \sigma_n^2) \, \mathcal{N}(y_{\true,n} \given m\,x_n + b, t^2 ) \, \mathrm{d}y_{\true, n} \\
 &=&  \ \mathcal{N}(y_n \given m\,x_n + b, t^2 + \sigma_n^2) \quad,
 \label{eq:toyLike}
 \end{eqnarray}
-where we have marginalized over the true sample $y_{\true, n}$. The resulting likelihood is a Gaussian because the noise model is a Gaussian. The likelihood of the full data set is then the product of the individual likelihoods
+where we have marginalized over the true sample $y_{\true, n}$. The resulting likelihood is a Gaussian because the noise model and our assumptions about the intrinsic width are both Gaussian. The likelihood of the full data set $\{y_n\}$ is then the product of the individual likelihoods
 \begin{equation}
-\prod_n\, p(y_n \given m, b, t^2, \sigma_n^2) \quad .
+p(\{y_n\} \given m, b, t^2, \sigma_n^2) = \prod_n\, p(y_n \given m, b, t^2, \sigma_n^2) \quad .
 \label{eq:toyLikeFull}
 \end{equation}
 Maximizing this joint likelihood of all the data is the same as minimizing
@@ -282,33 +283,33 @@ Maximizing this joint likelihood of all the data is the same as minimizing
 \label{eq:chisq}
 \end{equation}
 
-This MML gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In Figure \ref{fig:toy}, lower left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the red lines, and the best fit MML functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the blue lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
+The MMLE gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In \figurename~\ref{fig:toy}, lower-left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the red lines, and the best fit MMLE functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the blue lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
 
 Here is a good point to step back and acknowledge that our method is a
-bit strange. We are using the set of data to determine the
-noise-deconvolved distribution, which is an estimate of the true
-distribution, and then using that noise-deconvolved distribution to
-make inferences on the data. We are technically using the data
+bit strange. We are using the data to determine the
+noise-deconvolved distribution (an estimate of the true
+distribution), and then using that noise-deconvolved distribution to
+make inferences about the data. We are technically using the data
 twice! To be fully, technically correct, we should \emph{either} learn the true
 distribution while leaving one datum out, the one datum we want to
-infer the true y value for, or else go to full hierarchical Bayesian inference,
+infer the true y value for, or else perform a full hierarchical Bayesian inference,
 in which we treat the \cmd\ parameters probabilistically along with everything else.
-With large data sets, the MML or Empirical Bayes approximation is safe,
+With large data sets, the MMLE or Empirical Bayes approximation is safe,
 in some sense because no individual data point makes a large difference to
 the inference.
 
-Returning the inference:
-We use Bayes theorem to turn the likelihood of the noisy data into a posterior believe over the true y value.
+Returning to the inference:
+We use Bayes' theorem to turn the likelihood of the noisy data into a posterior belief over the true $y$ value:
 \begin{eqnarray}
 p(y_{\true,n} \given y_n, \tilde{\sigma}_n) &=& p(y_n \given y_{\true,n}, \sigma_n)\,p(y_{\true,n}) \\
 \mathrm{where}\;p(y_n \given y_{\true,n}, \sigma_n) &=& \mathcal{N}(y_n \given y_{\true,n}, \sigma_n) \\
 \mathrm{and}\;p(y_{\true,n}) &=& \mathcal{N}(y_{\true,n} \given \hat{m}\, x_n + \hat{b}, \hat{t})
 \label{eq:toyBayes}
 \end{eqnarray}
-Since everything is Gaussian, this can be done analytically by multiplying Gaussians together. In Figure \ref{fig:toy} lower left panel, the blue points represent the posterior belief of the true value $p(y_{\true,n} \given y_n, \tilde{\sigma}_n)$ for the highlighted black points. The red points are the associated true y values.
-In Figure \ref{fig:toy}, lower right panel, the blue points show the expectation value and $1\sigma$ uncertainty of the posterior belief for all 1024 $y_n$.
+In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs of the true values $y_{\true,n}$ for the 5 highlighted black points from the upper-right panel. The red points are the associated true $y$ values.
+In the lower-right panel of \figurename~\ref{fig:toy}, the blue points show the expectation value and $1\sigma$ uncertainty of the posterior belief for all 1024 $y_n$.
 When the true values are inferred in this way, the associated variance $\tilde{\sigma}_n^2$ is the convolution of the true distribution variance, $t^2$, and the measurement variance, $\sigma_n^2$.
-The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MML distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true y value by inferring each true y value from the measured y value and using an estimate of the true distribution the measured y value was drawn from as the prior.
+The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MMLE distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true y value by inferring each true y value from the measured y value and using an estimate of the true distribution the measured y value was drawn from as the prior.
 
 In detail, the posterior points shown in the lower-right panel of
 Figure~\ref{fig:toy} look more concentrated (vertically) than the true
@@ -479,7 +480,7 @@ with $f(\varpi_{true})$ being a window function to insure $\varpi_{\true}$ is po
 \label{fig:data}
 \end{figure}
 
-We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observing footprint of \panstarrs\ to access the Greene 3D dust model. We require the photometry have real values, and nonzero, real errors, and remove a small selection of \tmass\ stars that have zero color and zero J band magnitude. The full data set is visualized in the \cmd\ in Figure \ref{fig:data}. The left panel shows the point estimates of the color and absolute magnitude, using the point estimate of the parallax from \gaia, and the $1\sigma$ and $2\sigma$ contours of the distribution. The right panel shows a subset of the data with it's associated error bars. The uncertainties in the colors are fairly well behaved, but the large uncertainties in the absolute magnitude are due to the large uncertainties in the parallax measurements.
+We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observing footprint of \panstarrs\ to access the Greene 3D dust model. We require the photometry have real values, and nonzero, real errors, and remove a small selection of \tmass\ stars that have zero color and zero J band magnitude. The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}. The left panel shows the point estimates of the color and absolute magnitude, using the point estimate of the parallax from \gaia, and the $1\sigma$ and $2\sigma$ contours of the distribution. The right panel shows a subset of the data with it's associated error bars. The uncertainties in the colors are fairly well behaved, but the large uncertainties in the absolute magnitude are due to the large uncertainties in the parallax measurements.
 
 \subsection{Dust}
 
@@ -521,7 +522,7 @@ probabilistic dust model. We apply each light dust correction to our
 cite{schlafly11}. We then regenerate our prior using the lightly dust
 corrected photometry. The dust values we obtain in our final
 iteration, and which we apply to our photometry, are visualized in
-galactic coordinates in Figure \ref{fig:dust}. After applying a dust
+galactic coordinates in \figurename~\ref{fig:dust}. After applying a dust
 correction, we do not update the uncertainties, but keep them the same
 as before the dust correction, which is wrong and under representing
 our uncertainties but this leads, again, to a lighter
@@ -544,8 +545,8 @@ corresponding dust to become more consistent with the \cmd.
 Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
 
 \subsection{XD-generated Prior}
-Using \xd\ and the MML method described in the methods section, we generate the prior. This is shown in Figure \ref{fig:prior}.
-This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in Figure \ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
+Using \xd\ and the MMLE method described in the methods section, we generate the prior. This is shown in \figurename~\ref{fig:prior}.
+This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in \figurename~\ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{prior_ngauss128.png}
@@ -628,7 +629,7 @@ So it is a great test case for comparing parallax inferences with or without a p
 We made a window of 1 square degree on the sky with the cluster M67 lying in the middle.
 The cluster is visibly obvious as a clustering of stars in a visualization of the \gaia\ data on the 2D sky.
 With our converged dust values, and its associated prior, we calculate the posterior over $\varpi_{\true}$ for each star within this window on the sky around M67.
-Figure \ref{fig:m67} shows the comparison of the likelihoods and posteriors.
+\figurename~\ref{fig:m67} shows the comparison of the likelihoods and posteriors.
 The vertical lines bracket the previously measured parallaxes of, or distances to, the cluster.
 The likelihoods of the observed parallaxes, shown in the top row, are broad and the cluster is not obvious at all.
 The posterior pdf, shown in the bottom row, are more sharply peaked at the previously determined distance to the cluster, the vertical lines, for far more stars than the likelihoods.
@@ -700,7 +701,7 @@ One option is the exponentially declining spatial density (EDSD) of stars \citep
 It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth.
 It is a fairly weak prior.
 It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax.
-A comparison of the posteriors using the two different priors, our \cmd\ prior and the EDSD, is shown in Figure \ref{fig:comparePrior}.
+A comparison of the posteriors using the two different priors, our \cmd\ prior and the EDSD, is shown in \figurename~\ref{fig:comparePrior}.
 Here the parallax posterior pdf expectation value and square root of the variance is converted into an absolute magnitude and visualized as the \cmd.
 The left panel visualizes results using our \cmd\ prior, and the right panel visualizes results using the EDSD prior.
 The variance for the \cmd\ prior is significantly smaller than the variance for the EDSD prior.
@@ -709,7 +710,7 @@ It has the largest effect on the most noisy and negative parallaxes, and has the
 
 \subsection{What's That Feature?}
 The denoised expectation values of the parallax projected into the \cmd\ show interest features.
-We visualize this \cmd\ again in Figure \ref{fig:wtf} pointing out some interesting features.
+We visualize this \cmd\ again in \figurename~\ref{fig:wtf} pointing out some interesting features.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{whatsThatFeature.pdf}
