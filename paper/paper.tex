@@ -379,7 +379,6 @@ method that flows from them---in the discussion section below.
 \end{description}
 
 \subsection{Setting up the Inference}
- \emph{Think about presentation, prioritizing/highlighting prior but logically building it from an full inference perspective and needing a prior, then dive into prior stuff. It's confusing right now jumping between inference and prior building !!}
 
 Under these assumptions, we would like to infer the true parallax, $\varpi_{\true}$, for each star given its measured parallax, $\varpi$, and associated uncertainty, $\sigma_{\varpi}$, from \tgas.
 A first application of Bayes theorem leads to
@@ -397,16 +396,17 @@ The tight correlation of the \cmd\ benefits our inference because the luminosity
 We include this in the inference by using the \cmd\ as part of our prior for $\varpi_{\true}$.
 Specifically, we use the \cmd\ generated from the data themselves, as detailed in the next section.
 
-Equation~\ref{eq:bayes} is too simplistic to describe this procedure.
-Because our prior is the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. Specifically, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{true}_n$ color and the $J$ band absolute magnitude $M^{true}_{J,n}$ for each star, which we encapsulate in the true vector $\mathbf{Y}$. The observed data is the dust corrected color $(J-K)^c_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^c_n$, which we encapsulate in the data vector $\mathbf{y}$.
+Equation~\ref{eq:bayes} does not fully specify this procedure.
+Because our prior comes from the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. Specifically, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{true}_n$ color and the $J$ band absolute magnitude $M^{true}_{J,n}$ for each star, which we encapsulate in the true vector $\mathbf{Y}$. The observed data is the dust corrected color $(J-K)^c_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^c_n$, which we encapsulate in the data vector $\mathbf{y}$.
 
 We now describe a singularity of our method, which allows us to conservatively deconvolve the data into a \cmd\ prior without requiring a full hierarchical inference framework (which was explored in \citealt{leistedtHogg2017}).
 Instead of transforming the parallax and apparent magnitude into an absolute magnitude, the data vector $\mathbf{y}$ contains a transformation of the dust corrected absolute magnitude
 \begin{equation}
-y_0 = \varpi\,10^{0.2J^c_n} = 10^{0.2\,M^c_{J,n} + 2}
+y_0 = \varpi\,10^{\frac{1}{5}\,J^c_n} = 10^{\frac{1}{5}\,M^c_{J,n} + 2}
 \label{eq:transform}
 \end{equation}
-The transformation of the dust corrected absolute magnitude is required to to keep the uncertainties Gaussian, which, under some assumptions along with this transformation, we maintain. Gaussian uncertainties are required to generate our prior using \xd, but more about this and our dust corrections below.
+where, for this expression, it is important to remember that $\varpi$ is assumed to be in units of $[mas]$.
+The transformation of the dust corrected absolute magnitude is required to to keep the uncertainties Gaussian, which, under some assumptions along with this transformation, we maintain (Gaussian uncertainties are required to use \xd, see below).
 Our prior assumptions $I$ are the uncertainties in each of these measurements, as well as the 3D dust map. So our full terminology is
 \begin{equation}
 \begin{aligned}
@@ -420,7 +420,7 @@ Our prior assumptions $I$ are the uncertainties in each of these measurements, a
 \end{equation}
 where $E(B-V)_n$ is the output of the dust model of \cite{green15}, and $Q_{\lambda}$ is the correction factor for a photometric band assuming some reddening law.
 
-We assume that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood of the $n$th star is
+We assume that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood for the $n$th star is
 \begin{equation}
 p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) = \mathcal{N}(\mathbf{y}_n \given \mathbf{Y}_n, V_n)
 \end{equation}
@@ -428,32 +428,31 @@ with \\
 \[
 V_n = \begin{bmatrix}
 \sigma_{J,n}^2 + \sigma_{K,n}^2 & 0 \\
-0 & (\sigma_{\varpi}\,10^{0.2\,J_n^C})^2
+0 & \left(\sigma_{\varpi}\,10^{0.2\,J_n^C}\right)^2
 \end{bmatrix}
 \]
-where $\mathcal{N}$ is a 2D Gaussian function with mean $\mathbf{Y}$ and variance $V_n$.
-Here we have assumed that the parallax uncertainty is significantly larger than the $J$ band uncertainty, and therefore the dominant uncertainty in the transformed absolute magnitude. So we take $J_n^C$ as a point estimate and only propagate the parallax uncertainty.
+where $\mathcal{N}(\boldsymbol{\mu}, \mathbf{\Sigma})$ represents a normal distribution with mean vector $\boldsymbol{\mu}$ and covariance matrix $\mathbf{\Sigma}$.
+Here we have assumed that the parallax uncertainty is significantly larger than the $J$-band magnitude uncertainty and is therefore the dominant uncertainty in the transformed absolute magnitude. We take $J_n^C$ as a point estimate and only propagate the parallax uncertainty.
 
-We can now write the multidimensional analogous to Equation \ref{eq:bayes},
+We can now write the multidimensional posterior expression analogous to Equation~\ref{eq:bayes},
 \begin{equation}
-p(\mathbf{Y}_n \given \mathbf{y}_n, I_n) = p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) \, p(\mathbf{Y}_n) \label{eq:posterior}
+p(\mathbf{Y}_n \given \mathbf{y}_n, I_n) \propto p(\mathbf{y}_n \given \mathbf{Y}_n, I_n) \, p(\mathbf{Y}_n) \label{eq:posterior}
 \end{equation}
 where $p(\mathbf{y}_n \given \mathbf{Y}_n, I_n)$ is the likelihood of the data vector, and $p(\mathbf{Y}_n)$ is our prior.
-Before we describe how this can be turned into a posterior belief on the true parallax, we turn our attention to the prior, which will be generated from the data themselves. We will use XD, which will take advantage of the Gaussian likelihood.
+Before we describe how this can be turned into a posterior belief on the true parallax, we turn our attention to the prior, which will be generated from the data themselves. For this, we use XD, which takes advantage of the Gaussian likelihood.
 
 \subsection{Generating the Prior}
 
-To generate our prior $p(\mathbf{Y}_n)$, we fit our data in the slightly transformed \cmd\ space using \xd, which deconvolves the data $\{ \mathbf{Y}_n \}$ with its uncertainties $\{ V_n\}$, which are Gaussian, heterogeneous measurement uncertainties. It generates an estimate of the underlying distribution from which the uncertain data were drawn from, modeled as a mixture of $K$ Gaussians:
+To generate the empirical prior $p(\mathbf{Y}_n)$, we fit our data in the transformed \cmd\ space (see previous sub-section) using \xd, which deconvolves the data $\{ \mathbf{Y}_n \}$ with heterogeneous, Gaussian noise variances $\{ V_n\}$. \xd\ generates an estimate of the underlying distribution from which the uncertain data were drawn, modeled as a mixture of $K$ Gaussians:
 \begin{equation}
-	p\bigl(\ \mathbf{Y} \given  \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K \mathrm{amp}_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
+	p\bigl(\ \mathbf{Y} \given  \left\{A_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \bigr) = \sum_{k=1}^K A_k \ \mathcal{N}(\mathbf{Y} \given \mathbf{\mu}_k, V_k )
 \end{equation}
-where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ \mathrm{amp}_k \}$.
+where $\mathbf{\mu}_k$ and $V_k$ are a two dimensional vector and matrix, respectively, which correspond to the location and covariance of the $k$th component (a Gaussian in our transformed \cmd\ space). The relative amplitudes between the components are described by the scalars $\{ A_k \}$.
 
-Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelihood of the data, marginalizing over the true data. In equations, it finds the coefficients
+Given the data $\{ \mathbf{Y}_n, V_n\}$, \xd\ maximizes the marginalized likelihood of the data, marginalizing over the true data. Assuming $\alpha = \left\{A_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K$, it finds the coefficients
 \begin{eqnarray}
-\alpha &=& \left\{\mathrm{amp}_k, \mathbf{\mu}_k, V_k\right\}_{k=1}^K \nonumber\\
-       &=& \argmax_{\alpha} \, \Pi_n \, p(\mathbf{y}_n \given \alpha) \nonumber\\
-       &=& \argmax_{\alpha} \, \Pi_n \, \int p(\mathbf{y}_n \given \mathbf{Y}_n) \, p(\mathbf{Y}_n \given \alpha)\mathrm{d\mathbf{Y}_n}
+\hat{\alpha} &=& \argmax_{\alpha} \, \prod_n \, p(\mathbf{y}_n \given \alpha) \nonumber\\
+             &=& \argmax_{\alpha} \, \prod_n \, \int p(\mathbf{y}_n \given \mathbf{Y}_n) \, p(\mathbf{Y}_n \given \alpha)\mathrm{d\mathbf{Y}_n}
 \label{eq:xdmml}
 \end{eqnarray}
 which is made analytically tractable with the Gaussian likelihood and mixture-of-Gaussians prior \citep{bovy11}.
