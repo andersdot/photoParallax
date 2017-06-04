@@ -53,28 +53,31 @@
 %\affil{Department of Astronomy and Astrophysics, University of Toronto, 50 St. George Street, Toronto, ON M5S 3H4, Canada}
 
 \begin{abstract}\noindent % trust me
-Conversion of a noisy parallax measurement into a posterior
-belief over distances requires inference with a prior.
-Usually this prior represents some kind of belief about the Milky Way.
-However, there is multi-band photometry for a large fraction of the
-\gaia\ \tgas\ Catalog from imaging surveys;
-this imaging is incredibly informative about stellar distances.
-Here we use color information for $1.2$ million \tgas\ stars
-from \tmass\ to build a noise-deconvolved empirical prior distribution for stars in color--magnitude space.
-This data-driven model contains no knowledge of the physics of stellar interiors or photospheres, nor of the Milky Way, but rather derives its precision from its generative model of noisy parallax measurements and an assumption of stationarity.
-We use the Extreme Deconvolution (\xd) algorithm, which is an Empirical Bayes approximation to a full hierarchical model of the true parallax and photometry of every star.
-The algorithm is run not in absolute-magnitude space but in a
-transformed space where the measurement uncertainty is close to Gaussian.
-The \xd-optimized prior is used to perform parallax inferences for every star, yielding a precise photometric parallax estimate and uncertainty (and full posterior) for every star.
-Our posterior photometric parallax estimates are more precise than the
-\tgas\ catalog entries by a median factor of 1.2, and 14 percent
-are more precise by a factor $>2$. They are also more precise than
-previous examples of Bayesian distance estimates using a spatial prior.
-We independently validate our parallax inferences distances by looking
-at members of Milky Way star cluster M67, which is not visible as a
-cluster in the \tgas\ parallax estimates, but appears clearly as a
-cluster in our posterior parallax estimates.
-All our results, including a posterior parallax and distance sampling for 1.4 million \tgas\ stars, are available in companion electronic tables.
+Converting a noisy parallax measurement into a posterior
+belief over distance requires inference with a prior.
+Usually this prior represents beliefs about the stellar density distribution of
+the Milky Way.
+However, multi-band photometry exists for a large fraction of the
+\gaia\ \tgas\ Catalog and is incredibly informative about stellar distances.
+Here we use \tmass\ colors for $1.2$ million \tgas\ stars to build a
+noise-deconvolved empirical prior distribution for stars in color--magnitude
+space.
+This data-driven model contains no knowledge of stellar astrophysics or the
+Milky Way, but rather derives its precision from its generative model of noisy
+parallax measurements and an assumption of stationarity.
+We use the Extreme Deconvolution (\xd) algorithm---an approximation to a full
+hierarchical model of the true parallax and photometry of every star---to
+construct this prior.
+The \xd-optimized prior is used to infer a precise photometric parallax estimate
+and uncertainty (and full posterior) for every star.
+Our parallax estimates are more precise than the \tgas\ catalog entries by a
+median factor of 1.2 (14\% are more precise by a factor $>2$) and are more
+precise than previous Bayesian distance estimates that use spatial priors.
+We validate our parallax inferences using members of the Milky Way
+star cluster M67, which is not visible as a cluster in the \tgas\ parallax
+estimates, but appears as a cluster in our posterior parallax estimates.
+Our results, including a posterior parallax and distance sampling for 1.4
+million \tgas\ stars, are available in companion electronic tables.
 \end{abstract}
 
 \keywords{
@@ -87,8 +90,6 @@ All our results, including a posterior parallax and distance sampling for 1.4 mi
   parallaxes
   ---
   stars: distances
-  ---
-  stars: statistics
 }
 
 \section{Introduction}
