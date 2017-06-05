@@ -664,8 +664,8 @@ Our prior is not only making parallaxes more precise but also (possibly) increas
 \section{Discussion}
 
 We have shown that it is possible to obtain photometric parallaxes for
-distant stars in the \gaia\ \tgas\ data without any use of physical stellar
-models, nor models of the Milky Way.
+distant stars in the \gaia\ \tgas\ catalog without any use of physical stellar
+models, nor stellar density models of the Milky Way.
 We used the geometric parallaxes to calibrate a photometric
 model that is purely statistical, which is a model of the data rather than
 a model of stars \foreign{per se}.
@@ -699,10 +699,10 @@ This deconvolution, using a reasonable noise model and an
 assumption of stationarity, shrinks the parallax uncertainties, most dramatically for the stars measured at lower signal-to-noise.
 Because the method we use, \xd, which is
 an Empirical Bayesian maximum-marginalized-likelihood estimator, accounts for
-heteroskedastic noise, we were able to build our photometric parallax
+heteroskedastic noise, we are able to build our photometric parallax
 model---which is a model of the \cmd---using
 all the data, not just the data with the highest signal-to-noise.
-So, the model for the \cmd\ we built is representative for
+So, the generated model for the \cmd\ is representative for
 our subset of the \tgas\ Catalog.
 Because our model is representitive of our full subset catalog, we expect any (sensible) parallax estimates
 we generate from our parallax posterior pdfs to be only weakly biased.
@@ -711,16 +711,16 @@ we generate from our parallax posterior pdfs to be only weakly biased.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{comparePrior.png}
-\caption{Comparison with common prior: A visualization of the posterior pdf for a subsection of TGAS stars, shown as the expectation value and the sqrt of the variance as the uncertainty. On the left is the posterior pdf using our \cmd\ prior, and on the right is the posterior pdf when using the exponentially declining spatial density, a common prior used when inferring parallaxes. The scale of the exponentially declining spatial density prior is 1.35 kpc, the optimal value found in \cite{astraatmadja16a}. Using the \cmd\ as a prior generates a posterior pdf that has smaller variance.}
+\caption{Comparison with a common spatial prior: A visualization of the posterior pdf for a subsection of \tgas\ stars, shown as the expectation value and the sqrt of the variance as the uncertainty. Left panel shows the posterior pdf using our \cmd\ prior, right panel shows the posterior pdfs when using the exponentially declining spatial density, a common space-density prior used when inferring distances. The scale of the exponentially declining spatial density prior is $1.35~{\rm kpc}$, the optimal value found in \cite{astraatmadja16a}. Using the \cmd\ as a prior generates a posterior pdf that has smaller variance.}
 \label{fig:comparePrior}
 \end{figure}
 
 There are other options for prior information to include when inferring distances to stars.
 One option is the exponentially declining spatial density (EDSD) of stars \citep{astraatmadja16a}.
-It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so the posteriors are also very smooth.
+It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so that the posteriors are also very smooth.
 It is a fairly weak prior.
 It sets a smooth scale distance beyond which the posterior struggles to maintain much probability, and also converts a negative parallax likelihood into a posterior of very small parallax.
-A comparison of the posteriors using the two different priors, our \cmd\ prior and the EDSD, is shown in \figurename~\ref{fig:comparePrior}.
+\figurename~\ref{fig:comparePrior} shows a comparison of the EDSD prior with our \cmd\ prior.
 Here the parallax posterior pdf expectation value and square root of the variance is converted into an absolute magnitude and visualized as the \cmd.
 The left panel visualizes results using our \cmd\ prior, and the right panel visualizes results using the EDSD prior.
 The variance for the \cmd\ prior is significantly smaller than the variance for the EDSD prior.
@@ -728,8 +728,7 @@ In general, it is a fairly broad prior so the median \gaia\ star has a posterior
 It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes.
 
 \subsection{What's That Feature?}
-The denoised expectation values of the parallax projected into the \cmd\ show interest features.
-We visualize this \cmd\ again in \figurename~\ref{fig:wtf} pointing out some interesting features.
+The denoised expectation values of the parallax projected into the \cmd\ show many interesting and familiar features; we visualize this \cmd\ again in \figurename~\ref{fig:wtf} and highlight some of these features.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{whatsThatFeature.pdf}
@@ -739,13 +738,13 @@ We visualize this \cmd\ again in \figurename~\ref{fig:wtf} pointing out some int
 
 The lower main sequence is very narrow while the upper main sequence
 is much wider. This may be an age variation on the main sequence mixed
-with a malmquist bias of seeing a much larger volume of upper main
+with a Malmquist bias of seeing a much larger volume of upper main
 sequence stars. There is a plausible binary sequence of stars with
 about twice the brightness as the main sequence. The helium burning
 red clump is prominent for the volume DR1 probed, and the red giant
 branch is fairly straight and narrow. The main sequence turn off is
 noticeable and also surprisingly narrow, possibly a reflection of the
-star formation history of the local volume also mixed with a malmquist
+star formation history of the local volume also mixed with a Malmquist
 bias.
 
 \subsection{Critical discussion of assumptions}
@@ -763,14 +762,14 @@ detail, under the same set of assumption labels:
   This isn't precisely true because nearby stars in \tgas\ are
   mostly main sequence stars, while we can see luminous giants to much larger
   distances. So the red giant branch is a population of
-  relatively lower signal to noise objects compared with the main
+  relatively lower signal-to-noise objects compared with the main
   sequence. This does not violate the stationarity assumption in
-  detail, because the low and high signal to noise objects have to be
+  detail, because the low and high signal-to-noise objects have to be
   drawn from the same distribution within some feature or patch of the
   \cmd\ space.
 \item[selection] The biggest limitation of our method for generating
-  the \cmd\ from the data is that we made no use of any kind of
-  \tgas\ selection function or completeness estimate or
+  the \cmd\ from the data is that we have not used a
+  \tgas\ selection function, completeness estimate, or
   inverse-selection-volume corrections.  This model is a model of the
   \tgas\ Catalog (or really the \tgas--\tmass\ intersection), not of
   the stars in the Milky Way, nor any volume-limited subsample of the
@@ -827,7 +826,7 @@ detail, under the same set of assumption labels:
 \item[mixture of Gaussians] The \cmd\ model is a mixture of Gaussians,
   and furthermore fixed at $K=128$ components. This setting was chosen
   after some experimentation as being able to capture features but still
-  be easily optimized. We performed some experiments with
+  be easily optimized. We performed some experiments
   that suggest that larger $K$ would lead to better models, even in the
   conservative sense of cross-validation score. Choosing an optimized or
   optimal number for this mixture is a natural extension of this work.
