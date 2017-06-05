@@ -26,11 +26,12 @@
 \newcommand{\given}{\,|\,}
 \newcommand{\dd}{\mathrm{d}}
 \newcommand{\true}{\mathrm{true}}
+\newcommand{\corr}{\mathrm{c}}
 \renewcommand{\vec}[1]{\boldsymbol{{#1}}}
 \newcommand{\truth}{\vec{Y}}
 \newcommand{\data}{\vec{y}}
 \newcommand{\mean}{\vec{\mu}}
-\newcommand{\mat}[1]{{\mathrm{{#1}}}}
+\newcommand{\mat}[1]{{\mathbf{{#1}}}}
 \newcommand{\var}{\mat{V}}
 \newcommand{\covar}{\mat{C}}
 
@@ -406,12 +407,12 @@ We include this in the inference by using the \cmd\ as part of our prior for $\v
 Specifically, we use the \cmd\ generated from the data themselves, as detailed in the next section.
 
 Equation~\ref{eq:bayes} does not fully specify this procedure.
-Because our prior comes from the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. Specifically, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{true}_n$ color and the $J$ band absolute magnitude $M^{true}_{J,n}$ for each star, which we encapsulate in the true vector $\truth$. The observed data is the dust corrected color $(J-K)^c_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^c_n$, which we encapsulate in the data vector $\data$.
+Because our prior comes from the \cmd, our inference will include not only the parallax from \gaia, but also the photometry of the stars. Specifically, we use the $J$ and $K$ band photometry from \tmass, as well as the parallax from \gaia. Our true, latent values are the $(J-K)^{\true}_n$ color and the $J$ band absolute magnitude $M^{\true}_{J,n}$ for each star, which we encapsulate in the true vector $\truth$. The observed data is the dust corrected color $(J-K)^{\corr}_n$, the \gaia\ parallax $\varpi_n$ in units of $[mas]$, and the dust corrected $J$ band magnitude $J^{\corr}_n$, which we encapsulate in the data vector $\data$.
 
 We now describe a singularity of our method, which allows us to conservatively deconvolve the data into a \cmd\ prior without requiring a full hierarchical inference framework (which was explored in \citealt{leistedtHogg2017}).
 Instead of transforming the parallax and apparent magnitude into an absolute magnitude, the data vector $\data$ contains a transformation of the dust corrected absolute magnitude
 \begin{equation}
-y_0 = \varpi\,10^{\frac{1}{5}\,J^c_n} = 10^{\frac{1}{5}\,M^c_{J,n} + 2}
+y_0 = \varpi\,10^{\frac{1}{5}\,J^{\corr}_n} = 10^{\frac{1}{5}\,M^{\corr}_{J,n} + 2}
 \label{eq:transform}
 \end{equation}
 where, for this expression, it is important to remember that $\varpi$ is assumed to be in units of $[mas]$.
@@ -419,17 +420,17 @@ The transformation of the dust corrected absolute magnitude is required to to ke
 Our prior assumptions $I$ are the uncertainties in each of these measurements, as well as the 3D dust map. So our full terminology is
 \begin{equation}
 \begin{aligned}
-\mathrm{true \, vector} \quad &\truth_n = [10^{0.2\,M^{true}_{J,n} + 2}, (J-K)^{true}_n] \\
-\mathrm{data \, vector} \quad &\data_n = [\varpi_n\,10^{0.2J^c_n}, (J- K)^c_n] \;\hspace*{15mm}  n \in \mathrm{stars} \\
-\mathrm{with \; apparent \; magnitude} \quad &J^c_n = J_n - Q_J\,E(B-V)_n \\
-\mathrm{and \; color} \quad &(J - K)^c_n = J_n - K_n - Q_{JK}\,E(B-V)_n \\
+\mathrm{true \, vector} \quad &\truth_n = [10^{0.2\,M^{\true}_{J,n} + 2}, (J-K)^{\true}_n] \\
+\mathrm{data \, vector} \quad &\data_n = [\varpi_n\,10^{0.2J^{\corr}_n}, (J- K)^{\corr}_n] \;\hspace*{15mm}  n \in \mathrm{stars} \\
+\mathrm{with \; apparent \; magnitude} \quad &J^{\corr}_n = J_n - Q_J\,E(B-V)_n \\
+\mathrm{and \; color} \quad &(J - K)^{\corr}_n = J_n - K_n - Q_{JK}\,E(B-V)_n \\
 \mathrm{under\ the\ assumptions} \quad &I_n = \left\{\left\{\sigma^2_{\varpi, n}\right\}, \left\{\sigma^2_{J,n}\right\}, \left\{\sigma^2_{K,n}\right\}, \mathrm{Dust \, Map}\right\}
 \end{aligned}
 \label{eq:data}
 \end{equation}
 where $E(B-V)_n$ is the output of the dust model of \cite{green15}, and $Q_{\lambda}$ is the correction factor for a photometric band assuming some reddening law.
 
-We assume that the parallax likelihood is Gaussian, as well as the $(J-K)^c_n$ color likelihood. So our full likelihood for the $n$th star is
+We assume that the parallax likelihood is Gaussian, as well as the $(J-K)^{\corr}_n$ color likelihood. So our full likelihood for the $n$th star is
 \begin{equation}
 p(\data_n \given \truth_n, I_n) = \mathcal{N}(\data_n \given \truth_n, \covar_n)
 \end{equation}
@@ -437,12 +438,12 @@ with \\
 \[
 \covar_n = \begin{bmatrix}
 \sigma_{J,n}^2 + \sigma_{K,n}^2 & 0 \\
-0 & \left(\sigma_{\varpi}\,10^{0.2\,J_n^C}\right)^2
+0 & \left(\sigma_{\varpi}\,10^{0.2\,J_n^{\corr}}\right)^2
 \end{bmatrix}
 \]
 where $\mathcal{N}(\mean, \mat{\Sigma})$ represents a normal distribution with
 mean vector $\mean$ and covariance matrix $\mat{\Sigma}$.
-Here we have assumed that the parallax uncertainty is significantly larger than the $J$-band magnitude uncertainty and is therefore the dominant uncertainty in the transformed absolute magnitude. We take $J_n^C$ as a point estimate and only propagate the parallax uncertainty.
+Here we have assumed that the parallax uncertainty is significantly larger than the $J$-band magnitude uncertainty and is therefore the dominant uncertainty in the transformed absolute magnitude. We take $J_n^{\corr}$ as a point estimate and only propagate the parallax uncertainty.
 
 We can now write the multidimensional posterior expression analogous to Equation~\ref{eq:bayes},
 \begin{equation}
@@ -477,12 +478,12 @@ To infer $\varpi_{\true}$ once the \cmd\ prior is constructed, we first do the i
 \begin{eqnarray}
 p(\truth_0 \given \data, \hat{\alpha}) &\rightarrow& p(\varpi_{\true} \given y, \hat{\alpha}) \, f(\varpi_{\true}) \\
 \mathrm{where} \; f(\varpi_{\true}) &=& \begin{cases}
-              1 \quad \mathrm{if} \quad -2 < \mathrm{log}_{10} \varpi_{true} < 2\\
+              1 \quad \mathrm{if} \quad -2 < \mathrm{log}_{10} \varpi_{\true} < 2\\
               0 \quad \mathrm{otherwise}
               \end{cases}
 \label{eq:parallaxPost}
 \end{eqnarray}
-with $f(\varpi_{true})$ being a window function to insure $\varpi_{\true}$ is positive and to put $\varpi_{\true}$ on a similar grid for all the posteriors.
+with $f(\varpi_{\true})$ being a window function to insure $\varpi_{\true}$ is positive and to put $\varpi_{\true}$ on a similar grid for all the posteriors.
 
 \section{Data and results}
 \begin{figure}
@@ -629,7 +630,7 @@ This is a fairly standard result: the deconvolution of uncertainties is stronger
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{delta.png}
-\caption{Fractional Change in Variance: The left panel shows the natural log of the fractional change in the variance of the posterior relative to the likelihood as a function of the stellar color. The coloring of the points in both panels is by the fractional change in variance to guide the coloring of the right panel. The blue lines are the $1\sigma$ and $2\sigma$ contours. The median fractional change is 1.2. Some posteriors have significantly smaller variances shown in black, but some actually increase in variance, shown as the yellow bump at $(J-K)^C$ of about 0.6. The right panel shows the posterior point estimates on the CMD colored by fraction change in variance. There is significant changes for the red giant branch stars, as well as some main sequence stars.}
+\caption{Fractional Change in Variance: The left panel shows the natural log of the fractional change in the variance of the posterior relative to the likelihood as a function of the stellar color. The coloring of the points in both panels is by the fractional change in variance to guide the coloring of the right panel. The blue lines are the $1\sigma$ and $2\sigma$ contours. The median fractional change is 1.2. Some posteriors have significantly smaller variances shown in black, but some actually increase in variance, shown as the yellow bump at $(J-K)^{\corr}$ of about 0.6. The right panel shows the posterior point estimates on the CMD colored by fraction change in variance. There is significant changes for the red giant branch stars, as well as some main sequence stars.}
 \label{fig:delta}
 \end{figure}
 
