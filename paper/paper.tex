@@ -597,7 +597,15 @@ This is a fairly standard result: the deconvolution of uncertainties is stronger
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{posterior.png}
-\caption{5 example posteriors showing the priors and likelihoods as well}
+\caption{Five example posterior pdfs over parallax using our method.
+The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented by a mixture of Gaussians in green.
+We chose example points that evenly spanned the color space, but within each color bin, we chose a point at random.
+The remaining panels show the posterior pdf in blue, the prior pdf in green, and likelihood of the data in black.
+Most stars have posterior pdfs (blue) that are only slightly more precise than the data (black), which is well represented in this random sampling of points.
+Examples 1-4 are not very affected by the prior (green), where good data is good data.
+Example 4 is interesting because it lies in the same color range as the red clump, where there is a lot of support from the prior, but the likelihood does not have much support there so the parallax posterior pdf keeps the star on the main sequence.
+Example 5 shows a significantly more precise posterior pdf compared with the likelihood, and looks very similar to the prior pdf.
+Our prior tends to have the largest affect on stars in the red giant branch.}
 \label{fig:posterior}
 \end{figure}
 
