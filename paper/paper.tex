@@ -463,7 +463,7 @@ which is made analytically tractable with the Gaussian likelihood and mixture-of
 To infer $\varpi_{\true}$ once the \cmd\ prior is constructed, we first do the inference in the 2D space of the \cmd\ prior $p(\mathbf{Y} \given \alpha)$, using Equation \ref{eq:posterior}. We then project the 2D posterior into the 1D transformed absolute magnitude space, and do a little algebra to solve for $\varpi_{\true}$
 
 \begin{eqnarray}
-p(\mathbf{Y}_0 \given \mathbf{y}, \alpha) &\rightarrow& p(\varpi_{\true} \given y, \alpha) \, f(\varpi_{\true}) \\
+p(\mathbf{Y}_0 \given \mathbf{y}, \hat{\alpha}) &\rightarrow& p(\varpi_{\true} \given y, \hat{alpha}) \, f(\varpi_{\true}) \\
 \mathrm{where} \; f(\varpi_{\true}) &=& \begin{cases}
               1 \quad \mathrm{if} \quad -2 < \mathrm{log}_{10} \varpi_{true} < 2\\
               0 \quad \mathrm{otherwise}
