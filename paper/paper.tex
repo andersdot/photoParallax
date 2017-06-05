@@ -479,13 +479,25 @@ with $f(\varpi_{true})$ being a window function to insure $\varpi_{\true}$ is po
 \label{fig:data}
 \end{figure}
 
-We use stars crossmatched in \tgas\ and \tmass\, that also lie within the observing footprint of \panstarrs\ to access the Greene 3D dust model. We require the photometry have real values, and nonzero, real errors, and remove a small selection of \tmass\ stars that have zero color and zero J band magnitude. The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}. The left panel shows the point estimates of the color and absolute magnitude, using the point estimate of the parallax from \gaia, and the $1\sigma$ and $2\sigma$ contours of the distribution. The right panel shows a subset of the data with it's associated error bars. The uncertainties in the colors are fairly well behaved, but the large uncertainties in the absolute magnitude are due to the large uncertainties in the parallax measurements.
+We use stars crossmatched in \tgas\ and \tmass\, that also lie within the
+observing footprint of \panstarrs\ to access the \cite{green15} 3D dust model.
+We require that the photometry have real values, and nonzero, real errors, and
+remove a small selection of \tmass\ stars that have zero color and zero $J$-band
+magnitude.
+The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}.
+The left panel shows the point estimates of the color and absolute magnitude,
+using the point estimate of the parallax from \gaia, and the $1\sigma$ and
+$2\sigma$ contours of the distribution.
+The right panel shows a subset of the data with it's associated error bars.
+The uncertainties in the colors are fairly well behaved, but the large
+uncertainties in some absolute magnitudes are due to the large uncertainties in
+the parallax measurements.
 
 \subsection{Dust}
 
-We need to correct the photometry used in our method, both for the
-generation of the prior and the likelihood, for dust. With the
-emergence of 3D dust maps, it is now possible to estimate dust
+For the generation of the prior and the evaluation of the likelihood, we need to
+correct the \tmass\ photometry for dust extinction.
+With the emergence of 3D dust maps, it is now possible to estimate dust
 corrections to stars within the Milky Way. The challenge is getting a
 proper estimate of the distance to the star before inferring
 $\varpi_{\true}$, since we need a dust correction prior to doing our
@@ -496,7 +508,7 @@ therefore have severe dust corrections. This is most obvious in the
 giant stars, which tend to have the lowest signal to noise, and can
 therefore have dust corrections $> 2$ magnitudes. Although the dust
 model is probabilistic, as well as our distance inference, to move
-forward, we break from a fully Bayesian framework, in which we might
+forward, we break from a fully Bayesian framework in which we might
 infer the distance and the dust simultaneously (more about this in the
 discussion). Instead, we correct for dust using a point estimate from
 the 3D dust map \citep{green15} sampled at a distance estimated from
@@ -506,26 +518,30 @@ $\varpi_{\true}$. In more detail, to apply a dust correction to the
 attenuated photometry. Using this raw prior, we infer more precise
 parallaxes to all the stars in our sample. We then use this more
 precise parallax posterior to get a measurement of dust in the 3D dust
-map for each star. And repeat. This approach minimizes severe
+map for each star. We then iterate this procedure. This approach minimizes severe
 distances, and their associated severe dust corrections, which would
-occur if using the likelihoods alone. In detail, we take the $5\%$
-quantile of each distance posterior, so the closest bit of the
-posterior, and sample the 3D dust map at that distance. We take the
-$5\%$ quantile, as apposed to the median, for example, to do a light
-dust correction, because over correcting for dust can shoot the
-likelihood into an unphysical, different space of the \cmd\ and bias
-the parallax inference. For each distance, we sample the median of the
-probabilistic dust model. We apply each light dust correction to our
-\tmass\ photometry given by Equation \ref{eq:data} where $Q_{\lambda}$
-= [0.709, 0.302] for bands [J, K] respectively, taken from Table 6 of
-cite{schlafly11}. We then regenerate our prior using the lightly dust
-corrected photometry. The dust values we obtain in our final
+occur if using the likelihoods alone.
+
+In detail, we take the $5\%$
+quantile of each distance posterior (the closest part of the
+distance posterior) and query the 3D dust map at that distance.
+We take the $5\%$ quantile---as apposed to the median---to do a minimal dust
+correction because over-correcting for dust can push the peak of the likelihood
+function into an unphysical, different space of the \cmd\ and thus bias the
+parallax inference.
+For each distance, we sample the median of the
+probabilistic dust model. We apply each dust correction to our
+\tmass\ photometry using Equation~\ref{eq:data}, where $Q_{\lambda}
+= [0.709, 0.302]$ for bands $[J, K]$ respectively (see Table 6 in
+\citealt{schlafly11}).
+We then regenerate our prior using the dust-corrected photometry.
+The dust values we obtain in our final
 iteration, and which we apply to our photometry, are visualized in
-galactic coordinates in \figurename~\ref{fig:dust}. After applying a dust
-correction, we do not update the uncertainties, but keep them the same
-as before the dust correction, which is wrong and under representing
-our uncertainties but this leads, again, to a lighter
-deconvolution. In other words, the features of our inferred
+galactic coordinates in \figurename~\ref{fig:dust}.
+After applying the dust correction, we do not update the uncertainties, which is
+technically wrong and under-represents the true uncertainties; as mentioned
+previously, this leads to a less severe deconvolution.
+In other words, the features of our inferred
   \cmd\ are conservatively broad (broader than if we over-estimated
   the errors which would have lead to excessive deconvolution and
   unrealistically narrow features). We could add the covariance of
@@ -537,15 +553,19 @@ corresponding dust to become more consistent with the \cmd.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{dust.png}
-\caption{The converged dust values at the 5\% distance projected on the l,b galactic coordinates. This shows both the footprint of our analysis as well as the dust values we used. Each point represents a single star in our cross matched catalog. The large missing areas are due to the lack of dust values from \panstarrs\ since it only looked above -30 degrees in dec }
+\caption{The converged dust values at the 5\% distance quantile in Galactic coordinates. This shows both the footprint of our analysis as well as the adopted extinction values. Each point represents a single star in our cross matched catalog. The large missing areas are due to the \panstarrs\ footprint ($>-30~{\rm deg}$ in declination)}
 \label{fig:dust}
 \end{figure}
 
-Should I quote some statistics about the dust corrections? mostly small? maybe difference before/after applying prior to distance?
-
-\subsection{XD-generated Prior}
-Using \xd\ and the MMLE method described in the methods section, we generate the prior. This is shown in \figurename~\ref{fig:prior}.
-This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared with the raw data in \figurename~\ref{fig:data}, this is a tighter distribution. The left panel shows 1.3M samples from the prior distribution, and the right panel shows the underlying gaussian mixture model these samples are drawn from. The main sequence and red giant branch are much tighter, as well as the red clump. We'll come back to more features in the data below, especially those seen in the posterior distribution.
+\subsection{The empirical prior}
+Using \xd\ and the MMLE method described in the methods section, we generate the
+prior, shown in \figurename~\ref{fig:prior}.
+The left panel shows 1.3 million samples from the prior distribution, and the
+right panel shows $1\sigma$ contours for each component in the underlying
+Gaussian mixture model.
+Compared to the raw data in \figurename~\ref{fig:data}, the deconvolved
+color--magnitude diagram for the \gaia\ + \tmass\ stars is tighter, as expected.
+We'll come back to more features in the data below, especially those seen in the posterior distribution.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{prior_ngauss128.png}
@@ -555,7 +575,7 @@ This is the \gaia\ + \tmass\ data set deconvolved with it's noise, so compared w
   contours. The right panel shows the 1-$\sigma$ contours of the
   individual components. The latter are Gaussian in the transformed
   magnitude space to make the XD inference tractable. Thus, they
-  appear non-Gaussian in the physical color--magnitude space.}
+  appear as slightly deformed ellipses in color--magnitude space.}
 \label{fig:prior}
 \end{figure}
 
@@ -621,17 +641,17 @@ paper or any other data outputs straightforwardly.
 
 \subsection{Distances to M67}
 As a test of the accuracy of these photometric parallax inferences, we inferred the parallaxes to stars in the open cluster M67.
-It is an open cluster in the constellation Cancer and is estimated to be 3-5 billion years old and 800-900 pc away.
-Previous work \citep{cbj15} has estimated that bad things happen if you try to infer a distance as the inverse of the observed (noisy) parallax when the signal to noise of the parallax measurement drops below 5.
-With \gaia\ parallaxes having a minimum uncertainty of about 0.3 mas, the SN reaches 5 for the most certain parallax measurements at about 700 pc, right where this cluster lies.
-So it is a great test case for comparing parallax inferences with or without a prior.
-We made a window of 1 square degree on the sky with the cluster M67 lying in the middle.
-The cluster is visibly obvious as a clustering of stars in a visualization of the \gaia\ data on the 2D sky.
+M67 is at a Heliocentric distance of $800$--$900~{\rm pc}$ with an estimated age of 3--$5~{\rm Gyr}$.
+Previous work \citep{cbj15} has noted that bad things happen if you try to infer a distance as the inverse of the observed (noisy) parallax when the parallax signal-to-noise (SN) is below 5, $\varpi / \sigma_\varpi < 5$.
+With \gaia\ parallaxes having a minimum uncertainty of about $0.3~{\rm mas}$, the SN reaches 5 for the most certain parallax measurements at about $700~{\rm pc}$, just before the distance to this cluster.
+M67 is therefore a great test case for comparing parallax inferences with or without a prior.
+
+We select sources from our catalog within a $1~{\rm deg}^2$ square window centered on the position of M67; the cluster is visible as an over-density of stars in the sky positions alone.
 With our converged dust values, and its associated prior, we calculate the posterior over $\varpi_{\true}$ for each star within this window on the sky around M67.
 \figurename~\ref{fig:m67} shows the comparison of the likelihoods and posteriors.
 The vertical lines bracket the previously measured parallaxes of, or distances to, the cluster.
-The likelihoods of the observed parallaxes, shown in the top row, are broad and the cluster is not obvious at all.
-The posterior pdf, shown in the bottom row, are more sharply peaked at the previously determined distance to the cluster, the vertical lines, for far more stars than the likelihoods.
+The likelihoods of the observed parallaxes, shown in the top row, are broad and the cluster is not at all obvious.
+The posterior pdfs, shown in the bottom row, are more sharply peaked at the previously determined distance to the cluster (vertical lines) for far more stars.
 Our prior is not only making parallaxes more precise but also (possibly) increasing the accuracy.
 \begin{figure}
 \centering
