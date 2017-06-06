@@ -554,7 +554,8 @@ galactic coordinates in \figurename~\ref{fig:dust}.
 After applying the dust correction, we do not update the uncertainties, which is
 technically wrong and under-represents the true uncertainties; this leads to a less severe deconvolution, as mentioned previously.
 In other words, the features of our inferred
-  \cmd\ are conservatively broad\footnote{This can be understood by considering the following procedure: if one incrementally increase the noise levels (leaving the data unchanged; just increasing the declared uncertainties), the deconvolved distribution will be increasingly narrower, since it targets the distribution that would generate the noiseless observations, as well as the observed data once noise is added}. We could add the covariance of
+  \cmd\ are conservatively broad.\footnote{This can be understood by considering the following procedure: if one incrementally increased the noise levels (leaving the data unchanged; just increasing the declared uncertainties), the deconvolved distribution would be increasingly narrower, since it targets the distribution that would generate the noiseless observations, as well as the observed data once noise is added. Thus, under-estimating the uncertainties leads to a conservative under-deconvolution.}
+We could add the covariance of
 the dust to our likelihoods, but this is beyond the scope of this
 demonstration of concept.
 \begin{figure}
