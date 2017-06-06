@@ -102,7 +102,7 @@ def comparePrior():
 
     for a in ax:
         a.set_xlim(-0.5, 1.5)
-        a.set_xlabel(r'$(J - K)^C$')
+        a.set_xlabel(r'$(J - K_s)^C$')
     ax[0].set_ylabel(r'$M_J^C$')
     ax[1].set_ylabel(r'$\varpi 10^{0.2\,m_J}$')
     ax[0].set_ylim(6, -6)
@@ -144,7 +144,7 @@ def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', i
         mag1 = 'J'
         mag2 = 'K'
         absmag = 'J'
-        xlabel = r'$(J-K)^C$'
+        xlabel = r'$(J-K_s)^C$'
         ylabel = r'$M_J^C$'
         xlim = [-0.25, 1.25]
         ylim = [6, -6]
@@ -266,7 +266,7 @@ def whatsThatFeature(survey='2MASS', quantile=0.05, dataFilename='All.npz', iter
         mag1 = 'J'
         mag2 = 'K'
         absmag = 'J'
-        xlabel = r'$(J-K)^C$'
+        xlabel = r'$(J-K_s)^C$'
         ylabel = r'$M_J^C$'
         xlim = [-0.25, 1.25]
         ylim = [6, -6]
@@ -412,7 +412,7 @@ def examplePosterior(nexamples=100, postFile='posteriorSimple.npz', dustFile='du
         plt.legend(loc='best')
         plt.tight_layout()
         plt.xlabel('parallax [mas]', fontsize=18)
-        plt.title('J-K: ' + '{0:.1f}'.format(color[i]) + '    M: ' +  '{0:.1f}'.format(testXD.absMagKinda2absMag(absMagKinda[i])))
+        plt.title(r'J-K$_s$: ' + '{0:.1f}'.format(color[i]) + '    M: ' +  '{0:.1f}'.format(testXD.absMagKinda2absMag(absMagKinda[i])))
         plt.savefig('exampleCMDPosteriorLargerVariance_' + str(i) + '.png')
 
 
@@ -423,7 +423,7 @@ def compareSimpleGaia(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
     absmag = 'J'
     mag1 = 'J'
     mag2 = 'K'
-    xlabel = '$(J-K)^C$'
+    xlabel = '$(J-K_s)^C$'
     ylabel = r'$M_J^C$'
     xlim = [-0.25, 1.25]
     ylim = [6, -6]
@@ -489,7 +489,7 @@ def compareSimpleGaia(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
         ax[0].scatter(x, y, c=y, s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap)
         corner.hist2d(x, y, bins=200, ax=ax[0], levels=levels, no_fill_contours=True, plot_density=False, plot_data=False, color=contourColor)
         #ax[0].scatter(color[notnans], np.log(var[notnans]) - np.log(tgas['parallax_error'][notnans]**2.), lw=0, s=1, alpha=0.5, c=tesXD.absMagKinda2absMag(absMagKinda[notnans]), norm=cNorm, cmap='plasma')
-        ax[0].set_xlabel(r'$(J-K)^c$', fontsize=18)
+        ax[0].set_xlabel(r'$(J-K_s)^c$', fontsize=18)
         ax[0].set_ylim(-6, 2)
         ax[0].set_xlim(-0.5, 2)
         ax[0].set_ylabel(r'$\mathrm{ln} \, \tilde{\sigma}_{\varpi}^2 - \mathrm{ln} \, \sigma_{\varpi}^2$', fontsize=18)
@@ -568,7 +568,7 @@ def paperComparePrior(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
     absmag = 'J'
     mag1 = 'J'
     mag2 = 'K'
-    xlabel = '$(J-K)^C$'
+    xlabel = '$(J-K_s)^C$'
     ylabel = r'$M_J^C$'
     xlim = [-0.25, 1.25]
     ylim = [6, -6]
