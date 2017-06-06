@@ -602,7 +602,7 @@ This change in precision is further illustrated in Figure~\ref{fig:delta}, where
 The points are colored by the natural log of their fractional change in variance (the y-axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
 The giants show obvious large improvements, as well as some main sequence stars.
 Regions of large improvement are those with the largest photometric and parallax errors, which are the faintest observed objects.
-This is a fairly standard result which we illustrated in the introductory section of this paper: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
+This is a fairly standard result which we illustrated in the toy model above: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 Stars with a color $(J-K_s)^C \sim 0.6$ show a decrease in precision due to the width of the prior there; the more vertical structure in the red giant branch of the \cmd.
 
 Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog. This more directly shows what was alluded to in Figure~\ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
@@ -689,11 +689,11 @@ This shows that our prior is not only making parallaxes more precise but also (p
 \caption{Proof of concept: parallax inference to the open cluster M67.
 The upper left panel visualizes the \gaia\ + \tmass\ likelihoods of the data, shown in black and projected onto the \cmd, for all the stars within our $1~{\rm deg}^2$ window centered on the position of M67.
 Our prior, visualized as a mixture of Gaussians, is shown in green.
-The upper right panel shows the \gaia\ parallax likelihoods in black, with the "true" distance to M67, determined by previous methods, bracketed by the red lines.
+The upper right panel shows the \gaia\ parallax likelihoods in black, with the ``true" distance to M67, determined by previous methods, bracketed by the red lines.
 Similar to the upper left panel, the lower left panel shows the likelihoods of the data in black and our prior in green, as well as the posterior PDFs in blue.
 The posterior PDFs are a mixture of Gaussians as well, each a product of the likelihood with a Gaussian in our prior.
 The lower right panel shows the projection of the 2D posterior PDF onto parallax space.
-The posterior PDFs are much more clustered and sharply peaked around the "true" distance to M67 than the \gaia\ likelihoods, showing that our prior generates posterior PDFs that are accurate and more precise than \gaia\ alone.}
+The posterior PDFs are much more clustered and sharply peaked around the ``true" distance to M67 than the \gaia\ likelihoods, showing that our prior generates posterior PDFs that are accurate and more precise than \gaia\ alone.}
 \label{fig:m67}
 \end{figure}
 
