@@ -846,13 +846,19 @@ detail, under the same set of assumption labels:
   example, \citealt{leistedtHogg2017}).
 \item[noise model] Everything in both the establishment of the data-driven
   prior and the use of it for parallax inference has been done under the deep
-  assumption that the \gaia\ noise model is correct. If the
-  uncertainties are over-estimated then we could be over-deconvolving.
+  assumption that the \gaia\ noise model is correct, and an additional
+  assumption that the parallax uncertainty is always significantly larger
+  than the photometric uncertainty in the $J$ band, even after dust correction.
+  In the unlikely event (given these choices) that the
+  uncertainties are over-estimated, we could be over-deconvolving.
   That is, the data-driven model could be producing a tighter or more
   informative distribution than what would truly be observed in a much
   higher signal-to-noise experiment or survey. That is, incorrect uncertainty
   estimates will bias the empirical-Bayes prior we obtain. On the inference
   side, wrong uncertainty estimates lead to further biases in the derived photometric parallaxes.
+  Since we are explicitly ignoring the (non-Gaussian, in parallax space) photometric
+  and dust-extinction uncertainties, our noise estimates are certainly biased, and
+  this will translate into small biases in posterior parallax estimates.
 \item[dust] Within our probabilistic framework, we improperly handle
   dust. We are taking a point estimate of the probabilistic dust model
   at a quantile of our distance posterior, correcting our photometry
