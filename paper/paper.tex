@@ -75,10 +75,10 @@ space.
 This model contains no knowledge of stellar astrophysics or the
 Milky Way, but is precise (and beautiful) because it is a generative model fit to many noisy
 parallax measurements under an assumption of stationarity.
-We use the Extreme Deconvolution (\xd) algorithm---an approximation to a full
+We use the Extreme Deconvolution (\xd) algorithm---an Empirical Bayes approximation to a full
 hierarchical model of the true parallax and photometry of every star---to
 construct this prior.
-The \xd-optimized prior is used to infer a precise photometric parallax estimate
+The prior is combined with a \tgas\ likelihood to infer a precise photometric parallax estimate
 and uncertainty (and full posterior) for every star.
 Our parallax estimates are more precise than the \tgas\ catalog entries by a
 median factor of 1.2 (14\% are more precise by a factor $>2$) and are more
@@ -86,7 +86,7 @@ precise than previous Bayesian distance estimates that use spatial priors.
 We validate our parallax inferences using members of the Milky Way
 star cluster M67, which is not visible as a cluster in the \tgas\ parallax
 estimates, but appears as a cluster in our posterior parallax estimates.
-Our results, including a posterior parallax and distance sampling for 1.4
+Our results, including a parallax posterior pdf for each of 1.4
 million \tgas\ stars, are available in companion electronic tables.
 \end{abstract}
 
