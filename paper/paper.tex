@@ -257,7 +257,7 @@ Understanding the validity of this method can be challenging because we are usin
 To ease understanding, here we demonstrate the general methodology using a
 simpler toy model with simulated data.
 Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $Y$.
-We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the y-direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
+We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the $y$ direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
 Here the thickness of the toy distribution mimics the true thickness or intrinsic scatter of the \cmd\ due to age, mass, and metallicity.
 The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel.
 Similarly, noisy samples from this distribution are shown in the upper-right panel.
@@ -361,7 +361,7 @@ method that flows from them---in the discussion section below.
   properties of the stars in the Milky Way (nor any volume-limited component or region
   thereof).
 \item[big data] We assume that we have large numbers of stars, large enough that
-  empirical Bayes, or maximum-marginalized likelihood, is a safe
+  empirical-Bayes, or maximum-marginalized-likelihood, is a safe
   approximation to full Bayesian inference. This assumption will be
   least true in the least-populated parts of the \cmd. In the extreme
   case, if a portion of the \cmd\ has only one (statistically distinct)
@@ -522,7 +522,7 @@ with poor parallax signal to noise; these stars have
 a likelihood that is consistent with infinite distance and can
 therefore have severe dust corrections. This is most obvious in the
 giant stars, which tend to have the lowest signal to noise, and can
-therefore have dust corrections $> 2$ magnitudes. Although the dust
+therefore have dust corrections $> 2$~mag. Although the dust
 model is probabilistic, as well as our distance inference, to move
 forward, we break from a fully Bayesian framework in which we might
 infer the distance and the dust simultaneously (more about this in the
@@ -533,8 +533,8 @@ $\varpi_{\true}$. We first generate our prior using the observed,
 attenuated photometry. Using this raw prior, we infer more precise
 parallaxes to all the stars in our sample. We use this more
 precise parallax posterior to get a measurement of dust in the 3D dust
-map for each star. We then iterate this process 10 times, however
-the dust values seem to converge after about 2-3 iterations. The
+map for each star. We then iterate this process ten times, however
+the dust values seem to converge after a few iterations. The
 iterative process allows for slight variations in distance and
 corresponding dust to become more consistent with the \cmd.
 
@@ -591,7 +591,7 @@ We'll come back to more features in the data below, especially those seen in the
 \subsection{Shrinkage of parallax uncertainties}
 
 Figure~\ref{fig:posterior} shows the various probability distributions of our inference for a few randomly-chosen objects: the likelihood (black), prior (green), and posterior PDF (blue) on the true parallaxes.
-For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1-4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
+For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1 through 4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
 However, $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$. This larger change in precision is visualized in Example 5, which shows a significantly narrower posterior PDF compared to the likelihood.
 The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact, and shape, strongly depend on the location of each star in \cmd\ space.
 
@@ -600,7 +600,7 @@ The left panel shows the distribution for all 1.3 million stars in our dataset, 
 Compared with the raw data shown in Figure~\ref{fig:data}, it is clear the precision of the posterior PDFs is greater, especially for the red giant branch stars.
 
 This change in precision is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes in the variance. The left panel shows the natural log of the fractional change in variance as a function of $(J-K_s)^C$ color, with the $1\sigma$ and $2\sigma$ contours over plotted.
-The points are colored by the natural log of their fractional change in variance (the y-axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
+The points are colored by the natural log of their fractional change in variance (the $y$ axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
 The giants show obvious large improvements, as well as some main sequence stars.
 Regions of large improvement are those with the largest photometric and parallax errors, which are the faintest observed objects.
 This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
@@ -618,7 +618,7 @@ The upper left panel shows the position of each example data point in black, wit
 We chose example points that evenly spanned the color space, but within each color bin, we chose a point at random.
 The remaining panels show the posterior PDF in blue, the prior PDF in green, and likelihood of the data in black.
 Most stars have posterior PDFs (blue) that are only slightly more precise than the data (black), which is well represented in this random sampling of points.
-Examples 1-4 are not very effected by the prior (green), where good data is good data.
+Examples 1 through 4 are not very effected by the prior (green), where good data is good data.
 Example 4 is interesting because it lies in the same color range as the red clump, where there is a lot of support from the prior, but the likelihood does not have much support there so the parallax posterior PDF, transformed into an absolute magnitude, remains on the main sequence.
 Example 5 shows a significantly more precise posterior PDF compared with the likelihood, and looks very similar to the prior PDF.
 It also exemplifies that our prior tends to have the largest effect on stars in the red giant branch.}
@@ -669,7 +669,7 @@ paper or any other data outputs straightforwardly.
 
 \subsection{Distances to M67}
 As a test of the accuracy of these photometric parallax inferences, we inferred the parallaxes to stars in the open cluster M67.
-M67 is at a Heliocentric distance of $800$--$900~{\rm pc}$ with an estimated age of $3$--$5~{\rm Gyr}$.
+M67 is at a Heliocentric distance of $800$ to $900~{\rm pc}$ with an estimated age of $3$ to $5~{\rm Gyr}$.
 Previous work \citep{cbj15} has noted that bad things happen if you try to infer a distance as the inverse of the observed (noisy) parallax when the parallax signal-to-noise (SN) is below 5, $\varpi / \sigma_\varpi < 5$.
 With \gaia\ parallaxes having a minimum uncertainty of about $0.3~{\rm mas}$, the SN reaches 5 for the most certain parallax measurements at about $700~{\rm pc}$, just before the distance to this cluster.
 M67 is therefore a great test case for comparing parallax inferences with or without a prior.
@@ -919,7 +919,7 @@ PDF to a large power.
 We have (in previous work)
 given examples of correct uses of posterior samplings or PDFs
 for subsequent inferences (\citealt{hogg08}; \citealt{dfm14}); we
-encourage power-users to consult those methodological
+encourage power users to consult those methodological
 contributions before engaging with these outputs.
 
 \section{Conclusion}
