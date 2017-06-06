@@ -249,20 +249,20 @@ commitment to---or even use of---physical models of stars or the Milky Way.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{toy.png}
-\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
+\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
 \label{fig:toy}
 \end{figure}
 
 In this paper we use the noise-deconvolved \cmd\ as a prior to infer more precise parallax probability distribution functions (PDFs) from \gaia\ measurements.
 Understanding the validity of this method can be challenging because we are using the data both for the prior and the likelihood in our inference.
-To ease understanding, here we demonstrate the generaly methodology using a
+To ease understanding, here we demonstrate the general methodology using a
 simpler toy model with simulated data.
 Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $Y$.
 We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the y-direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
 Here the thickness of the toy distribution mimics the true thickness or intrinsic scatter of the \cmd\ due to age, mass, and metallicity.
 The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel.
 Similarly, noisy samples from this distribution are shown in the upper-right panel.
-Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample from the distribution, from $y_n$, a sample from the noise distribution.
+Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample from the distribution, from $y_n$, a sample from the noisy distribution.
 
 Setting up the problem in more detail, we have the true samples from the underlying distribution and the noisy samples
 \begin{eqnarray}
@@ -274,7 +274,7 @@ where $\Delta_n$ is drawn from the Gaussian function $\mathcal{N}(\Delta_n \give
 These represent true and noisy draws from a distribution that is a straight line with some thickness $t$, and are visualized in the upper panels of \figurename~\ref{fig:toy}.
 The upper-left shows 1024 realizations of the true values, and the upper-right, as well as lower-left, show 1024 realizations of the noisy values $y_n$ and their associated measurement uncertainties $\sigma_n$ as the grey points; we highlight 5 random points in black.
 
-To infer a posterior PDF of the true $y$ value for each measured $y$ value we need a prior. We use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy $y$ data themselves.
+To infer a posterior PDF of the true $y$ value for each measured $y$ value we need a prior. We use an estimate of the underlying true distribution that the noisy data $y_n$ are drawn from, which we build from the noisy $y_n$ data themselves.
 We learn the noise-deconvolved function using marginalized, maximum-likelihood estimation (MMLE), which marginalizes over the true data values and maximizes the likelihood of the data. Here our likelihood for each individual datum is
 \begin{eqnarray}
 p(y_n \given m, b, t^2, \sigma_n^2) \ &=& \ \int \mathcal{N}(y_n \given y_{\true,n}, \sigma_n^2) \, \mathcal{N}(y_{\true,n} \given m\,x_n + b, t^2 ) \, \dd y_{\true, n} \\
@@ -305,7 +305,7 @@ distribution while leaving one datum out, the one datum we want to
 infer the true y value for, or else perform a full hierarchical Bayesian inference,
 in which we treat the \cmd\ parameters probabilistically along with everything else.
 With large data sets, the MMLE or Empirical Bayes approximation is safe,
-in some sense because no individual data point makes a large difference to
+in some sense, because no individual data point makes a large difference to
 the inference.
 
 Returning to the inference:
@@ -316,10 +316,10 @@ p(y_{\true,n} \given y_n, \tilde{\sigma}_n) &=& p(y_n \given y_{\true,n}, \sigma
 \mathrm{and}\;p(y_{\true,n}) &=& \mathcal{N}(y_{\true,n} \given \hat{m}\, x_n + \hat{b}, \hat{t})
 \label{eq:toyBayes}
 \end{eqnarray}
-In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs of the true values $y_{\true,n}$ for the 5 highlighted black points from the upper-right panel. The red points are the associated true $y$ values.
-In the lower-right panel of \figurename~\ref{fig:toy}, the blue points show the expectation value and $1\sigma$ uncertainty of the posterior belief for all 1024 $y_n$.
+In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs (visualized as the expectation value and $1\sigma$ uncertainties) of the true values $y_{\true,n}$ for the 5 highlighted black points from the upper-right panel. The red points are the associated true $y$ values.
+In the lower-right panel of \figurename~\ref{fig:toy}, the blue points represent the posterior beliefs, again visualized as the expectation value and $1\sigma$ uncertainty, for all 1024 $y_n$.
 When the true values are inferred in this way, the associated variance $\tilde{\sigma}_n^2$ is the convolution of the true distribution variance, $t^2$, and the measurement variance, $\sigma_n^2$.
-The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MMLE distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true y value by inferring each true y value from the measured y value and using an estimate of the true distribution the measured y value was drawn from as the prior.
+The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MMLE distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true $y$ value by inferring each true $y$ value from the measured $y$ value using an estimate of the true distribution the measured $y$ value was drawn from as the prior.
 
 In detail, the posterior points shown in the lower-right panel of
 Figure~\ref{fig:toy} look more concentrated (vertically) than the true
@@ -512,7 +512,7 @@ the parallax measurements.
 
 \subsection{Dust}
 
-For the generation of the prior and the evaluation of the likelihood, we need to
+To generate the prior and evaluate the likelihood, we need to
 correct the \tmass\ photometry for dust extinction.
 With the emergence of 3D dust maps, it is now possible to estimate dust
 corrections to stars within the Milky Way. The challenge is getting a
@@ -540,11 +540,10 @@ iterative process allows for slight variations in distance and
 corresponding dust to become more consistent with the \cmd.
 
 In detail, we take the $5\%$
-quantile of each distance posterior (the closest part of the
-distance posterior) and query the 3D dust map at that distance.
+quantile of each parallax posterior (the closest part) and query the 3D dust map at that distance.
 We take the $5\%$ quantile---as apposed to the median---to do a minimal dust
 correction because over-correcting for dust can push the likelihood
-function into an unphysical, different space of the \cmd\ and thus bias the
+function into an unphysical, extremely blue part of the \cmd\ and thus bias the
 parallax inference. At the 3D position of each star, we sample the \texttt{mode=median} value of the probabilistic dust map.
 We apply each dust correction to our
 \tmass\ photometry using Equation~\ref{eq:data}, where $Q_{\lambda}
@@ -554,8 +553,7 @@ The dust values we obtain in our final
 iteration, and which we apply to the photometry in our inference, are visualized in
 galactic coordinates in \figurename~\ref{fig:dust}.
 After applying the dust correction, we do not update the uncertainties, which is
-technically wrong and under-represents the true uncertainties; as mentioned
-previously, this leads to a less severe deconvolution.
+technically wrong and under-represents the true uncertainties; this leads to a less severe deconvolution, as mentioned previously.
 In other words, the features of our inferred
   \cmd\ are conservatively broad (broader than if we over-estimated
   the errors which would have lead to excessive deconvolution and
@@ -594,14 +592,25 @@ We'll come back to more features in the data below, especially those seen in the
 \subsection{Shrinkage of parallax uncertainties}
 
 Figure~\ref{fig:posterior} shows the various probability distributions of our inference for a few randomly-chosen objects: the likelihood (black), prior (green), and posterior PDF (blue) on the true parallaxes.
-For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. This is visualized by Examples 1-4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
-However, $14\%$ of our parllax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$. This larger change in precision is visualized in Example 5, which shows a significantly narrower posterior PDF compared to the likelihood.
-The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact strongly depend on the location of each object in \cmd\ space.
+For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1-4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
+However, $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$. This larger change in precision is visualized in Example 5, which shows a significantly narrower posterior PDF compared to the likelihood.
+The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact, and shape, strongly depend on the location of each star in \cmd\ space.
 
-Figure~\ref{fig:posteriorCMD} shows the distribution of the posterior parallax PDFs derived with our \cmd\ prior.
-This is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes, and highlight the regions of \cmd\ space with the greatest improvement.
-Those typically are the regions with the largest photometric and parallax errors, for the faintest objects.
+Figure~\ref{fig:posteriorCMD} shows the distribution of the expectation values of the posterior parallax PDFs projected back onto the \cmd\ space.
+The left panel shows the distribution for all 1.3 million stars in our dataset, and the right panel shows a subsample of the dataset but includes the $1\sigma$ uncertainties on the posterior PDFs.
+Compared with the raw data shown in Figure~\ref{fig:data}, it is clear the precision of the posterior PDFs is greater, especially for the red giant branch stars.
+
+This change in precision is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes in the variance. The left panel shows the natural log of the fractional change in variance as a function of $(J-K_s)^C$ color, with the $1\sigma$ and $2\sigma$ contours over plotted.
+The points are colored by the natural log of their fractional change in variance (the y-axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
+The giants show obvious large improvements, as well as some main sequence stars.
+Regions of large improvement are those with the largest photometric and parallax errors, which are the faintest observed objects.
 This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
+Stars with a color $(J-K_s)^C \sim 0.6$ show a decrease in precision due to the width of the prior there; the more vertical structure in the red giant branch of the \cmd.
+
+Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog. This more directly shows what was alluded to in Figure~ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
+And $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$, or have a fraction decrease in variance by a factor of $>4$, shown as the other dotted line at $y=0.14$.
+
+
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{posterior.png}
