@@ -401,7 +401,7 @@ parallax, and $Z$ is a normalization constant (the model evidence, or marginaliz
 The strength of our inference lies in how we generate our prior.
 Instead of assuming a functional form for the spatial distribution of stars in the Milky Way (\citealt{astraatmadja16b}), or relying on stellar models (\citealt{gaia16}), we build a noise-deconvolved estimate of the \cmd\ from the observed colors and absolute magnitudes of our full set of stars.
 This is because supplementary to the trigonometric measure of distance, the photometry of stars is also informative of their distances.
-The intrinsic temperatures and luminosities of stars tightly correlate leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
+The intrinsic temperatures and luminosities of stars tightly correlate, leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
 The tight correlation of the \cmd\ benefits our inference because the luminosity or absolute magnitude of a star $M$, when compared with its brightness or apparent magnitude $m$, contains distance information $d$ via the fundamental relation $m=M+5\log(d/10\, \mathrm{pc})$.
 We include this in the inference by using the \cmd\ as part of our prior for $\varpi_{\true}$.
 Specifically, we use the \cmd\ generated from the data themselves, as detailed in the next section.
@@ -493,9 +493,8 @@ with $f(\varpi_{\true})$ being a window function to insure $\varpi_{\true}$ is p
 \label{fig:data}
 \end{figure}
 
-We use stars crossmatched in \tgas\ and \tmass\.
-The match was done using a nearest-neighbor algorithm with a search radius of $4"$.
-\footnote{\url{http://portal.nersc.gov/project/cosmo/temp/dstn/gaia/tgas-matched-2mass.fits.gz}}
+We use stars crossmatched in \tgas\ and \tmass.
+The match was done using a nearest-neighbor algorithm with a search radius of $4"$.\footnote{\url{http://portal.nersc.gov/project/cosmo/temp/dstn/gaia/tgas-matched-2mass.fits.gz}}
 We also required that the stars lie within the
 observing footprint of \psone\ to access the \cite{green15} 3D dust model.
 We require that the photometry have real values, and nonzero, real errors, and
