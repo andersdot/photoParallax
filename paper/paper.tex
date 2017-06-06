@@ -373,7 +373,7 @@ method that flows from them---in the discussion section below.
   correctly known variances. In detail, we assume that the parallax uncertainty estimates,
   (the \texttt{parallax{\_}error} entry in the \gaia\ catalog), are correct.
   Here we are making use of the fact that, for
-  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.
+  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise. 
 \item[dust] We treat the \psone-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -555,9 +555,7 @@ galactic coordinates in \figurename~\ref{fig:dust}.
 After applying the dust correction, we do not update the uncertainties, which is
 technically wrong and under-represents the true uncertainties; this leads to a less severe deconvolution, as mentioned previously.
 In other words, the features of our inferred
-  \cmd\ are conservatively broad (broader than if we over-estimated
-  the errors which would have lead to excessive deconvolution and
-  unrealistically narrow features). We could add the covariance of
+  \cmd\ are conservatively broad\footnote{This can be understood by considering the following procedure: if one incrementally increase the noise levels (leaving the data unchanged; just increasing the declared uncertainties), the deconvolved distribution will be increasingly narrower, since it targets the distribution that would generate the noiseless observations, as well as the observed data once noise is added}. We could add the covariance of
 the dust to our likelihoods, but this is beyond the scope of this
 demonstration of concept.
 \begin{figure}
