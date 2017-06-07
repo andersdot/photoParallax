@@ -2,6 +2,7 @@ import numpy as np
 import scipy.optimize as op
 import sys
 import matplotlib as mpl
+import matplotlib.pyplot as plt
 
 def make_fake_data(parsTrue, N=512):
     np.random.seed(42)
@@ -84,8 +85,8 @@ def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mt
     axes[3].errorbar(xns, ydns, yerr=sigmadns, fmt="None", mew=0, color=dataColor, alpha=0.25, elinewidth=0.5)
     #axes[2].errorbar(xns[0:nexamples], ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color="b", zorder=37, alpha=alpha_chosen, mew=0)
     for ax in axes:
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
+        ax.set_xlabel('$x$')
+        ax.set_ylabel('$y$')
         ax.set_xlim(xlim)
         ax.set_ylim(ylim)
         ax.set_xticks((-1, -0.5, 0, 0.5, 1))
@@ -111,7 +112,6 @@ def gaussian(mean, sigma, array, amplitude=1.0):
     return amplitude/np.sqrt(2.*np.pi*sigma**2.)*np.exp(-(array - mean)**2./(2.*sigma**2.))
 
 def exampleParallax():
-    import matplotlib.pyplot as plt
     plt.style.use('seaborn-talk')
     fig, ax = plt.subplots(1, 2, figsize=(15, 7))
     x = np.linspace(-2., 8., 1000)
@@ -154,19 +154,11 @@ def exampleParallax():
     #ax[1].set_xlim(0, 8)
     fig.savefig('likelihoodExampleNegative.png')
     plt.close(fig)
-if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-    import matplotlib as mpl
+
+def makeplots(mtrue=-1.37, btrue=0.2, ttrue=0.8, nexamples=5, trueColor='darkred', priorColor='darkgreen', posteriorColor='royalblue', dataColor='black', posteriorMapColor='Blues'):
+    posteriorMap = mpl.cm.get_cmap(posteriorMapColor)
     xlim = (-1, 1)
     ylim = (-5, 5)
-    trueColor = 'darkred'
-    priorColor = 'darkgreen'
-    posteriorColor='royalblue'
-    posteriorMap = mpl.cm.get_cmap('Blues')
-    dataColor = 'black'
-
-    nexamples =  np.int(sys.argv[1])
-    mtrue, btrue, ttrue = -1.37, 0.2, 0.8
     parsTrue = [mtrue, btrue, ttrue] #m, b, t
 
     xns, yns, sigmans, yntrues = make_fake_data(parsTrue)
@@ -184,6 +176,8 @@ if __name__ == "__main__":
         plt.style.use(style)
         mpl.rcParams['xtick.labelsize'] = 18
         mpl.rcParams['ytick.labelsize'] = 18
+        mpl.rcParams['axes.labelsize'] = 18
+        mpl.rcParams['font.size'] = 25
         fig, axes = plt.subplots(2, 2, figsize=(15, 11))
         axes = axes.flatten()
         figNoise, axesNoise = plt.subplots(2,2, figsize=(8,8))
@@ -194,8 +188,8 @@ if __name__ == "__main__":
         for ax in axesTrue:
             ax.plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
             ax.plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, linewidth=2, alpha=0.75)
-            ax.set_xlabel('X')
-            ax.set_ylabel('Y')
+            ax.set_xlabel('$x$', fontsize=18)
+            ax.set_ylabel('$y$', fontsize=18)
             ax.set_xlim(xlim)
             ax.set_ylim(ylim)
         axesTrue[0].scatter(xns, yntrues, c=trueColor, lw=0, alpha=0.5, label=r'$y_{true,n}$: true y values')
@@ -205,9 +199,20 @@ if __name__ == "__main__":
         axesTrue[1].legend(loc='best', fontsize=15)
         figTrue.tight_layout()
         figTrue.savefig('toyTrue.png')
-
+        figTrue.savefig('toyTrue.pdf', rasterizee=True)
         fig, axes, figNoise, axesNoise = plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=nexamples, dataColor=dataColor, priorColor=priorColor, posteriorColor=posteriorColor, trueColor=trueColor, posteriorMap=posteriorMap)
         figNoise.tight_layout()
         figNoise.savefig('toyNoise.' + label + '.png')
+        figNoise.savefig('toyNoise.' + label + '.pdf', rasterized=True)
         #fig.tight_layout()
         fig.savefig("toy." + label + ".png")
+        fig.savefig('toy.' + label + '.pdf', rasterized=True)
+
+if __name__ == "__main__":
+    nexamples =  np.int(sys.argv[1])
+    mtrue, btrue, ttrue = -1.37, 0.2, 0.8
+    trueColor='darkred'
+    priorColor='darkgreen'
+    posteriorColor='royalblue'
+    dataColor='black'
+    makeplots(mtrue=mtrue, btrue=btrue, ttrue=ttrue, nexamples=nexamples, trueColor=trueColor, priorColor=priorColor, posteriorColor=posteriorColor, dataColor=dataColor, posteriorMap=posteriorMap)

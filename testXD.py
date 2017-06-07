@@ -896,14 +896,16 @@ def dataArrays(survey='2MASS'):
               ~np.isnan(bandDictionary[mag2]['array'][bandDictionary[mag2]['key']]) & \
               ~np.isnan(bandDictionary[absmag]['array'][bandDictionary[absmag]['key']])
 
+    nanGaia = ~np.isnan(tgas['parallax']) & ~np.isnan(tgas['parallax_error'])
+
     if survey == '2MASS':
         nonZeroColor = (bandDictionary[mag1]['array'][bandDictionary[mag1]['key']] -
                         bandDictionary[mag2]['array'][bandDictionary[mag2]['key']] != 0.0) & \
                        (bandDictionary[mag1]['array'][bandDictionary[mag1]['key']] != 0.0)
-        indices = twoMass['matched'] & nonzeroError & ~nanDust & nanPhot & nanPhotErr
+        indices = twoMass['matched'] & nonzeroError & ~nanDust & nanPhot & nanPhotErr & nanGaia
 
     else:
-        indices = parallaxSNcut & lowPhotErrorcut & nonzeroError & ~nanDust
+        indices = parallaxSNcut & lowPhotErrorcut & nonzeroError & ~nanDust & nanGaia
 
     tgas = tgas[indices]
     Apass = Apass[indices]
