@@ -184,6 +184,19 @@ absMag = testXD.absMagKinda2absMag(mean[positive]*10.**(0.2*apparentMagnitude[po
 absMag_err = absMagError(mean[positive], sigma[positive], apparentMagnitude[positive], absMag)
 titles = ["De-noised Expectation Values", "Posterior Distributions"]
 plot_samples(color, absMag, color_err, absMag_err, ind, contourColor='black', rasterized=True, plot_contours=True, dataColor=posteriorColor, titles=titles, xlim=xlim_cmd, ylim=ylim_cmd, xlabel=xlabel_cmd, ylabel=ylabel_cmd, pdf=pdf)
-if pdf: os.rename('plot_sample.pdf', 'paper/posterior.pdf')
+if pdf: os.rename('plot_sample.pdf', 'paper/posteriorCMD.pdf')
 os.rename('plot_sample.png', 'posterior.png')
 #-------------------------------------------------------
+
+
+#dust plot
+
+#posterior example plot
+
+#delta plot
+
+#delta cdf plot
+
+#M67 plot
+
+#what's that feature plot 

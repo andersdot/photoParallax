@@ -487,7 +487,7 @@ with $f(\varpi_{\true})$ being a window function to insure $\varpi_{\true}$ is p
 \section{Data and results}
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{data.png}
+  \includegraphics[width=\textwidth]{data.pdf}
 \caption{The observed \cmd: To visualize the full dataset, in the left panel we use the point estimates of the \tmass\ $J-K_s$ color, the $J$ band apparent magnitude, and the \gaia\ parallax. The blue lines represent the $1\sigma$ and $2\sigma$ contours for the distribution. To give a sense of the uncertainties, in the right panel we subsample the dataset and include the $1\sigma$ uncertainties. The uncertainties are dominated by the parallax noise, with many stars diverging to infinitely far away and therefore very intrinsically bright.}
 \label{fig:data}
 \end{figure}
@@ -577,7 +577,7 @@ color--magnitude diagram for the \gaia\ + \tmass\ stars is tighter, as expected.
 We'll come back to more features in the data below, especially those seen in the posterior distribution.
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{prior_ngauss128.png}
+  \includegraphics[width=\textwidth]{prior.pdf}
 \caption{The \cmd\ prior, modeled as a Gaussian mixture inferred by
   running XD on all of the data. The left panel shows a sampling of
   the prior, with the blue lines showing the $1\sigma$ and $2\sigma$
@@ -627,7 +627,7 @@ It also exemplifies that our prior tends to have the largest effect on stars in 
 
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{posteriorCMD.png}
+  \includegraphics[width=\textwidth]{posteriorCMD.pdf}
 \caption{The distribution of expectation values of the parallax posterior PDFs transformed into an absolute magnitude vs color, the \cmd, of the full data set is shown in the left panel, with the $1\sigma$ and $2\sigma$ contours of the distribution shown in black.
 The right panel shows a subsample of data set, plotting the expectation value and $1\sigma$ uncertainty of posterior PDF projected onto the \cmd.
 Notice that some parts of this \cmd\ are tighter than the prior, or noise-deconvolved \cmd, shown in \figurename~\ref{fig:prior}
@@ -748,7 +748,7 @@ we generate from our parallax posterior PDFs to be only weakly biased.
 \subsection{Comparison with other priors}
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{comparePrior.png}
+  \includegraphics[width=\textwidth]{comparePrior.pdf}
 \caption{Comparison with a common spatial prior: A visualization of the posterior PDF for a subsection of \tgas\ stars, shown as the expectation value and the sqrt of the variance as the uncertainty. Left panel shows the posterior PDF using our \cmd\ prior, right panel shows the posterior PDFs when using the exponentially declining spatial density, a common space-density prior used when inferring distances. The scale of the exponentially declining spatial density prior is $1.35~{\rm kpc}$, the optimal value found in \cite{astraatmadja16a}. Using the \cmd\ as a prior generates a posterior PDF that has smaller variance.}
 \label{fig:comparePrior}
 \end{figure}
