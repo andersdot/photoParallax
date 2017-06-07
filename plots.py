@@ -28,11 +28,11 @@ def plot_samples(x, y, xerr, yerr, ind, contourColor='black', rasterized=True, p
     ax2 = fig.add_subplot(122)
     levels = 1.0 - np.exp(-0.5 * np.arange(1.0, 2.1, 1.0) ** 2)
     im = corner.hist2d(x, y, ax=ax1, levels=levels, bins=200, no_fill_contours=True, plot_density=False, color=contourColor, rasterized=True, plot_contours=plot_contours, plot_datapoints=False)
-    ax1.scatter(x, y, s=1, lw=0, c=dataColor, alpha=alpha, zorder=0)
+    ax1.scatter(x, y, s=1, lw=0, c=dataColor, alpha=alpha, zorder=0, rasterized=True)
     if prior:
         plotPrior(xdgmm, ax2, c=dataColor)
     else:
-        ax2.errorbar(x[ind], y[ind], xerr=xerr[ind], yerr=[yerr[0][ind], yerr[1][ind]], fmt="none", zorder=0, mew=0, ecolor='black', alpha=0.5, elinewidth=0.5)
+        ax2.errorbar(x[ind], y[ind], xerr=xerr[ind], yerr=[yerr[0][ind], yerr[1][ind]], fmt="none", zorder=0, mew=0, ecolor=dataColor, alpha=0.5, elinewidth=0.5)
     ax = [ax1, ax2]
     for i, axis in enumerate(ax):
         axis.set_xlim(xlim)
@@ -44,7 +44,7 @@ def plot_samples(x, y, xerr, yerr, ind, contourColor='black', rasterized=True, p
             axis.yaxis.set_major_formatter(plt.NullFormatter())
         else:
             axis.set_ylabel(ylabel, fontsize = 18)
-    if pdf: fig.savefig('plot_sample.pdf', rasterized=True)
+    if pdf: fig.savefig('plot_sample.pdf', dpi=400)
     fig.savefig('plot_sample.png')
 
 
@@ -68,7 +68,7 @@ def sampleXDGMM(xdgmm, Nsamples):
     return samplex, sampley
 
 #    for label, style in zip(['paper', 'talk'],['seaborn-paper', 'seaborn-talk']):
-pdf = False
+pdf = True
 style = 'seaborn-paper'
 plt.style.use(style)
 mpl.rcParams['xtick.labelsize'] = 18
@@ -123,7 +123,7 @@ absMag_err = absMagError(tgas['parallax'][positive], tgas['parallax_error'][posi
 titles = ["Observed Distribution", "Obs+Noise Distribution"]
 
 plot_samples(color, absMag, color_err, absMag_err, ind, contourColor='grey', rasterized=True, plot_contours=True, dataColor=dataColor, titles=titles, xlim=xlim_cmd, ylim=ylim_cmd, xlabel=xlabel_cmd, ylabel=ylabel_cmd, pdf=pdf)
-if pdf: os.rename('plot_sample.pdf', 'data.pdf')
+if pdf: os.rename('plot_sample.pdf', 'paper/data.pdf')
 os.rename('plot_sample.png', 'data.png')
 #-------------------------------------------------------
 
@@ -133,7 +133,7 @@ xdgmm = XDGMM(filename=xdgmmFile)
 samplex, sampley = sampleXDGMM(xdgmm, len(tgas))
 titles = ["Extreme Deconvolution\n  resampling", "Extreme Deconvolution\n  cluster locations"]
 plot_samples(samplex, sampley, None, None, ind, contourColor='black', rasterized=True, plot_contours=True, dataColor=priorColor, titles=titles, xlim=xlim_cmd, ylim=ylim_cmd, xlabel=xlabel_cmd, ylabel=ylabel_cmd, prior=True, xdgmm=xdgmm, pdf=pdf)
-if pdf: os.rename('plot_sample.pdf', 'prior.pdf')
+if pdf: os.rename('plot_sample.pdf', 'paper/prior.pdf')
 os.rename('plot_sample.png', 'prior.png')
 #-------------------------------------------------------
 
@@ -156,7 +156,7 @@ fig.subplots_adjust(left=0.1, right=0.95,
 ax1 = fig.add_subplot(121)
 ax2 = fig.add_subplot(122)
 ax = [ax1, ax2]
-titles =  ['CMD Prior', 'Exp Dec Sp Den Prior']
+titles =  ['Exp Dec Sp Den Prior', 'CMD Prior']
 for i, file in enumerate(['posteriorSimple.npz', posteriorFile]):
     data = np.load(file)
     posterior = data['posterior']
@@ -164,8 +164,8 @@ for i, file in enumerate(['posteriorSimple.npz', posteriorFile]):
     mean = data['mean']
     absMag = testXD.absMagKinda2absMag(mean[positive]*10.**(0.2*apparentMagnitude[positive]))
     absMag_err = absMagError(mean[positive], sigma[positive], apparentMagnitude[positive], absMag)
-    ax[i].scatter(color[ind], absMag[ind], c=posteriorColor)
-    ax[i].errorbar(color[ind], absMag[ind], xerr=color_err[ind], yerr=[absMag_err[0][ind], absMag_err[1][ind]], fmt=None, zorder=0, lw=0.5, mew=0, color=posteriorColor)
+    #ax[i].scatter(color[ind], absMag[ind], c=posteriorColor, s=1, lw=0, alpha=alpha, zorder=0)
+    ax[i].errorbar(color[ind], absMag[ind], xerr=color_err[ind], yerr=[absMag_err[0][ind], absMag_err[1][ind]], fmt="none", zorder=0, mew=0, ecolor=posteriorColor, alpha=0.5, elinewidth=0.5, color=posteriorColor)
     ax[i].set_xlim(xlim_cmd)
     ax[i].set_ylim(ylim_cmd[0], ylim_cmd[1]*1.1)
     ax[i].text(0.05, 0.95, titles[i], ha='left', va='top', transform=ax[i].transAxes, fontsize=18)
@@ -174,7 +174,7 @@ for i, file in enumerate(['posteriorSimple.npz', posteriorFile]):
         ax[i].yaxis.set_major_formatter(plt.NullFormatter())
     else:
         ax[i].set_ylabel(ylabel_cmd, fontsize = 18)
-if pdf: fig.savefig('comparePrior.pdf', rasterized=True)
+if pdf: fig.savefig('paper/comparePrior.pdf', dpi=400)
 fig.savefig('comparePrior.png')
 #-------------------------------------------------------
 
@@ -184,6 +184,6 @@ absMag = testXD.absMagKinda2absMag(mean[positive]*10.**(0.2*apparentMagnitude[po
 absMag_err = absMagError(mean[positive], sigma[positive], apparentMagnitude[positive], absMag)
 titles = ["De-noised Expectation Values", "Posterior Distributions"]
 plot_samples(color, absMag, color_err, absMag_err, ind, contourColor='black', rasterized=True, plot_contours=True, dataColor=posteriorColor, titles=titles, xlim=xlim_cmd, ylim=ylim_cmd, xlabel=xlabel_cmd, ylabel=ylabel_cmd, pdf=pdf)
-if pdf: os.rename('plot_sample.pdf', 'posterior.pdf')
+if pdf: os.rename('plot_sample.pdf', 'paper/posterior.pdf')
 os.rename('plot_sample.png', 'posterior.png')
 #-------------------------------------------------------

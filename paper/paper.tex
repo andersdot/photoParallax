@@ -247,7 +247,7 @@ commitment to---or even use of---physical models of stars or the Milky Way.
 \section{Why does this work?}
 \begin{figure}
 \centering
-  \includegraphics[width=\textwidth]{toy.png}
+  \includegraphics[width=\textwidth]{toy.pdf}
 \caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
 \label{fig:toy}
 \end{figure}
@@ -256,7 +256,7 @@ In this paper we use the noise-deconvolved \cmd\ as a prior to infer more precis
 Understanding the validity of this method can be challenging because we are using the data both for the prior and the likelihood in our inference.
 To ease understanding, here we demonstrate the general methodology using a
 simpler toy model with simulated data.
-Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $Y$.
+Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $y$.
 We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the $y$ direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
 Here the thickness of the toy distribution mimics the true thickness or intrinsic scatter of the \cmd\ due to age, mass, and metallicity.
 The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel.
