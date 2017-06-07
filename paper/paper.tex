@@ -43,16 +43,17 @@
        with a data-driven model of stars}
 
 \author[0000-0001-5725-9329]{Lauren Anderson}
-\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA}
+\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA\hspace*{-1cm}}
 
 \author[0000-0003-2866-9403]{David W. Hogg}
-\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA}
-\affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726 Broadway, room 1005, New York, NY 10003, USA}
+\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA\hspace*{-1cm}}
+\affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726 Broadway, New York, NY 10003, USA}
 \affil{Center for Data Science, New York University, 60 Fifth Ave, New York, NY 10011, USA}
 \affil{Max-Planck-Institut f\"ur Astronomie, K\"onigstuhl 17, D-69117 Heidelberg}
 
 \author[0000-0002-3962-9274]{Boris Leistedt}
-\affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726 Broadway, room 1005, New York, NY 10003, USA}
+\affil{Center for Cosmology and Particle Physics, Department of Physics, New York University, 726 Broadway, New York, NY 10003, USA}
+\affil{NASA Einstein Fellow}
 
 \author[0000-0003-0872-7098]{Adrian M. Price-Whelan}
 \affil{Department of Astrophysical Sciences, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA}
@@ -72,7 +73,7 @@ Here we use \tmass\ colors for $1.4$ million \tgas\ stars to build a
 noise-deconvolved empirical prior distribution for stars in color--magnitude
 space.
 This model contains no knowledge of stellar astrophysics or the
-Milky Way, but is precise (and beautiful) because it is a generative model fit to many noisy
+Milky Way, but is precise because it is a generative model fit to many noisy
 parallax measurements under an assumption of stationarity.
 We use the Extreme Deconvolution (\xd) algorithm---an Empirical Bayes approximation to a full
 hierarchical model of the true parallax and photometry of every star---to
@@ -138,7 +139,7 @@ on the precise information coming from the high signal-to-noise stars
 and deliver valuable information about the low signal-to-noise stars,
 which in turn will deliver precise parallax (or distance or absolute magnitude) inferences.
 
-Here we deliver a demonstration-of-concept that shows that a
+Here we present a demonstration-of-concept that shows that a
 data-driven model of the \gaia\ data could in principle deliver very
 precise parallax measurements, without any input of the physics or numerical models of stellar
 evolution, interiors, or photospheres.
@@ -372,7 +373,7 @@ method that flows from them---in the discussion section below.
   correctly known variances. In detail, we assume that the parallax uncertainty estimates,
   (the \texttt{parallax{\_}error} entry in the \gaia\ catalog), are correct.
   Here we are making use of the fact that, for
-  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.
+  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise. 
 \item[dust] We treat the \psone-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -400,7 +401,7 @@ parallax, and $Z$ is a normalization constant (the model evidence, or marginaliz
 The strength of our inference lies in how we generate our prior.
 Instead of assuming a functional form for the spatial distribution of stars in the Milky Way (\citealt{astraatmadja16b}), or relying on stellar models (\citealt{gaia16}), we build a noise-deconvolved estimate of the \cmd\ from the observed colors and absolute magnitudes of our full set of stars.
 This is because supplementary to the trigonometric measure of distance, the photometry of stars is also informative of their distances.
-The intrinsic temperatures and luminosities of stars tightly correlate leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
+The intrinsic temperatures and luminosities of stars tightly correlate, leading to the observed colors and absolute magnitudes of stars also tightly correlating, usually visualized as the \cmd.
 The tight correlation of the \cmd\ benefits our inference because the luminosity or absolute magnitude of a star $M$, when compared with its brightness or apparent magnitude $m$, contains distance information $d$ via the fundamental relation $m=M+5\log(d/10\, \mathrm{pc})$.
 We include this in the inference by using the \cmd\ as part of our prior for $\varpi_{\true}$.
 Specifically, we use the \cmd\ generated from the data themselves, as detailed in the next section.
@@ -492,9 +493,8 @@ with $f(\varpi_{\true})$ being a window function to insure $\varpi_{\true}$ is p
 \label{fig:data}
 \end{figure}
 
-We use stars crossmatched in \tgas\ and \tmass\.
-The match was done using a nearest-neighbor algorithm with a search radius of $4"$.
-\footnote{\url{http://portal.nersc.gov/project/cosmo/temp/dstn/gaia/tgas-matched-2mass.fits.gz}}
+We use stars crossmatched in \tgas\ and \tmass.
+The match was done using a nearest-neighbor algorithm with a search radius of $4"$.\footnote{\url{http://portal.nersc.gov/project/cosmo/temp/dstn/gaia/tgas-matched-2mass.fits.gz}}
 We also required that the stars lie within the
 observing footprint of \psone\ to access the \cite{green15} 3D dust model.
 We require that the photometry have real values, and nonzero, real errors, and
@@ -504,7 +504,7 @@ The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}.
 The left panel shows the point estimates of the color and absolute magnitude,
 using the point estimate of the parallax from \gaia, and the $1\sigma$ and
 $2\sigma$ contours of the distribution.
-The right panel shows a subset of the data with it's associated error bars.
+The right panel shows a subset of the data with it's associated error bars, calculated via subsampling.
 The uncertainties in the colors are fairly well behaved, but the large
 uncertainties in some absolute magnitudes are due to the large uncertainties in
 the parallax measurements.
@@ -554,9 +554,8 @@ galactic coordinates in \figurename~\ref{fig:dust}.
 After applying the dust correction, we do not update the uncertainties, which is
 technically wrong and under-represents the true uncertainties; this leads to a less severe deconvolution, as mentioned previously.
 In other words, the features of our inferred
-  \cmd\ are conservatively broad (broader than if we over-estimated
-  the errors which would have lead to excessive deconvolution and
-  unrealistically narrow features). We could add the covariance of
+  \cmd\ are conservatively broad.\footnote{This can be understood by considering the following procedure: if one incrementally increased the noise levels (leaving the data unchanged; just increasing the declared uncertainties), the deconvolved distribution would be increasingly narrower, since it targets the distribution that would generate the noiseless observations, as well as the observed data once noise is added. Thus, under-estimating the uncertainties leads to a conservative under-deconvolution.}
+We could add the covariance of
 the dust to our likelihoods, but this is beyond the scope of this
 demonstration of concept.
 \begin{figure}
@@ -603,10 +602,10 @@ This change in precision is further illustrated in Figure~\ref{fig:delta}, where
 The points are colored by the natural log of their fractional change in variance (the $y$ axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
 The giants show obvious large improvements, as well as some main sequence stars.
 Regions of large improvement are those with the largest photometric and parallax errors, which are the faintest observed objects.
-This is a fairly standard result: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
+This is a fairly standard result which we illustrated in the toy model above: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 Stars with a color $(J-K_s)^C \sim 0.6$ show a decrease in precision due to the width of the prior there; the more vertical structure in the red giant branch of the \cmd.
 
-Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog. This more directly shows what was alluded to in Figure~ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
+Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog. This more directly shows what was alluded to in Figure~\ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
 And $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$, or have a fraction decrease in variance by a factor of $>4$, shown as the other dotted line at $y=0.14$.
 
 
@@ -669,8 +668,10 @@ paper or any other data outputs straightforwardly.
 
 \subsection{Distances to M67}
 As a test of the accuracy of these photometric parallax inferences, we inferred the parallaxes to stars in the open cluster M67.
-M67 is at a Heliocentric distance of $800$ to $900~{\rm pc}$ with an estimated age of $3$ to $5~{\rm Gyr}$.
-Previous work \citep{cbj15} has noted that bad things happen if you try to infer a distance as the inverse of the observed (noisy) parallax when the parallax signal-to-noise (SN) is below 5, $\varpi / \sigma_\varpi < 5$.
+
+M67 is at a Heliocentric distance of $800$--$900~{\rm pc}$ with an estimated age of $3$--$5~{\rm Gyr}$.
+Previous work \citep{cbj15} has noted that distance estimates directly derived from the inverse of the observed (noisy) parallax are unreliable (significantly biased and uncertain) when the parallax signal-to-noise (SN) is below 5, $\varpi / \sigma_\varpi < 5$.
+
 With \gaia\ parallaxes having a minimum uncertainty of about $0.3~{\rm mas}$, the SN reaches 5 for the most certain parallax measurements at about $700~{\rm pc}$, just before the distance to this cluster.
 M67 is therefore a great test case for comparing parallax inferences with or without a prior.
 
@@ -690,11 +691,11 @@ This shows that our prior is not only making parallaxes more precise but also (p
 \caption{Proof of concept: parallax inference to the open cluster M67.
 The upper left panel visualizes the \gaia\ + \tmass\ likelihoods of the data, shown in black and projected onto the \cmd, for all the stars within our $1~{\rm deg}^2$ window centered on the position of M67.
 Our prior, visualized as a mixture of Gaussians, is shown in green.
-The upper right panel shows the \gaia\ parallax likelihoods in black, with the "true" distance to M67, determined by previous methods, bracketed by the red lines.
+The upper right panel shows the \gaia\ parallax likelihoods in black, with the ``true" distance to M67, determined by previous methods, bracketed by the red lines.
 Similar to the upper left panel, the lower left panel shows the likelihoods of the data in black and our prior in green, as well as the posterior PDFs in blue.
 The posterior PDFs are a mixture of Gaussians as well, each a product of the likelihood with a Gaussian in our prior.
 The lower right panel shows the projection of the 2D posterior PDF onto parallax space.
-The posterior PDFs are much more clustered and sharply peaked around the "true" distance to M67 than the \gaia\ likelihoods, showing that our prior generates posterior PDFs that are accurate and more precise than \gaia\ alone.}
+The posterior PDFs are much more clustered and sharply peaked around the ``true" distance to M67 than the \gaia\ likelihoods, showing that our prior generates posterior PDFs that are accurate and more precise than \gaia\ alone.}
 \label{fig:m67}
 \end{figure}
 
@@ -780,13 +781,13 @@ There is a plausible binary sequence of stars, as well as a prominent red clump,
 The lower main sequence is very narrow while the upper main sequence
 is much wider. This may be an age variation on the main sequence mixed
 with a Malmquist bias of seeing a much larger volume of upper main
-sequence stars. There is a plausible binary sequence of stars with
+sequence stars \citep{malmquist22}. There is a plausible binary sequence of stars with
 about twice the brightness as the main sequence. The helium burning
 red clump is prominent for the volume DR1 probed, and the red giant
 branch is fairly straight and narrow. The main sequence turn off is
 noticeable and also surprisingly narrow, possibly a reflection of the
 star formation history of the local volume also mixed with a Malmquist
-bias (\citealt{malmquist22}).
+bias.
 
 \subsection{Critical discussion of assumptions}
 
@@ -807,7 +808,7 @@ detail, under the same set of assumption labels:
   sequence. This does not violate the stationarity assumption in
   detail, because the low and high signal-to-noise objects have to be
   drawn from the same distribution within some feature or patch of the
-  \cmd\ space.
+  \cmd\ space. Thus, this has a small effect on our results, and could be improved by modelling the noise distribution simultaneously with the \cmd.
 \item[selection] The biggest limitation of our method for generating
   the \cmd\ from the data is that we have not used a
   \tgas\ selection function, completeness estimate, or
@@ -815,7 +816,7 @@ detail, under the same set of assumption labels:
   \tgas\ Catalog (or really the \tgas--\tmass\ intersection), not of
   the stars in the Milky Way, nor any volume-limited subsample of the
   Milky Way.  Importantly, because we used \emph{all} of the stars in
-  the \tgas--\tmass\ intersection, the model \emph{is} representive of
+  the \tgas--\tmass\ intersection, the model \emph{is} representative of
   the full intersection, even the distant parts, where all the
   parallaxes are measured at low signal-to-noise.  This is in contrast
   to techniques that might build the model from only the high
@@ -829,6 +830,9 @@ detail, under the same set of assumption labels:
   prior to infer distances for the full billion-star catalog released
   in \gaia\ DR1 alongside \tgas, or for stars fainter or brighter or
   bluer than those included in the \tgas--\tmass\ intersection.
+  A similar argument can be made for \textit{internal} selection effects, such as inhomogeneities of the depth and noise distributions, which we have neglected. 
+  Those inhomogeneities are unlikely to affect the \cmd results; we effectively model the average distribution of the \tgas--\tmass\ intersection. 
+  By modeling the selection function in detail, one could improve the quality of the inferred \cmd, its effect on individual objects, and its connection to physical models of the Milky Way. 
 \item[big data] The empirical Bayesian methodology is a good
   approximation to full hierarchical inference in the limit of large
   numbers of data points, such that no individual star is carrying a
@@ -894,7 +898,7 @@ detail, under the same set of assumption labels:
   those successes. A next-generation model might be designed to be data-driven
   but nonetheless capitalize on physics-driven successes. One framework
   for that would be to fit not the \cmd\ but rather deviations of the \cmd\ away
-  from a good physics-based model prediction.
+  from a good physics-based model prediction. This would also require modeling the selection function of the data under consideration.
 \end{description}
 
 
@@ -951,10 +955,11 @@ Center/California Institute of Technology, funded by the National
 Aeronautics and Space Administration and the National Science
 Foundation.
 
-This project was partially supported by This research was partially supported by
+This research was partially supported by
   the \acronym{NSF} (\acronym{AST-1517237}),
   \acronym{NASA} (grant \acronym{NNX12AI50G}),
-  and the Moore-Sloan Data Science Environment at \acronym{NYU}.
+  and the Moore-Sloan Data Science Environment at \acronym{NYU}. 
+  BL was supported by the National Aeronautics and Space Administration through Einstein Postdoctoral Fellowship Award Number PF6-170154.
 It made use of the \acronym{NASA} Astrophysics Data System.
 All the code used in this project is available online\footnote{\url{https://github.com/andersdot/photoParallax}} under an open-source license.
 
