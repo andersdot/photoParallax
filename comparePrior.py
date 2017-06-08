@@ -111,23 +111,23 @@ def comparePrior():
     plt.tight_layout()
     fig.savefig('priorNgaussComparison.png')
 
-def dustViz(ngauss=128, quantile=0.5, iter='8th', survey='2MASS', dataFilename='All.npz'):
+def dustViz(ngauss=128, quantile=0.5, iter='8th', survey='2MASS', dataFilename='All.npz', ax=None, tgas=None):
 
-    tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
+    if tgas is None: tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
     dustFile = dustFilename(ngauss, quantile, iter, survey, dataFilename)
     data = np.load(dustFile)
     dust = data['ebv']
-    fig, ax = plt.subplots(figsize=(12,7))
+    if ax is None: fig, ax = plt.subplots(figsize=(12,7))
     norm = mpl.colors.PowerNorm(gamma=1/2.)#(vmin=-0.5, vmax=1)
-    im = ax.scatter(tgas['l'], tgas['b'], c=dust, lw=0, cmap='Greys', s=1, vmin=0, vmax=1, norm=norm)
+    im = ax.scatter(tgas['l'], tgas['b'], c=dust, lw=0, cmap='Greys', s=1, vmin=0, vmax=1, norm=norm, rasterized=True)
     ax.set_xlim(0, 360)
     ax.set_ylim(-90, 90)
-    ax.set_xlabel('$\mathscr{l}$ [deg]')
-    ax.set_ylabel('$\mathscr{b}$ [deg]')
+    ax.set_xlabel(r'$\mathscr{l}$ [deg]')
+    ax.set_ylabel(r'$\mathscr{b}$ [deg]')
     cb = plt.colorbar(im, ax=ax)
     cb.set_clim(-0.1, 1)
     cb.set_label(r'E($B-V$ )')
-    fig.savefig('dustViz.dQ' + str(quantile) + '.png')
+    if ax is None: fig.savefig('dustViz.dQ' + str(quantile) + '.png')
 
 def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', iter='10th', Nsamples=3e5, contourColor='k', dustFile='dust.npz', sdss5=False, whatsThatFeature=False):
 
@@ -595,7 +595,7 @@ def paperComparePrior(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
         absMag = testXD.absMagKinda2absMag(mean*10.**(0.2*apparentMagnitude))
         absMagSigma = testXD.absMagKinda2absMag(sigma*10.**(0.2*apparentMagnitude))
         ax[0].scatter(color[indices], absMag[indices])
-        ax[0].errorbar(color[indices], absMag[indices], xerr=color_err[inidces], yerr=[absMag/absMagSigma, absMag*absMagSigma], fmt=None, zorder=0, lw=0.5, mew=0, color=posteriorColor))
+        ax[0].errorbar(color[indices], absMag[indices], xerr=color_err[inidces], yerr=[absMag/absMagSigma, absMag*absMagSigma], fmt=None, zorder=0, lw=0.5, mew=0, color=posteriorColor)
 
         ax[0].set_xlabel(xlabel, fontsize=18)
         ax[0].set_ylabel(ylabel, fontsize=18)
@@ -606,7 +606,7 @@ def paperComparePrior(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
     fig.savefig('comparePriorPaper.png')
 
 
-def compareSimple
+
 
 if __name__ == '__main__':
     #comparePrior()

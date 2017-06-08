@@ -229,7 +229,7 @@ def posterior2d(means, amps, covs, xbins, ybins, nperGauss=100000., plot=False):
     Z, xedges, yedges = np.histogram2d(samplesX, absMagKinda2absMag(samplesY), bins=[xbins, ybins], normed=True)
     return xedges, yedges, Z, samplesY
 
-def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None, dataColor='black', posteriorColor='blue', truthColor='red', likeLabel=None, postLabel=None):
+def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None, dataColor='black', posteriorColor='blue', truthColor='red', likeLabel=None, postLabel=None, xlim=[0,1], ylim=[0,1], xlabel=None, ylabel=None, like2D_lw=1):
     """
     plot the posterior of each star into example.png and feed it axAll to put it on another plot
     """
@@ -265,8 +265,8 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     pointsData = drawEllipse.plotvector(meanLike, covLike)
     ax[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), 'g', lw=2)
     if axAll is not None:
-        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
-        axAll[2].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
+        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=like2D_lw, label=likeLabel)
+        axAll[2].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=like2D_lw, label=likeLabel)
 
     #plot the posterior in parallax space
     parallaxLikelihood = st.gaussian(meanLike[1], np.sqrt(covLike[1,1]), xabsMagKinda)
@@ -320,16 +320,16 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     fig.savefig('example.png')
 
 
-def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim, plot2DPost=False, dataColor='black', priorColor='green', truthColor='red', posteriorColor='blue'):
+def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim, bandDictionary, absmag, mag1, mag2, plot2DPost=False, dataColor='black', priorColor='green', truthColor='red', posteriorColor='blue', figDist=None, axDist=None, xlabel=None, ylabel=None, lw_2dlike=1):
     """
     test posterior accuracy using distances to cluster M67
     """
     indicesM67 = m67indices(tgas, plot=False, db=0.5, dl=0.5)
 
     #all the plot stuff
-    figDist, axDist = plt.subplots(2, 2, figsize=(14, 14))
-    figPaper, axPaper = plt.subplots(1, 2, figsize=(10, 7))
-    axDist = axDist.flatten()
+    if figDist is None:
+        figDist, axDist = plt.subplots(2, 2, figsize=(14, 14))
+        axDist = axDist.flatten()
     ylabel_posterior_logd = r'P(log d | y, $\sigma_{y}$)'
     ylabel_posterior_d = r'$P(d | y, \sigma_{y}$)'
     ylabel_posterior_parallax = r'$P(\varpi_{\mathrm{true}} | \varpi, \sigma_{\varpi})$'
@@ -384,13 +384,13 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
         else:
             likeLabel = None
             postLabel = None
-        plotPosteriorEachStar(allMeans, allCov, allAmps, summedPosterior[k,:], meanData, covData, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=X, Y=Y, Z=Z, samplesY=samplesY, axAll=axDist, plot2D=plot2DPost, dataColor=dataColor, posteriorColor=posteriorColor, truthColor=truthColor, likeLabel=likeLabel, postLabel=postLabel)
+        plotPosteriorEachStar(allMeans, allCov, allAmps, summedPosterior[k,:], meanData, covData, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=X, Y=Y, Z=Z, samplesY=samplesY, axAll=axDist, plot2D=plot2DPost, dataColor=dataColor, posteriorColor=posteriorColor, truthColor=truthColor, likeLabel=likeLabel, postLabel=postLabel, xlim=xlim, ylim=ylim, xlabel=xlabel, ylabel=ylabel)
         os.rename('example.png', 'example.' + str(k) + '.png')
 
         #plot prior on plot of all stars but only first loop
         if k == 0:
-            plotPrior(xdgmm, axDist[0], c=priorColor, lw=2, label='prior')
-            plotPrior(xdgmm, axDist[2], c=priorColor, lw=2, label='prior')
+            plotPrior(xdgmm, axDist[0], c=priorColor, lw=1, label='prior')
+            plotPrior(xdgmm, axDist[2], c=priorColor, lw=1, label='prior')
         #check that things seem right
         normalization_parallaxPosterior = scipy.integrate.cumtrapz(summedPosterior[k,:]*10.**(0.2*apparentMagnitude), xparallaxMAS)[-1]
         normalization_distancePosterior = scipy.integrate.cumtrapz(summedPosterior[k,:][positive]*xparallaxMAS[positive]**2.*10.**(0.2*apparentMagnitude), 1./xparallaxMAS[positive])[-1]
