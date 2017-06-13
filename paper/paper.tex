@@ -165,7 +165,8 @@ When using physical models, it is impossible to deliver photometric parallax est
 
 However, the use of physical models for distance estimation is not necessary.
 It is possible to build a stellar photometric model from the data themselves,
-because there are stars at all luminosities with useful parallax information.
+because there are stars at a wide range of luminosities with useful parallax information, and this
+range of stellar luminosities with useful parallax information will grow with future \gaia\ data releases.
 One challenge is that different stars are observed at different levels of parallax precision,
 so it requires relatively sophisticated technology to build this data-driven model
 using all of the data available, fairly and responsibly.
@@ -249,7 +250,7 @@ commitment to---or even use of---physical models of stars or the Milky Way.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{toy.pdf}
-\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value. The blue points are better than the black for doing stuff.}
+\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the blue lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value.}
 \label{fig:toy}
 \end{figure}
 
@@ -348,19 +349,20 @@ method that flows from them---in the discussion section below.
 \item[stationarity] We make an assumption of \emph{stationarity}; that is, that the
   stars measured at lower signal-to-noise have analogs measured at
   higher signal-to-noise.
-  In detail, this assumption is wrong, (for example, distant halo stars are different than local
-  disk stars), but the stationarity assumption is fairly weak:
+  In detail, this assumption is wrong. For example, more distant stars will have lower signal to noise ratio measurements
+  and also will be different than local
+  disk stars, in age and metallicity. The stationarity assumption is fairly weak:
   The requirement is that, locally in the \cmd, there is
   support among the high signal-to-noise stars for the types
   of stars also seen at low signal-to-noise.
   If this requirement is met, the results will not be
   strongly biased. Although this is a weak assumption, it is deep and fundamental to this
   work.
-\item[selection] We have no model for the selection function of \tgas,
+\item[selection] We have no model for the selection function of \tgas (but see \cite{bovy17}),
   nor selection volumes for any kinds of stars.
   For this reason, we are building a model of \emph{the contents of \tgas}, not the
   properties of the stars in the Milky Way (nor any volume-limited component or region
-  thereof).
+  thereof). For this reason, our \cmd\ prior might not be appropriate to use with other surveys. 
 \item[big data] We assume that we have large numbers of stars, large enough that
   empirical-Bayes, or maximum-marginalized-likelihood, is a safe
   approximation to full Bayesian inference. This assumption will be
