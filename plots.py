@@ -175,17 +175,17 @@ def likePriorPost(color, absMagKinda, color_err, absMagKinda_err, apparentMagnit
 
 #    for label, style in zip(['paper', 'talk'],['seaborn-paper', 'seaborn-talk']):
 pdf = True
-plot_data = True
-plot_dust = True
-plot_prior = True
-plot_m67 = True
-plot_compare = True
-plot_expectation = True
+plot_data = False
+plot_dust = False
+plot_prior = False
+plot_m67 = False
+plot_compare = False
+plot_expectation = False
 plot_examples = True
-plot_delta = True
-plot_deltacdf = True
-plot_nobias = True
-plot_wtf = True
+plot_delta = False
+plot_deltacdf = False
+plot_nobias = False
+plot_wtf = False
 
 #figsize2x1 = (12, 5.5)
 #figsize2x2 = (12, 11)
@@ -248,6 +248,7 @@ if pdf:
 tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
 posterior = np.load(posteriorFile)
 mean = posterior['mean']
+sigma = np.sqrt(posterior['var'])
 positive = (tgas['parallax'] > 0.) & (mean > 0.)
 ind = np.random.randint(0, len(tgas[positive]), nsubsamples)
 
@@ -394,7 +395,7 @@ if plot_examples:
 
     #plot likelihood and posterior in each axes
     for iteration in np.arange(20, 40):
-        fig, ax = makeFigureInstance(x=3, y=2) #, figsize=figsize3x2)
+        fig, ax = makeFigureInstance(x=3, y=2, hspace=0.75, figureSize=(2,2)) #, figsize=figsize3x2)
         #fig, ax = plt.subplots(2, 3, figsize=figsize3x2)
         #ax = ax.flatten()
         #fig.subplots_adjust(left=0.1, right=0.9,
@@ -411,16 +412,23 @@ if plot_examples:
         for i in range(np.max(digit)):
             currentInd = np.where((digit == i))[0]
             index = currentInd[np.random.randint(0, high=len(currentInd))]
-            ax[0].scatter(color[index], absMag_dust[index], c=dataColor)
+            ax[0].scatter(color[index], absMag_dust[index], c=dataColor, s=20)
             ax[0].errorbar(color[index], absMag_dust[index], xerr=[[color_err[index], color_err[index]]], yerr=[[absMag_dust_err[0][index], absMag_dust_err[1][index]]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=dataColor, ecolor=dataColor)
-            ax[0].annotate(str(i+1), (color[index]+0.05, absMag_dust[index]+0.15))#, fontsize=annotateTextSize)
+            ax[0].annotate(str(i+1), (color[index]+0.075, absMag_dust[index]+0.175))#, fontsize=annotateTextSize)
             #print len(color), len(absMagKinda_dust), len(color_err), len(absMagKinda_dust_err), len(apparentMagnitude)
             likeParallax, priorParallax, posteriorParallax = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
 
             l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=2, color=dataColor)
             l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
             l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
-            ax[i+1].set_title(str(i+1))
+            maxInd = posteriorParallax == np.max(posteriorParallax)
+            maxPar = xparallaxMAS[maxInd]
+            maxY = posteriorParallax[maxInd]
+            if maxPar < 5: annX = 9
+            else: annX = 0
+            if i == 1: annY = 0.75*maxY
+            else: annY = maxY/1.1
+            ax[i+1].text(annX, annY, str(i+1))
             ax[i+1].set_xlabel(r'$\varpi$ [mas]')
             ax[i+1].tick_params(
                 axis='y',          # changes apply to the x-axis
@@ -432,7 +440,8 @@ if plot_examples:
                 leg = fig.legend((l1, l2, l3), ('likelihood', 'prior', 'posterior'), 'upper right') #, fontsize=legendTextSize)
                 leg.get_frame().set_alpha(1.0)
             #plt.tight_layout()
-        if pdf: fig.savefig('posterior_' + str(iteration) + '.pdf', dpi=400)
+            if pdf: fig.savefig('posterior_' + str(iteration) + '.pdf', dpi=400)
+        fig.savefig('paper/posterior.pdf', dpi=400)
         fig.tight_layout()
         fig.savefig('posterior.png')
         plt.close(fig)
