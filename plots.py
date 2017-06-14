@@ -181,7 +181,7 @@ plot_prior = False
 plot_m67 = False
 plot_compare = False
 plot_expectation = False
-plot_examples = True
+plot_examples = False
 plot_delta = True
 plot_deltacdf = False
 plot_nobias = True
@@ -525,7 +525,7 @@ if plot_nobias:
     ax.scatter(x[notnans], y[notnans], c=colorDeltaVar[notnans], s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap, rasterized=True)
     #ax.scatter(x[good], y[good], c=sigma[good], s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap, rasterized=True)
     #ax.scatter(x[good], y[good], c=np.sqrt(sigma[good]), s=1, rasterized=True, zorder=0, alpha=0.1, cmap=cmap, norm=norm)
-    ax.plot([0, 1.1], [0,0], 'k--')
+    ax.plot([0, 1.1], [0,0], 'k--', lw=1)
     ax.set_xlim(0.15, 1.05)
     ax.set_ylim(-2.5, 2.5)
     ylabel = r'$\mathrm{Posterior \, Expectation \, Value} - \varpi_n$'
