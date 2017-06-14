@@ -510,7 +510,7 @@ The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}.
 The left panel shows the point estimates of the color and absolute magnitude,
 using the point estimate of the parallax from \gaia. The $1\sigma$ and
 $2\sigma$ contours of the distribution are shown in grey.
-The right panel shows a subset of the data with its associated error bars, calculated via subsampling.
+The right panel shows a subset of the data with the associated error bar for each star.
 The uncertainties in the colors are fairly well behaved, but the large
 uncertainties in some absolute magnitudes are due to the large uncertainties in
 the parallax measurements.
@@ -574,7 +574,7 @@ demonstration of concept.
 \subsection{The empirical prior}
 Using \xd\ and the MMLE method described in the methods section, we generate the
 prior, shown in \figurename~\ref{fig:prior}.
-The left panel shows 1.3 million samples from the prior distribution, and the
+The left panel shows 1.4 million samples from the prior distribution, and the
 right panel shows $1\sigma$ contours for each component in the underlying
 Gaussian mixture model.
 Compared to the raw data in \figurename~\ref{fig:data}, the deconvolved
@@ -596,24 +596,26 @@ We'll come back to more features in the data below, especially those seen in the
 \subsection{Shrinkage of parallax uncertainties}
 
 Figure~\ref{fig:posterior} shows the various probability distributions of our inference for a few randomly-chosen objects: the likelihood (black), prior (green), and posterior PDF (blue) on the true parallaxes.
-For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1 through 4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
+For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ likelihood. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1 through 4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
 However, $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$. This larger change in precision is visualized in Example 5, which shows a significantly narrower posterior PDF compared to the likelihood.
 The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact, and shape, strongly depend on the location of each star in \cmd\ space.
 
 Figure~\ref{fig:posteriorCMD} shows the distribution of the expectation values of the posterior parallax PDFs projected back onto the \cmd\ space.
-The left panel shows the distribution for all 1.3 million stars in our dataset, and the right panel shows a subsample of the dataset but includes the $1\sigma$ uncertainties on the posterior PDFs.
+The left panel shows the distribution for all 1.4 million stars in our dataset, and the right panel shows a subsample of the dataset and includes the $1\sigma$ uncertainties on the posterior PDFs.
 Compared with the raw data shown in Figure~\ref{fig:data}, it is clear the precision of the posterior PDFs is greater, especially for the red giant branch stars.
 
-This change in precision is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes in the variance. The left panel shows the natural log of the fractional change in variance as a function of $(J-K_s)^C$ color, with the $1\sigma$ and $2\sigma$ contours over plotted.
+This change in precision is further illustrated in Figure~\ref{fig:delta}, where we show the fractional changes in the variance. The left panel shows the natural log of the fractional change in variance as a function of $(J-K_s)^C$ color, with the $1\sigma$ and $2\sigma$ contours of the distribution over plotted.
 The points are colored by the natural log of their fractional change in variance (the $y$ axis of the left panel) in both panels to help guide your eye for the right panel. The regions of \cmd\ space with the greatest improvements are shown in black, and the regions with the lowest improvements are shown in yellow.
 The giants show obvious large improvements, as well as some main sequence stars.
 Regions of large improvement are those with the largest photometric and parallax errors, which are the faintest observed objects.
 This is a fairly standard result which we illustrated in the toy model above: the deconvolution of uncertainties is stronger in noisier regions of the data, leading to narrower features in the upper part of the \cmd, for example.
 Stars with a color $(J-K_s)^C \sim 0.6$ show a decrease in precision due to the width of the prior there; the more vertical structure in the red giant branch of the \cmd.
 
-Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog. This more directly shows what was alluded to in Figure~\ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
+Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \gaia\ catalog (the y-axis of Figure~\ref{fig:delta}). This more directly shows what was alluded to in Figure~\ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
 The precision of our posterior PDFs is greater than or equal to the precision of the \gaia\ catalogue for $87\%$ of the stars, shown as the dotted line at $x=0$,
 and $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$, which corresponds to a fraction decrease in variance by a factor of $>4$, shown as the dotted line at $y=0.14$.
+
+LMA: describe Figure \ref{fig:deltaParallax}
 
 
 \begin{figure}
@@ -687,7 +689,6 @@ paper or any other data outputs straightforwardly.
 
 \subsection{Distances to M67}
 As a test of the accuracy of these photometric parallax inferences, we inferred the parallaxes to stars in the open cluster M67.
-
 M67 is at a Heliocentric distance of $800$--$900~{\rm pc}$ with an estimated age of $3$--$5~{\rm Gyr}$.
 Previous work \citep{cbj15} has noted that distance estimates directly derived from the inverse of the observed (noisy) parallax are unreliable (significantly biased and uncertain) when the parallax signal-to-noise (SN) is below 5, $\varpi / \sigma_\varpi < 5$.
 
@@ -699,9 +700,9 @@ To be clear, we do no prior selection on previously known members of M67, but in
 Keep in mind, the (low) number of M67 members seen here is constrained by the (unknown) selection effects of the \tgas\ dataset.
 With our converged dust values, and its associated prior, we calculate the posterior over $\varpi_{\true}$ for each star within this window on the sky around M67.
 \figurename~\ref{fig:m67} shows the comparison of the likelihoods and posteriors.
-The vertical lines bracket the previously measured parallaxes of, or distances to, the cluster.
-The likelihoods of the observed parallaxes, shown in the top row, are broad and the cluster is not at all obvious.
-The posterior PDFs, shown in the bottom row, are more sharply peaked showing an increase in precision.
+The vertical red lines bracket the previously measured parallaxes of, or distances to, the cluster.
+The likelihoods of the observed parallaxes, shown in the top row in black, are broad and the cluster is not at all obvious.
+The posterior PDFs, shown in the bottom row in blue, are more sharply peaked showing an increase in precision.
 The posterior PDFs also have modes that are more similar to the previously determined distance to the cluster (vertical lines) for far more stars.
 This shows that our prior is not only making parallaxes more precise but also (possibly) increasing the accuracy.
 \begin{figure}
@@ -781,11 +782,11 @@ One option is the exponentially declining spatial density (EDSD) of stars \citep
 It is parameterized by a scale length, and has the nice property that it is smooth out to very large distances so that the posteriors are also very smooth.
 It is a fairly weak prior.
 \figurename~\ref{fig:comparePrior} shows a comparison of the EDSD prior with our \cmd\ prior.
-Here the parallax posterior PDF expectation value and square root of the variance is converted into an absolute magnitude and visualized as the \cmd.
-The left panel visualizes results using our \cmd\ prior, and the right panel visualizes results using the EDSD prior.
+Here the parallax posterior PDF expectation value, and $1\sigma$ uncertainty, for a subset of stars in our dataset is converted into an absolute magnitude and visualized as the \cmd.
+The left panel visualizes results using the EDSD prior, and the right panel visualizes results using our \cmd\ prior.
 The variance for the \cmd\ prior is significantly smaller than the variance for the EDSD prior.
-In general, it is a fairly broad prior so the median \gaia\ star has a posterior variance equal to the likelihood variance.
-It has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes.
+In general, EDSD is a fairly broad prior so the median \gaia\ star has a posterior variance equal to the likelihood variance.
+EDSD has the largest effect on the most noisy and negative parallaxes, and has the nice property of bringing these noisy or negative measurements to reasonable parallaxes.
 
 \subsection{What's That Feature?}
 The denoised expectation values of the parallax projected into the \cmd\ show many interesting and familiar features; we visualize this \cmd\ again in \figurename~\ref{fig:wtf} and highlight some of these features.
@@ -837,7 +838,7 @@ detail, under the same set of assumption labels:
   \tgas\ Catalog (or really the \tgas--\tmass--\psone\ intersection), not of
   the stars in the Milky Way, nor any volume-limited subsample of the
   Milky Way.  Importantly, because we used \emph{all} of the stars in
-  the \tgas--\tmass\ intersection, the model \emph{is} representative of
+  the \tgas--\tmass--\psone\ intersection, the model \emph{is} representative of
   the full intersection, even the distant parts, where all the
   parallaxes are measured at low signal-to-noise.  This is in contrast
   to techniques that might build the model from only the high
@@ -845,14 +846,14 @@ detail, under the same set of assumption labels:
   stellar types and compositions found locally, as well as
   lower-luminosity stars, and stars which happened to get good
   parallaxes.  However, our use of the entire
-  \tgas--\tmass\ intersection without any selection function restricts
+  \tgas--\tmass--\psone\ intersection without any selection function restricts
   the use of our \cmd\ model as a prior to inferences within that same
-  \tgas--\tmass\ intersection.  It would be biasing to use this same
+  \tgas--\tmass--\psone\ intersection.  It would be biasing to use this same
   prior to infer distances for the full billion-star catalog released
   in \gaia\ DR1 alongside \tgas, or for stars fainter or brighter or
-  bluer than those included in the \tgas--\tmass\ intersection.
+  bluer than those included in the \tgas--\tmass--\psone\ intersection.
   A similar argument can be made for \textit{internal} selection effects, such as inhomogeneities of the depth and noise distributions, which we have neglected.
-  Those inhomogeneities are unlikely to affect the \cmd results; we effectively model the average distribution of the \tgas--\tmass\ intersection.
+  Those inhomogeneities are unlikely to affect the \cmd\ results; we effectively model the average distribution of the \tgas--\tmass--\psone\ intersection.
   By modeling the selection function in detail, one could improve the quality of the inferred \cmd, its effect on individual objects, and its connection to physical models of the Milky Way.
 \item[big data] The empirical Bayesian methodology is a good
   approximation to full hierarchical inference in the limit of large
@@ -898,9 +899,9 @@ detail, under the same set of assumption labels:
 \item[mixture of Gaussians] The \cmd\ model is a mixture of Gaussians,
   and furthermore fixed at $K=128$ components. This setting was chosen
   after some experimentation as being able to capture features but still
-  be easily optimized. We performed some experiments
+  easily optimized. We performed some experiments
   that suggest that larger $K$ would lead to better models, even in the
-  conservative sense of cross-validation score. Choosing an optimized or
+  conservative sense of a cross-validation score. Choosing an optimized or
   optimal number for this mixture is a natural extension of this work.
 
   Beyond this, the choice of the Gaussian form itself for the mixture is
