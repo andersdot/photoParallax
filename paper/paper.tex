@@ -260,9 +260,9 @@ To ease understanding, here we demonstrate the general methodology using a
 simpler toy model with simulated data.
 Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $y$.
 We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the $y$ direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
-Here the thickness of the toy distribution mimics the true thickness or intrinsic scatter of the \cmd\ due to age, mass, and metallicity.
-The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel.
-Similarly, noisy samples from this distribution are shown in the upper-right panel.
+Here the thickness of the toy distribution mimics the true thickness, or intrinsic scatter, of the \cmd\ due to age, mass, and metallicity.
+The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel in red.
+Similarly, noisy samples from this distribution are shown in the upper-right panel in grey and black.
 Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample from the distribution, from $y_n$, a sample from the noisy distribution.
 
 Setting up the problem in more detail, we have the true samples from the underlying distribution and the noisy samples
@@ -294,7 +294,7 @@ Maximizing this joint likelihood of all the data is the same as minimizing
 \label{eq:chisq}
 \end{equation}
 
-The MMLE gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In \figurename~\ref{fig:toy}, lower-left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the red lines, and the best fit MMLE functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the blue lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
+The MMLE gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In \figurename~\ref{fig:toy}, lower-left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the red lines, and the best fit MMLE functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the green lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
 
 Here is a good point to step back and acknowledge that our method is a
 bit strange. We are using the data to determine the
@@ -317,7 +317,7 @@ p(y_{\true,n} \given y_n, \tilde{\sigma}_n) &=& p(y_n \given y_{\true,n}, \sigma
 \mathrm{and}\;p(y_{\true,n}) &=& \mathcal{N}(y_{\true,n} \given \hat{m}\, x_n + \hat{b}, \hat{t})
 \label{eq:toyBayes}
 \end{eqnarray}
-In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs (visualized as the expectation value and $1\sigma$ uncertainties) of the true values $y_{\true,n}$ for the 5 highlighted black points from the upper-right panel. The red points are the associated true $y$ values.
+In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs (visualized as the expectation value and $1\sigma$ uncertainties) of the true values $y_{\true,n}$ for the 5 highlighted (black) points from the upper-right panel. The red points are the associated true $y$ values.
 In the lower-right panel of \figurename~\ref{fig:toy}, the blue points represent the posterior beliefs, again visualized as the expectation value and $1\sigma$ uncertainty, for all 1024 $y_n$.
 When the true values are inferred in this way, the associated variance $\tilde{\sigma}_n^2$ is the convolution of the true distribution variance, $t^2$, and the measurement variance, $\sigma_n^2$.
 The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MMLE distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true $y$ value by inferring each true $y$ value from the measured $y$ value using an estimate of the true distribution the measured $y$ value was drawn from as the prior.
@@ -328,7 +328,7 @@ values shown in the upper-left panel.
 This is because the points in the lower-right (posterior) panel show
 not typical values or typical draws from the posterior; they show the
 modes (and, with error bars, the variances) of the posterior PDFs.
-When an original data point has a large variance, the posterior ends
+When a measured value has a large variance, the posterior ends
 up close to the prior, which has a mode at the center line; the
 posterior modes therefore concentrate more towards the center line
 than any representative sampling.
@@ -337,6 +337,7 @@ show a scatter like that in the upper-left (truth) panel.
 
 Bringing the toy model back to our original problem:
 We can get better estimates of the true parallax for each star by inferring the true parallax from the measured parallax and using the noise-deconvolved \cmd, an estimate of the true \cmd, as our prior.
+For the remainder of the paper, we will also maintain the color scheme presented here (where possible): truth will be red, data will be black, prior information will be green, and posterior information will be blue.
 
 \section{Assumptions and methods}\label{sec:method}
 
@@ -350,15 +351,15 @@ method that flows from them---in the discussion section below.
   stars measured at lower signal-to-noise have analogs measured at
   higher signal-to-noise.
   In detail, this assumption is wrong. For example, more distant stars will have lower signal to noise ratio measurements
-  and also will be different than local
-  disk stars, in age and metallicity. The stationarity assumption is fairly weak:
-  The requirement is that, locally in the \cmd, there is
+  and will also be different than local
+  disk stars in age and metallicity. However, the stationarity assumption is fairly weak:
+  the requirement is that, locally in the \cmd, there is
   support among the high signal-to-noise stars for the types
   of stars also seen at low signal-to-noise.
   If this requirement is met, the results will not be
   strongly biased. Although this is a weak assumption, it is deep and fundamental to this
   work.
-\item[selection] We have no model for the selection function of \tgas (but see \cite{bovy17}),
+\item[selection] We have no model for the selection function of \tgas\ (but see \cite{bovy17}),
   nor selection volumes for any kinds of stars.
   For this reason, we are building a model of \emph{the contents of \tgas}, not the
   properties of the stars in the Milky Way (nor any volume-limited component or region
@@ -374,8 +375,8 @@ method that flows from them---in the discussion section below.
   the parallax and color uncertainties are Gaussian in form with
   correctly known variances. In detail, we assume that the parallax uncertainty estimates,
   (the \texttt{parallax{\_}error} entry in the \gaia\ catalog), are correct.
-  Here we are making use of the fact that, for
-  de-noising, under-estimation of measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than than if we over-estimated the noise.
+  Here we are making use of the fact that when
+  de-noising data, under estimating measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than if we over-estimated the noise.
 \item[dust] We treat the \psone-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -445,7 +446,7 @@ with \\
 \]
 where $\mathcal{N}(\mean, \mat{\Sigma})$ represents a normal distribution with
 mean vector $\mean$ and covariance matrix $\mat{\Sigma}$.
-Here we have assumed that the parallax uncertainty is significantly larger than the $J$-band magnitude uncertainty and is therefore the dominant uncertainty in the transformed absolute magnitude. We take $J_n^{\corr}$ as a point estimate and only propagate the parallax uncertainty.
+Here we have assumed that the parallax uncertainty is significantly larger than the $J$-band magnitude uncertainty and is therefore the dominant uncertainty in the transformed absolute magnitude. In detail, we take $J_n^{\corr}$ as a point estimate and only propagate the parallax uncertainty.
 
 We can now write the multidimensional posterior expression analogous to Equation~\ref{eq:bayes},
 \begin{equation}
@@ -507,8 +508,8 @@ remove a small selection of \tmass\ stars that have zero color and zero $J$-band
 magnitude.
 The full data set is visualized in the \cmd\ in \figurename~\ref{fig:data}.
 The left panel shows the point estimates of the color and absolute magnitude,
-using the point estimate of the parallax from \gaia, and the $1\sigma$ and
-$2\sigma$ contours of the distribution.
+using the point estimate of the parallax from \gaia. The $1\sigma$ and
+$2\sigma$ contours of the distribution are shown in grey.
 The right panel shows a subset of the data with its associated error bars, calculated via subsampling.
 The uncertainties in the colors are fairly well behaved, but the large
 uncertainties in some absolute magnitudes are due to the large uncertainties in
