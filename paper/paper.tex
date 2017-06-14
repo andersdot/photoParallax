@@ -1,4 +1,4 @@
-% This project is part of the stellarTwins project.
+% This project is part of the photoParallax project.
 % Copyright 2017 the authors.
 
 %@archiver{posteriorCMD.pdf}
@@ -132,7 +132,7 @@ questions are being asked.
 In general, data-driven models contain fewer assumptions than
 physics-driven models, but they are also usually less interpretable;
 the model presented here has these same properties.
-The \gaia\ data set is ideal for thinking about these kinds of purely statistical
+Yet, the \gaia\ data set is ideal for thinking about these kinds of purely statistical
 models of stars.
 The different stars observed by \gaia\ are measured at very different
 signal-to-noise ratios,
@@ -484,7 +484,6 @@ To infer $\varpi_{\true}$ once the \cmd\ prior is constructed, we first do the i
 
 \begin{eqnarray}
 p(\varpi_{\true} \given \data, \hat{\alpha}) \, &\propto& \, \left|\frac{\dd\truth}{\dd\varpi}\right| \, p(\truth \given \data, \hat{\alpha}) \, f(\varpi_{\true}) \\
-%p(\truth_0 \given \data, \hat{\alpha}) &\rightarrow& p(\varpi_{\true} \given y, \hat{\alpha}) \, f(\varpi_{\true}) \\
 \mathrm{where} \; f(\varpi_{\true}) &=& \begin{cases}
               1 \quad \mathrm{if} \quad -2 < \mathrm{log}_{10} \varpi_{\true} < 2\\
               0 \quad \mathrm{otherwise}
@@ -614,7 +613,7 @@ This is a fairly standard result which we illustrated in the toy model above: th
 Stars with a color $(J-K_s)^C \sim 0.6$ show a decrease in precision due to the width of the prior there; the more vertical structure in the red giant branch of the \cmd.
 
 Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natural log of the fractional change in variance of the parallax posterior pdf relative to the \tgas\ catalog (the y-axis of Figure~\ref{fig:delta}). This more directly shows what was alluded to in Figure~\ref{fig:posterior}. For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \tgas\ variance. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$, shown as the dotted line at $y=0.5$.
-The precision of our posterior PDFs is greater than or equal to the precision of the \tgas\ catalogue for $87\%$ of the stars, shown as the dotted line at $x=0$,
+The precision of our posterior PDFs is greater than or equal to the precision of the \tgas\ catalogue for $83\%$ of the stars, shown as the dotted line at $x=0$,
 and $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$, which corresponds to a fraction decrease in variance by a factor of $>4$, shown as the dotted line at $y=0.14$.
 
 We have shown that the posterior parallax estimates are more precise
@@ -667,7 +666,7 @@ The visual of the prior is a sampling of the Gaussians, but this is the expectat
 \begin{figure}
 \centering
 \includegraphics[width=0.5\textwidth]{deltaCDF.pdf}
-\caption{Fractional Change in Variance: The cumulative distribution function of the natural log of the fractional variance change when comparing our posterior to the \tgas\ catalogue. Negative numbers represent stars which have a posterior that is narrower than the \tgas\ catalogue, which is true for a large fraction of the stars. We've drawn three dashed lines. One represents the median star $(y=0.5)$ which has a fractional variation of $x=-0.3=ln(1/1.2^2)$, corresponding to an increase in precision by a factor of 1.2. Another represents the fraction of stars $(y=0.14)$ which have a fractional variance greater than $x=-1.4=ln(1/2^2)$, corresponding to an increase in precision by a factor of 2. The final line, $x=0$, represents the fraction of stars with an increased precision, $87\%$.}
+\caption{Fractional Change in Variance: The cumulative distribution function of the natural log of the fractional variance change when comparing our posterior to the \tgas\ catalogue. Negative numbers represent stars which have a posterior that is narrower than the \tgas\ catalogue, which is true for a large fraction of the stars. We've drawn three dashed lines. One represents the median star $(y=0.5)$ which has a fractional variation of $x=-0.3=ln(1/1.2^2)$, corresponding to an increase in precision by a factor of 1.2. Another represents the fraction of stars $(y=0.14)$ which have a fractional variance greater than $x=-1.4=ln(1/2^2)$, corresponding to an increase in precision by a factor of 2. The final line, $x=0$, represents the fraction of stars with an increased precision, $83\%$.}
 \label{fig:deltaCDF}
 \end{figure}
 

@@ -182,10 +182,10 @@ plot_m67 = False
 plot_compare = False
 plot_expectation = False
 plot_examples = False
-plot_delta = True
+plot_delta = False
 plot_deltacdf = False
-plot_nobias = True
-plot_wtf = False
+plot_nobias = False
+plot_wtf = True
 
 #figsize2x1 = (12, 5.5)
 #figsize2x2 = (12, 11)
@@ -347,14 +347,14 @@ if plot_compare:
     #ax2 = fig.add_subplot(122)
     #ax = [ax1, ax2]
     titles =  ['Exp Dec Sp \nDen Prior', 'CMD Prior']
-    for i, file in enumerate(['posteriorSimple.npz', posteriorFile]):
-        data = np.load(file)
-        posterior = data['posterior']
-        sigma = np.sqrt(data['var'])
-        mean = data['mean']
-        absMag = testXD.absMagKinda2absMag(mean[positive]*10.**(0.2*apparentMagnitude))
-        absMag_err = absMagError(mean[positive], sigma[positive], apparentMagnitude, absMag)
-        #ax[i].scatter(color[ind], absMag[ind], c=posteriorColor, s=1, lw=0, alpha=alpha, zorder=0)
+for i, file in enumerate(['posteriorSimple.npz', posteriorFile]):
+    data = np.load(file)
+    posterior = data['posterior']
+    sigma = np.sqrt(data['var'])
+    mean = data['mean']
+    absMag = testXD.absMagKinda2absMag(mean[positive]*10.**(0.2*apparentMagnitude))
+    absMag_err = absMagError(mean[positive], sigma[positive], apparentMagnitude, absMag)
+    if plot_compare:    #ax[i].scatter(color[ind], absMag[ind], c=posteriorColor, s=1, lw=0, alpha=alpha, zorder=0)
         ax[i].errorbar(color[ind], absMag[ind], xerr=color_err[ind], yerr=[absMag_err[0][ind], absMag_err[1][ind]], fmt="none", zorder=0, mew=0, ecolor=posteriorColor, alpha=0.5, elinewidth=0.5, color=posteriorColor)
         ax[i].set_xlim(xlim_cmd)
         ax[i].set_ylim(ylim_cmd[0], ylim_cmd[1]*1.1)
@@ -364,6 +364,7 @@ if plot_compare:
             ax[i].yaxis.set_major_formatter(plt.NullFormatter())
         else:
             ax[i].set_ylabel(ylabel_cmd)
+if plot_compare:
     if pdf: fig.savefig('paper/comparePrior.pdf', dpi=400)
     fig.savefig('comparePrior.png')
     plt.close(fig)
@@ -454,16 +455,17 @@ if plot_examples:
 #delta plot
 label = r'$\mathrm{ln} \, \tilde{\sigma}_{\varpi}^2 - \mathrm{ln} \, \sigma_{\varpi}^2$'
 contourColor = '#1f77b4'
+color = testXD.colorArray(mag1, mag2, dustEBV, bandDictionary)
+color_err = np.sqrt(bandDictionary[mag1]['array'][bandDictionary[mag1]['err_key']]**2. + bandDictionary[mag2]['array'][bandDictionary[mag2]['err_key']]**2.)
+
+x = color
+y = np.log(sigma**2.) - np.log(tgas['parallax_error']**2.)
+colorDeltaVar = y
+notnans = ~np.isnan(sigma) & ~np.isnan(tgas['parallax_error']) & ~np.isnan(color)
+
 if plot_delta:
     fig, ax = makeFigureInstance(x=2, y=1, wspace=1.0) # , figsize=figsize2x1)
     #fig, ax = plt.subplots(1, 2, figsize=figsize2x1)
-    color = testXD.colorArray(mag1, mag2, dustEBV, bandDictionary)
-    color_err = np.sqrt(bandDictionary[mag1]['array'][bandDictionary[mag1]['err_key']]**2. + bandDictionary[mag2]['array'][bandDictionary[mag2]['err_key']]**2.)
-
-    x = color
-    y = np.log(sigma**2.) - np.log(tgas['parallax_error']**2.)
-    colorDeltaVar = y
-    notnans = ~np.isnan(sigma) & ~np.isnan(tgas['parallax_error']) & ~np.isnan(color)
     levels = 1.0 - np.exp(-0.5 * np.arange(1.0, 2.1, 1.0) ** 2)
     norm = plt.matplotlib.colors.Normalize(vmin=-1.5, vmax=1)
     cmap = 'inferno'
@@ -484,11 +486,12 @@ if plot_delta:
     plt.close(fig)
 
 #delta cdf plot
+ratioCmd = sigma[notnans]**2./tgas['parallax_error'][notnans]**2.
+lnratio = np.log(ratioCmd)
+
 if plot_deltacdf:
     plt.clf()
     fig, ax = makeFigureInstance(left=0.75)
-    ratioCmd = sigma[notnans]**2./tgas['parallax_error'][notnans]**2.
-    lnratio = np.log(ratioCmd)
     N = len(lnratio)
     ys = np.arange(0+0.5/N, 1, 1.0/N)
     sinds = np.argsort(lnratio)
@@ -511,12 +514,13 @@ if plot_deltacdf:
     plt.close(fig)
     print 'fraction of stars which decreased in variance: ', f(fac1)
 #delta mean vs gaia uncertainty
+y = mean - tgas['parallax']
+x = tgas['parallax_error']
+good = ~np.isnan(y) & ~np.isnan(x)
+
 if plot_nobias:
     plt.clf()
     fig, ax = makeFigureInstance(left=0.75)
-    y = mean - tgas['parallax']
-    x = tgas['parallax_error']
-    good = ~np.isnan(y) & ~np.isnan(x)
     levels = 1.0 - np.exp(-0.5 * np.arange(1.0, 2.1, 1.0) ** 2)
     contourColor = '#1f77b4'
     contourColor = 'black'
@@ -546,7 +550,7 @@ if plot_wtf:
     ax.set_ylabel(ylabel_cmd)
     lowerMainSequence = (0.4, 5.5)
     upperMainSequence = (-0.225, 2)
-    binarySequence = (0.75, 4)
+    binarySequence = (0.65, 4)
     redClump = (0.35, -2)
     redGiantBranch = (1.0, -2)
     turnOff = (-0.15, 3.5)
