@@ -58,9 +58,9 @@
 \author[0000-0003-0872-7098]{Adrian M. Price-Whelan}
 \affil{Department of Astrophysical Sciences, Princeton University, 4 Ivy Lane, Princeton, NJ 08544, USA}
 
-%\author{Jo Bovy}
-%\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA}
-%\affil{Department of Astronomy and Astrophysics, University of Toronto, 50 St. George Street, Toronto, ON M5S 3H4, Canada}
+\author{Jo Bovy}
+\affil{Center for Computational Astrophysics, Flatiron Institute, 162 Fifth Ave, New York, NY 10010, USA\hspace*{-1cm}}
+\affil{Department of Astronomy and Astrophysics, University of Toronto, 50 St. George Street, Toronto, ON M5S 3H4, Canada}
 
 \begin{abstract}\noindent % trust me
 Converting a noisy parallax measurement into a posterior
@@ -73,7 +73,7 @@ Here we use \tmass\ colors for $1.4$ million \tgas\ stars to build a
 noise-deconvolved empirical prior distribution for stars in color--magnitude
 space.
 This model contains no knowledge of stellar astrophysics or the
-Milky Way, but is precise because it is a generative model fit to many noisy
+Milky Way, but is precise because it is a generative-model fit to many noisy
 parallax measurements under an assumption of stationarity.
 We use the Extreme Deconvolution (\xd) algorithm---an Empirical Bayes approximation to a full
 hierarchical model of the true parallax and photometry of every star---to
@@ -110,11 +110,11 @@ Only a small fraction (but large number) of these
 measurements will be both precise and purely astrometric.
 \gaia\ will use astrometric parallaxes to determine the distances of the more
 precise stars, and then calibrate spectrophotometric models.
-These spectrophotometric models, in turn, along with \gaia's on-board
+These spectrophotometric models, along with \gaia's on-board
 low-resolution $BP/RP$ spectrophotometry, are used to provide
 parallax estimates to less precise stars.
 The full stack required for these parallax inferences is complex.
-It involves modeling the stars, as well as the dust in the Milky Way,
+It involves modeling the stars, as well as the dust, in the Milky Way,
 and the response of the telescope itself.
 It might be possible to eliminate some of this complexity using data driven models which don't rely on physical models.
 
@@ -131,13 +131,13 @@ questions are being asked.
 In general, data-driven models contain fewer assumptions than
 physics-driven models, but they are also usually less interpretable.
 However, the \gaia\ data set is ideal for thinking about purely statistical
-models of stars:
+models of stars.
 The different stars observed by \gaia\ are measured at very different
-signal-to-noise ratios.
-A data-driven model of the stellar color--magnitude distribution can capitalize
+signal-to-noise ratios,
+and a data-driven model of the stellar color--magnitude distribution can capitalize
 on the precise information coming from the high signal-to-noise stars
-and deliver valuable information about the low signal-to-noise stars,
-which in turn will deliver precise parallax (or distance or absolute magnitude) inferences.
+and deliver valuable information about the low signal-to-noise stars.
+This information can then deliver precise parallax (or distance or absolute magnitude) inferences.
 
 Here we present a demonstration-of-concept that shows that a
 data-driven model of the \gaia\ data could in principle deliver very
@@ -156,8 +156,8 @@ temperature) and evolutionary stage.
 Most stellar models used to generate photometric
 parallaxes have been \emph{physical} models, based on gravity, fluid mechanics,
 radiative transfer, nuclear reactions, and atomic and molecular transitions.
-Because there are small issues with each of these components, the models are inaccurate in detail, and
-the physical models therefore produce parallax (and hence distance) estimates that are biased.
+Because there are small issues with each of these components, the physical models are inaccurate in detail, and
+therefore produce parallax (and distance) estimates that are biased.
 In addition, they build a long list of physical assumptions (about
 nuclear reactions, convection, and thermal timescales, for example)
 into the parallax estimates.
@@ -194,8 +194,8 @@ or implies a strictly Gaussian noise model.
 As we show below, this requires us to transform the \cmd\ to a space in which
 the noise is approximately Gaussian.
 
-We then use the novel \xd\ output---the deconvolved \cmd---as
-a prior for use in inference of individual-star parallaxes.
+We then use the \xd\ output---the deconvolved \cmd---as
+a prior for use in inference of individual stellar parallaxes.
 These inferences, one per star, provide much more precise parallax, distance,
 or absolute magnitude estimates than we get from each star's primary
 \tgas\ parallax measurement alone.
@@ -221,7 +221,7 @@ about the Milky Way, and similarly weak assumptions about the properties of
 stars.
 To date, there has been some discussion in the literature
 about how to use a parallax responsibly to infer a distance (\citealt{astraatmadja16a}; \citealt{astraatmadja16b}).
-These papers use the \gaia\ measurement to construct a parallax likelihood,
+These papers use a \gaia\ measurement to construct a parallax likelihood,
 and combine this with a distance prior.
 While this is sensible and correct, all present methods proposed along
 these lines build in informative (and known-to-be-wrong) assumptions
@@ -650,13 +650,6 @@ The visual of the prior is a sampling of the Gaussians, but this is the expectat
 \label{fig:delta}
 \end{figure}
 
-\begin{figure}
-\centering
-\includegraphics[width=\textwidth]{deltaParallax.pdf}
-\caption{No bias in posterior pdf parallax expectation values.}
-\label{fig:delta}
-\end{figure}
-
 
 
 
@@ -666,6 +659,15 @@ The visual of the prior is a sampling of the Gaussians, but this is the expectat
 \caption{Fractional Change in Variance: The cumulative distribution function of the natural log of the fractional variance change when comparing our posterior to the \gaia\ catalogue. Negative numbers represent stars which have a posterior that is narrower than the \gaia\ catalogue, which is true for a large fraction of the stars. We've drawn two dashed lines. One represents the median star $(y=0.5)$ which has a fractional variation of $x=-0.3=ln(1/1.2^2)$, corresponding to an increase in precision by a factor of 1.2. Another represents the fraction of stars $(y=0.14)$ which have a fractional variance greater than $x=-1.4=ln(1/2^2)$, corresponding to an increase in precision by a factor of 2.}
 \label{fig:deltaCDF}
 \end{figure}
+
+
+\begin{figure}
+\centering
+\includegraphics[width=\textwidth]{deltaParallax.pdf}
+\caption{The difference between the expectation value of our parallax posteriors and the \gaia\ parallax measurement as a function of the \gaia\ uncertainty. The points are colored by the fractional change in the variance of the posterior PDF compared with the \gaia\ likelihood, the same as Figure \ref{fig:delta}. The points are evenly distributed around $y=0$ showing that there is little bias in our inferred parallax PDFs. The distribution gets wider with larger \gaia\ uncertainties due to those lower signal to noise measurements being more influenced by the prior. They also tend to have the largest fractional change in their variance (shown as darker points)}
+\label{fig:deltaParallax}
+\end{figure}
+
 
 \subsection{Data products}
 
@@ -949,7 +951,6 @@ We forgo an explicit conclusion; we attempt to summarize the conclusions in the 
 
 \acknowledgments It is a pleasure to thank
   Ana Bonaca (Harvard),
-  Jo Bovy (Toronto),
   Andy Casey (Monash),
   Stephen Feeney (Flatiron),
   Dustin Lang (Toronto),
