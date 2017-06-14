@@ -182,9 +182,9 @@ plot_m67 = False
 plot_compare = False
 plot_expectation = False
 plot_examples = True
-plot_delta = False
+plot_delta = True
 plot_deltacdf = False
-plot_nobias = False
+plot_nobias = True
 plot_wtf = False
 
 #figsize2x1 = (12, 5.5)
@@ -418,7 +418,7 @@ if plot_examples:
             #print len(color), len(absMagKinda_dust), len(color_err), len(absMagKinda_dust_err), len(apparentMagnitude)
             likeParallax, priorParallax, posteriorParallax = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
 
-            l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=2, color=dataColor)
+            l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=1, color=dataColor, zorder=100)
             l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
             l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
             maxInd = posteriorParallax == np.max(posteriorParallax)
@@ -468,7 +468,7 @@ if plot_delta:
     norm = plt.matplotlib.colors.Normalize(vmin=-1.5, vmax=1)
     cmap = 'inferno'
     ax[0].scatter(x[notnans], y[notnans], c=y[notnans], s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap, rasterized=True)
-    corner.hist2d(x[notnans], y[notnans], bins=200, ax=ax[0], levels=levels, no_fill_contours=True, plot_density=False, plot_data=False, color=contourColor, rasterized=True)
+    #corner.hist2d(x[notnans], y[notnans], bins=200, ax=ax[0], levels=levels, no_fill_contours=True, plot_density=False, plot_data=False, color=contourColor, rasterized=True)
     ax[0].set_xlabel(xlabel_cmd)
     ax[0].set_ylim(-6, 2)
     ax[0].set_xlim(-0.5, 2)
@@ -520,7 +520,7 @@ if plot_nobias:
     levels = 1.0 - np.exp(-0.5 * np.arange(1.0, 2.1, 1.0) ** 2)
     contourColor = '#1f77b4'
     contourColor = 'black'
-    corner.hist2d(x[good], y[good], bins=200, ax=ax, levels=levels, no_fill_contours=True, plot_density=False, plot_data=False, color=contourColor, rasterized=True)
+    #corner.hist2d(x[good], y[good], bins=200, ax=ax, levels=levels, no_fill_contours=True, plot_density=False, plot_data=False, color=contourColor, rasterized=True)
     #norm = plt.matplotlib.colors.Normalize(vmin=0.0, vmax=1)
     ax.scatter(x[notnans], y[notnans], c=colorDeltaVar[notnans], s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap, rasterized=True)
     #ax.scatter(x[good], y[good], c=sigma[good], s=1, lw=0, alpha=0.05, norm=norm, cmap=cmap, rasterized=True)
