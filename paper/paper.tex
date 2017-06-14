@@ -617,8 +617,18 @@ Figure~\ref{fig:deltaCDF} shows the cumulative distribution function of the natu
 The precision of our posterior PDFs is greater than or equal to the precision of the \gaia\ catalogue for $87\%$ of the stars, shown as the dotted line at $x=0$,
 and $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$, which corresponds to a fraction decrease in variance by a factor of $>4$, shown as the dotted line at $y=0.14$.
 
-LMA: describe Figure \ref{fig:deltaParallax}
-
+We have shown that the posterior parallax estimates are more precise
+than the likelihoods, both on average and especially for low
+signal-to-noise stars.
+It is also interesting to ask whether our data-driven prior leads to
+biased inferences.
+In Figure~\ref{fig:deltaParallax}, we show the shifts of the parallax
+estimates from likelihood \tgas\ catalog entry to posterior
+expectation.
+This shows that while many parallax estimates change substantially,
+they do not change on average, even at low signal-to-noise ratios.
+Our conclusion is that the prior developed here does not introduce additional
+bias into the \tgas\ parallax measurements.
 
 \begin{figure}
 \centering
@@ -655,9 +665,6 @@ The visual of the prior is a sampling of the Gaussians, but this is the expectat
 \label{fig:delta}
 \end{figure}
 
-
-
-
 \begin{figure}
 \centering
 \includegraphics[width=0.75\textwidth]{deltaCDF.pdf}
@@ -665,14 +672,12 @@ The visual of the prior is a sampling of the Gaussians, but this is the expectat
 \label{fig:deltaCDF}
 \end{figure}
 
-
 \begin{figure}
 \centering
 \includegraphics[width=\textwidth]{deltaParallax.pdf}
-\caption{The difference between the expectation value of our parallax posteriors and the \gaia\ parallax measurement as a function of the \gaia\ uncertainty. The points are colored by the fractional change in the variance of the posterior PDF compared with the \gaia\ likelihood, the same as Figure \ref{fig:delta}. The points are evenly distributed around $y=0$ showing that there is little bias in our inferred parallax PDFs. The distribution gets wider with larger \gaia\ uncertainties due to those lower signal to noise measurements being more influenced by the prior. They also tend to have the largest fractional change in their variance (shown as darker points)}
+\caption{The difference between the expectation value of our parallax posteriors and the \gaia\ parallax measurement as a function of the \gaia\ uncertainty. The points are colored by the fractional change in the variance of the posterior PDF compared with the \gaia\ likelihood, the same as Figure \ref{fig:delta}. The points are evenly distributed around $y=0$ showing that there is little bias introduced by inferred parallax PDFs. The distribution gets wider with larger \gaia\ uncertainties due to those lower signal to noise measurements being more influenced by the prior. They also tend to have the largest fractional change in their variance (shown as darker points)}
 \label{fig:deltaParallax}
 \end{figure}
-
 
 \subsection{Data products}
 
