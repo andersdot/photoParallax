@@ -16,7 +16,7 @@ pgm.add_node(daft.Node("D", r"$D_n$", 1, 3))
 pgm.add_node(daft.Node("MW", r"MW", 0, 3, fixed=True))
 pgm.add_node(daft.Node("parallax", r"$\varpi_n$", 2, 3, observed=True))
 
-pgm.add_plate(daft.Plate([0.5, 2.25, 2, 2.25],
+pgm.add_plate(daft.Plate([0.4, 2.25, 2.2, 2.25],
         label=r"stars $n$"))
 
 pgm.add_edge("Omega", "theta")
