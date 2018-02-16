@@ -3,7 +3,7 @@
 
 %@arxiver{posteriorCMD.pdf}
 
-\documentclass[modern]{aastex61}
+\documentclass[trackchanges]{aastex61}
 \usepackage{amsmath}
 \usepackage{color}
 \setlength{\parindent}{\baselineskip} % trust me!
@@ -424,6 +424,7 @@ y_0 = \varpi\,10^{\frac{1}{5}\,J^{\corr}_n} = 10^{\frac{1}{5}\,M^{\corr}_{J,n} +
 \end{equation}
 where, for this expression, it is important to remember that $\varpi$ is assumed to be in units of $[mas]$.
 The transformation of the (dust corrected) absolute magnitude is required to keep the uncertainties Gaussian, and Gaussian uncertainties are required to use \xd, see below.
+\added{This transformation also allows our method to handle negative parallaxes from the \tgas\ dataset naturally. A negative parallax simply refers to a distant object that is affected by large errors, and therefore intrinsically bright, and our transformation places these objects in the bright portion of the \cmd.}
 Our prior assumptions $I$ are the uncertainties in each of these measurements, as well as the 3D dust map. So our full terminology is
 \begin{equation}
 \begin{aligned}
@@ -478,8 +479,6 @@ Given the data $\{ \truth_n, \covar_n\}$, \xd\ maximizes the marginalized likeli
 \end{eqnarray}
 which is made analytically tractable with the Gaussian likelihood and mixture-of-Gaussians prior \citep{bovy11}.
 
-DWH: write something about how our prior is a prior on distance
-
 \subsection{Back to the Inference}
 
 To infer $\varpi_{\true}$ once the \cmd\ prior is constructed, we first do the inference in the 2D space of the \cmd\ prior $p(\truth \given \alpha)$, using Equation \ref{eq:posterior}. We then project the 2D posterior into the 1D $\varpi_{\true}$ space by multiply by the Jacobian to calculate the posterior PDF over $\varpi_{\true}$
@@ -504,6 +503,7 @@ with $f(\varpi_{\true})$ being a window function to insure $\varpi_{\true}$ is p
 
 We use stars crossmatched in \tgas\ and \tmass.
 The match was done using a nearest-neighbor algorithm with a search radius of $4$ arcsec\footnote{\url{http://portal.nersc.gov/project/cosmo/temp/dstn/gaia/tgas-matched-2mass.fits.gz}}.
+\added{There is also a \tgas\-\tmass\ cross-match as part of the official \gaia\ product, but this project began before that catalogue was available.}
 We also required that the stars lie within the
 observing footprint of \psone\ to access the \cite{green15} 3D dust model.
 We require that the photometry have real values, and nonzero, real errors, and
