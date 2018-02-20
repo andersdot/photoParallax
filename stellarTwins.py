@@ -7,7 +7,6 @@ import itertools
 import matplotlib as mpl
 from astroML.density_estimation import XDGMM
 from astroML.plotting.tools import draw_ellipse
-from extreme_deconvolution import extreme_deconvolution as ed
 from matplotlib.patches import Ellipse
 import pdb
 from dustmaps.sfd import SFDQuery
@@ -39,11 +38,11 @@ def distMetric(sourceInd, matchedInd, apassMagnitudes, varMuMatched, p=False):
     absMagSigs = np.log(apassMagnitudes['e_vmag'][sourceInd]**2. + apassMagnitudes['e_vmag'][matchedInd]**2. + varMuMatched[sourceInd] + varMuMatched[matchedInd])
     totChiSq = colorChiSq + absMagChiSq + colorSigs + absMagSigs
     if p:
-        print 'the total chi2: ',totChiSq[0:5]
-        print 'the color chi2: ',colorChiSq[0:5]
-        print 'the color sigs: ', colorSigs[0:5]
-        print 'the absmag chi2:',absMagChiSq[0:5]
-        print 'the absmag sigs:',absMagSigs[0:5]
+        print( 'the total chi2: ',totChiSq[0:5])
+        print( 'the color chi2: ',colorChiSq[0:5])
+        print( 'the color sigs: ', colorSigs[0:5])
+        print( 'the absmag chi2:',absMagChiSq[0:5])
+        print( 'the absmag sigs:',absMagSigs[0:5])
 
     return totChiSq
 
@@ -381,9 +380,9 @@ def observationsCutMatched(SNthreshold=1., filename='cutMatchedArrays.npz'):
     raveInd = np.in1d(tgasRave['source_id'], tgasMatched['source_id'])
     raveMatched = tgasRave[raveInd]
 
-    print 'Number of tgas stars: ', len(tgas)
-    print 'Number of matched stars: ', np.sum(matched)
-    print 'Percent matched = ', 100 - (len(tgas) - np.sum(matched))/np.float(len(tgas))*100., '%'
+    print( 'Number of tgas stars: ', len(tgas))
+    print( 'Number of matched stars: ', np.sum(matched))
+    print( 'Percent matched = ', 100 - (len(tgas) - np.sum(matched))/np.float(len(tgas))*100., '%')
 
     np.savez(filename, tgasCutMatched=tgasMatched, apassCutMatched=magsMatched, raveCutMatched=raveMatched, twoMassCutMatched=twoMassMatched, wiseCutMatched=wiseMatched, distCutMatched=distMatched)
     return tgasMatched, magsMatched, raveMatched, twoMassMatched, wiseMatched, distMatched
@@ -555,7 +554,7 @@ def raveSourceTwinIndex(apassSourceIndex, apassTwinIndex, raveCutMatched, tgasCu
     for i, (s, m) in enumerate(zip(apassSourceIndex, apassTwinIndex)):
         raveSourceIndex[i] = np.where(np.in1d(raveCutMatched['source_id'], tgasCutMatched[s]['source_id']))[0]
         raveTwinIndex[i, :] = np.where(np.in1d(raveCutMatched['source_id'], tgasCutMatched[m]['source_id']))[0]
-        if np.sum(raveCutMatched['source_id'][raveTwinIndex[i,:]] - tgasCutMatched[m]['source_id']) != 0: print 'Rave not sorted like Apass'
+        if np.sum(raveCutMatched['source_id'][raveTwinIndex[i,:]] - tgasCutMatched[m]['source_id']) != 0: print( 'Rave not sorted like Apass')
         chisqRave[i, :] = raveChisq(raveSourceIndex[i], raveTwinIndex[i,:], raveCutMatched)
     return raveSourceIndex, raveTwinIndex, chisqRave
 
@@ -611,7 +610,7 @@ if __name__ == '__main__':
         distCutMatched = cutMatchedArrays['distCutMatched']
     except IOError:
         tgasCutMatched, apassCutMatched, raveCutMatched, twoMassCutMatched, wiseCutMatched, distCutMatched = observationsCutMatched(maxlogg=maxlogg, minlogg=minlogg, mintemp=mintemp, SNthreshold=SNthreshold, filename=filename)
-    print 'Number of Matched stars is: ', len(tgasCutMatched)
+    print( 'Number of Matched stars is: ', len(tgasCutMatched))
 
     #plot broad colors to check that cross matching was done properly
     if plot: crossMatchCheck(apassCutMatched, twoMassCutMatched, wiseCutMatched)
@@ -725,8 +724,8 @@ if __name__ == '__main__':
     #spot check dwarfs with lots of Apass neighbors but few Rave neighbors
     manyApassfewRave = np.where((neffRave < maxNeffRave) & (neffApass > minNeffApass))[0]
     manyRavefewApass = np.where((neffRave > minNeffRave) & (neffApass < maxNeffApass))[0]
-    print 'Lots of Apass, few Rave: ', manyApassfewRave
-    print 'Few Apass, lots of Rave: ', manyRavefewApass
+    print( 'Lots of Apass, few Rave: ', manyApassfewRave)
+    print( 'Few Apass, lots of Rave: ', manyRavefewApass)
 
     try:
         data = np.load('gaussianArrays.npz')

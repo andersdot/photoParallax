@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 import os
 import sys
 import stellarTwins as st
-from extreme_deconvolution import extreme_deconvolution as ed
 import astropy.units as units
 import numpy as np
 import pdb
@@ -29,7 +28,7 @@ def convert2gal(ra, dec):
     """
     return SkyCoord([ra, dec], unit=(units.hourangle, units.deg))
 
-def m67indices(tgas, plot=False, dl=0.1, db=0.1, l='215.6960', b='31.8963', twoMass=None):
+def m67indices(tgas, plot=False, dl=0.1, db=0.1, l='215.6960', b='31.8963'):
     """
     return the indices of tgas which fall within dl and db of l and b.
     default is M67
@@ -39,11 +38,6 @@ def m67indices(tgas, plot=False, dl=0.1, db=0.1, l='215.6960', b='31.8963', twoM
             (tgas['b'] > np.float(b) - db) & \
             (tgas['l'] < np.float(l) + dl) & \
             (tgas['l'] > np.float(l) - dl)
-
-    if twoMass is not None:
-        print twoMass['j_cmsig'][index], twoMass['k_cmsig'][index]
-        goodError = (twoMass['j_cmsig'] < 2.) & (twoMass['k_cmsig'] < 2.)
-        index = index & goodError
     if plot:
         fig, ax = plt.subplots()
         ax.scatter(tgas['l'][index], tgas['b'][index], alpha=0.5, lw=0)
@@ -91,7 +85,7 @@ def scalability(X, Xerr, numberOfStars = [1024, 2048, 4096, 8192]):
     totTime = np.zeros(4)
     for i, ns in enumerate(numberOfStars):
         totalTime, numStar = timing(X, Xerr, nstars=ns, ngauss=64)
-        print totalTime, numStar
+        print(totalTime, numStar)
         totTime[i] = totalTime
         plt.plot(numData, totTime)
         plt.savefig('timing64Gaussians.png')
@@ -234,7 +228,7 @@ def posterior2d(means, amps, covs, xbins, ybins, nperGauss=100000., plot=False):
     Z, xedges, yedges = np.histogram2d(samplesX, absMagKinda2absMag(samplesY), bins=[xbins, ybins], normed=True)
     return xedges, yedges, Z, samplesY
 
-def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None, dataColor='black', posteriorColor='blue', truthColor='red', likeLabel=None, postLabel=None, xlim=[0,1], ylim=[0,1], xlabel=None, ylabel=None, like2D_lw=1, alpha_like = 1.0):
+def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike, covLike, xdgmm, xparallaxMAS, xabsMagKinda, apparentMagnitude, X=None, Y=None, Z=None, plot2D=False, samplesY=None, axAll=None, dataColor='black', posteriorColor='blue', truthColor='red', likeLabel=None, postLabel=None, xlim=None, ylim=None, xlabel='x', ylabel='y'):
     """
     plot the posterior of each star into example.png and feed it axAll to put it on another plot
     """
@@ -260,7 +254,7 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
             if axAll is not None:
                 if ampPost[gg] == np.max(ampPost): label=postLabel
                 else: label=None
-                axAll[2].plot(points[0, :], absMagKinda2absMag(points[1,:]), posteriorColor, alpha=ampPost[gg]/np.max(ampPost), lw=0.5, label=label, rasterized=True)
+                axAll[2].plot(points[0, :], absMagKinda2absMag(points[1,:]), posteriorColor, alpha=ampPost[gg]/np.max(ampPost), lw=0.5, label=label)
 
         #plot the prior
         points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
@@ -270,9 +264,8 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     pointsData = drawEllipse.plotvector(meanLike, covLike)
     ax[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), 'g', lw=2)
     if axAll is not None:
-        if np.max(pointsData[0,:]) > 1.2: pdb.set_trace()
-        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=like2D_lw, label=likeLabel)
-        axAll[2].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=like2D_lw, label=likeLabel)
+        axAll[0].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
+        axAll[2].plot(pointsData[0, :], absMagKinda2absMag(pointsData[1,:]), dataColor, lw=2, label=likeLabel)
 
     #plot the posterior in parallax space
     parallaxLikelihood = st.gaussian(meanLike[1], np.sqrt(covLike[1,1]), xabsMagKinda)
@@ -281,8 +274,8 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
     ax[1].plot(xparallaxMAS, parallaxPosterior, posteriorColor, lw=2)
     ax[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, dataColor, lw=2)
     if axAll is not None:
-        axAll[1].plot(xparallaxMAS, parallaxLikelihood, dataColor, lw=1, alpha=alpha_like)
-        axAll[3].plot(xparallaxMAS, parallaxPosterior, posteriorColor, lw=1, alpha=alpha_like)
+        axAll[1].plot(xparallaxMAS, parallaxLikelihood*ampRatio, dataColor, lw=2, alpha=0.75)
+        axAll[3].plot(xparallaxMAS, parallaxPosterior, posteriorColor, lw=2, alpha=0.75)
 
     #plot historgram of y samples vs true distribution to check my sampling is correct
     if plot2D: ax[1].hist(absMagKinda2Parallax(samplesY, apparentMagnitude), color='black', bins=100, histtype='step', normed=True)
@@ -306,36 +299,36 @@ def plotPosteriorEachStar(meanPost, covPost, ampPost, summedPosterior, meanLike,
 
     ax[0].set_xlim(xlim)
     ax[0].set_ylim(ylim)
-    ax[0].set_xlabel(xlabel, fontsize=18)
-    ax[0].set_ylabel(ylabel, fontsize=18)
+    ax[0].set_xlabel(xlabel)
+    ax[0].set_ylabel(ylabel)
 
-    ax[1].set_xlabel('Parallax [mas]', fontsize=18)
+    ax[1].set_xlabel('Parallax [mas]')
     ax[1].set_xlim(-1, 6)
     ax[1].set_ylabel(ylabel_posterior_parallax)
 
     ax[2].set_xscale('log')
     ax[2].set_xlim(0.01, 3)
-    ax[2].set_xlabel('Distance [kpc]', fontsize=18)
+    ax[2].set_xlabel('Distance [kpc]')
     ax[2].set_ylabel(ylabel_posterior_d)
 
     ax[3].set_xlim(np.log10(0.3), np.log10(3))
-    ax[3].set_xlabel('log Distance [kpc]', fontsize=18)
+    ax[3].set_xlabel('log Distance [kpc]')
     ax[3].set_ylabel(ylabel_posterior_logd)
     plt.legend()
     plt.tight_layout()
     fig.savefig('example.png')
 
-
-def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim, bandDictionary, absmag, mag1, mag2, plot2DPost=False, dataColor='black', priorColor='green', truthColor='red', posteriorColor='blue', figDist=None, axDist=None, xlabel=None, ylabel=None, lw_2dlike=1, twoMass=None):
+def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, ylim,  bandDictionary, absmag, figDist=None, axDist = None, xlabel='x', ylabel='y', plot2DPost=False, dataColor='black', priorColor='green', truthColor='red', posteriorColor='blue', dl=0.1, db=0.1):
     """
     test posterior accuracy using distances to cluster M67
     """
-    indicesM67 = m67indices(tgas, plot=False, db=0.5, dl=0.5, twoMass=twoMass)
+    indicesM67 = m67indices(tgas, dl=dl, db=db, plot=False)
 
     #all the plot stuff
     if figDist is None:
         figDist, axDist = plt.subplots(2, 2, figsize=(14, 14))
-        axDist = axDist.flatten()
+    figPaper, axPaper = plt.subplots(1, 2, figsize=(10, 7))
+    axDist = axDist.flatten()
     ylabel_posterior_logd = r'P(log d | y, $\sigma_{y}$)'
     ylabel_posterior_d = r'$P(d | y, \sigma_{y}$)'
     ylabel_posterior_parallax = r'$P(\varpi_{\mathrm{true}} | \varpi, \sigma_{\varpi})$'
@@ -362,7 +355,7 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
     for k, index in enumerate(np.where(indicesM67)[0]): #zip([16], [np.where(indicesM67)[0][16]]): #
 
         #plotting for each star in the cluster
-        windowFactor = 5. #the number of sigma to sample in mas for plotting
+        windowFactor = 10. #the number of sigma to sample in mas for plotting
         minParallaxMAS = tgas['parallax'][index] - windowFactor*tgas['parallax_error'][index]
         maxParallaxMAS = tgas['parallax'][index] + windowFactor*tgas['parallax_error'][index]
         apparentMagnitude = bandDictionary[absmag]['array'][bandDictionary[absmag]['key']][index]
@@ -375,8 +368,7 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
         meanData = meanData[0]
         covData = covData[0]
         ndim = 2
-        print 'mean/cov of data for distance test:'
-        print meanData, covData
+
         #calculate the posterior, a gaussian for each xdgmm component
         allMeans, allAmps, allCov, summedPosterior[k,:] = absMagKindaPosterior(xdgmm, ndim, meanData, covData, xabsMagKinda, nPosteriorPoints=nPosteriorPoints)
 
@@ -396,8 +388,8 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
 
         #plot prior on plot of all stars but only first loop
         if k == 0:
-            plotPrior(xdgmm, axDist[0], c=priorColor, lw=1, label='prior')
-            plotPrior(xdgmm, axDist[2], c=priorColor, lw=1, label='prior')
+            plotPrior(xdgmm, axDist[0], c=priorColor, lw=2, label='prior')
+            plotPrior(xdgmm, axDist[2], c=priorColor, lw=2, label='prior')
         #check that things seem right
         normalization_parallaxPosterior = scipy.integrate.cumtrapz(summedPosterior[k,:]*10.**(0.2*apparentMagnitude), xparallaxMAS)[-1]
         normalization_distancePosterior = scipy.integrate.cumtrapz(summedPosterior[k,:][positive]*xparallaxMAS[positive]**2.*10.**(0.2*apparentMagnitude), 1./xparallaxMAS[positive])[-1]
@@ -410,31 +402,31 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
     np.save('summedPosteriorM67', summedPosterior)
 
 
-    axDist[0].set_xlabel(xlabel)#, fontsize=18)
-    axDist[0].set_ylabel(ylabel)#, fontsize=18)
+    axDist[0].set_xlabel(xlabel, fontsize=18)
+    axDist[0].set_ylabel(ylabel, fontsize=18)
     axDist[0].set_xlim(xlim)
     axDist[0].set_ylim(ylim)
-    axDist[2].set_xlabel(xlabel)#, fontsize=18)
-    axDist[2].set_ylabel(ylabel)#, fontsize=18)
+    axDist[2].set_xlabel(xlabel, fontsize=18)
+    axDist[2].set_ylabel(ylabel, fontsize=18)
     axDist[2].set_xlim(xlim)
     axDist[2].set_ylim(ylim)
 
 
-    axDist[1].axvline(1./0.8, color=truthColor, lw=2)
-    axDist[1].axvline(1./0.9, color=truthColor, lw=2)
-    axDist[3].axvline(1./0.8, color=truthColor, lw=2)
-    axDist[3].axvline(1./0.9, color=truthColor, lw=2)
+    axDist[1].axvline(1./0.8, color=truthColor, lw=2, zorder=-1, linestyle=':')
+    axDist[1].axvline(1./0.9, color=truthColor, lw=2, zorder=-1, linestyle=':')
+    axDist[3].axvline(1./0.8, color=truthColor, lw=2, zorder=-1, linestyle=':')
+    axDist[3].axvline(1./0.9, color=truthColor, lw=2, zorder=-1, linestyle=':')
 
 
     axDist[1].set_xlabel('Parallax [mas]')
     axDist[3].set_xlabel('Parallax [mas]')
-    axDist[1].set_ylabel(ylabel_likelihood_parallax)#, fontsize=18)
-    axDist[3].set_ylabel(ylabel_posterior_parallax)#, fontsize=18)
-    axDist[1].set_xlim(-1, 6)
-    axDist[3].set_xlim(-1, 6)
+    axDist[1].set_ylabel(ylabel_likelihood_parallax, fontsize=18)
+    axDist[3].set_ylabel(ylabel_posterior_parallax, fontsize=18)
+    axDist[1].set_xlim(-1, 3)
+    axDist[3].set_xlim(-1, 3)
 
-    axDist[0].legend(loc='lower right')#, fontsize=10)
-    axDist[2].legend(loc='lower right')#, fontsize=10)
+    axDist[0].legend(loc='best')
+    axDist[2].legend(loc='best')
 
     #axDist[2].axvline(np.log10(0.8), color="b", lw=2)
     #axDist[2].axvline(np.log10(0.9), color="b", lw=2)
@@ -459,7 +451,7 @@ def plotPrior(xdgmm, ax, c='k', lw=1, label='prior'):
         else:
             label = None
         points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
-        ax.plot(points[0,:], absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights), label=label, rasterized=True)
+        ax.plot(points[0,:], absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights), label=label)
 
 
 def calcPosterior(color, absMagKinda, color_err, absMagKinda_err, apparentMagnitude, xdgmm, nPosteriorPoints=1000, xarray=np.linspace(-2, 2, 1000), debug=False, ndim=1):
@@ -481,9 +473,9 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
     try:
         data = np.load(distanceFile)
         distance = data['distance']
-        print 'distance file is: ', distanceFile
+        print('distance file is: ', distanceFile)
     except IOError:
-        print 'distance file does not exist: ', distanceFile
+        print('distance file does not exist: ', distanceFile)
         nstars = len(color)
         sourceID = np.zeros(nstars, dtype='>i8')
         #dustEBV = np.zeros(nstars)
@@ -518,7 +510,7 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
         for index in range(100):
             if np.mod(index, 10000) == 0.0:
                 end = time.time()
-                print index, ' took ', str(end - start), 'seconds, projecting will be ', str((end-start)*((nstars-index)/10000.))
+                print(index, ' took ', str(end - start), 'seconds, projecting will be ', str((end-start)*((nstars-index)/10000.)))
                 start = time.time()
             #if index == 4491: pdb.set_trace()
             #np.savez('dustCorrection_' + dataFilename, ebv=dustEBV, sourceID=sourceID)
@@ -542,11 +534,11 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                 xparallaxMAS = xparallaxMAS[::-1]
                 positive = xparallaxMAS > 0.
                 if np.sum(positive) == 0:
-                    print str(index) + ' has no positive distance values'
+                    print(str(index) + ' has no positive distance values')
                     continue
                 logDistance = np.log10(1./xparallaxMAS[positive])
             allMeans, allAmps, allCovs, summedPosteriorAbsmagKinda = absMagKindaPosterior(xdgmm, ndim, meanData, covData, xabsMagKinda, projectedDimension=1, nPosteriorPoints=nPosteriorPoints)
-            print np.min(summedPriorAbsMagKinda), np.max(summedPriorAbsMagKinda)
+            print(np.min(summedPriorAbsMagKinda), np.max(summedPriorAbsMagKinda))
             posteriorParallax = summedPosteriorAbsmagKinda*10.**(0.2*apparentMagnitude[index])
             priorParallax = summedPriorAbsMagKinda*10.**(0.2*apparentMagnitude[index])
             likeParallax = st.gaussian(absMagKinda[index]/10.**(0.2*apparentMagnitude[index]), absMagKinda_err[index]/10.**(0.2*apparentMagnitude[index]), xparallaxMAS)
@@ -605,7 +597,7 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                 if P_minDist > P_maxDist: #pdf lies at small distances
                     distance[index] = 10.**minDist
                     label = 'posterior small in range, set to ' + '{0:.2f}'.format(float(distance[index]))
-                    print label
+                    print(label)
                     nSmallMin += 1
                 if P_minDist < P_maxDist: #pdf lies at large distances
                     distance[index] = 10.**maxDist
@@ -620,7 +612,7 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                         nSmallFlatMin += 1
                     label = 'The posterior is flat with value '+ str(P_minDist)+', Dist = ' + '{0:.2f}'.format(float(distance[index]))
 
-                    print label
+                    print(label)
                 if plotPost:
                     plt.cla()
                     ax.plot(logDistance[:-1], cdf, label=label, lw=2)
@@ -636,7 +628,7 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                 if P_minDist > P_maxDist: #pdf not rising with distance
                     distance[index] = 10.**minDist
                     label = 'posterior is mid in range, set to ' + '{0:.2f}'.format(float(distance[index]))
-                    print label
+                    print(label)
                     nMidMin += 1
                 if P_minDist < P_maxDist: #pdf rising with distance
                     distance[index] = 10.**cdfInv(quantile)
@@ -644,14 +636,14 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                     nMidPost += 1
                 if P_minDist == P_maxDist: #pdf is flat
                     label= 'The posterior is flat with value ' + str(P_minDist)+', Dist= ' + '{0:.2f}'.format(float(distance[index]))
-                    print label
+                    print(label)
                     if tgas['parallax'][index] <= 0:
                         distance[index] = 10.**maxDist
                         nMidFlatMax += 1
                     else:
                         distance[index] = 10.**minDist
                         nMidFlatMin += 1
-                    print label
+                    print(label)
                     distance[index] = 10.**minDist
 
                 if plotPost:
@@ -675,14 +667,14 @@ def distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, apparentMag
                 fig.savefig('cdfplots/cdf.' + str(index) + '.png')
                 #distanceMedian[index] = np.nan
             """
-        print 'N mid posterior set to minDist: ', nMidMin
-        print 'N mid posterior set to quantil Dist: ', nMidPost
-        print 'N mid posterior that are flat, set to minDist: ', nMidFlatMin
-        print 'N mid posterior that are flat, set to maxDist: ', nMidFlatMax
-        print 'N small posterior set to minDist: ', nSmallMin
-        print 'N small posterior set to maxDist: ', nSmallMax
-        print 'N small posteriors that are flat, set to minDist: ', nSmallFlatMin
-        print 'N small posteriors that are flat, set to maxDist: ', nSmallFlatMax
+        print('N mid posterior set to minDist: ', nMidMin)
+        print('N mid posterior set to quantil Dist: ', nMidPost)
+        print('N mid posterior that are flat, set to minDist: ', nMidFlatMin)
+        print('N mid posterior that are flat, set to maxDist: ', nMidFlatMax)
+        print('N small posterior set to minDist: ', nSmallMin)
+        print('N small posterior set to maxDist: ', nSmallMax)
+        print('N small posteriors that are flat, set to minDist: ', nSmallFlatMin)
+        print('N small posteriors that are flat, set to maxDist: ', nSmallFlatMax)
 
 
         np.savez(distanceFile, distance=distance)
@@ -695,10 +687,10 @@ def dustCorrection(tgas, color, color_err, absMagKinda, absMagKinda_err, xdgmm, 
         dustEBV = data['ebv']
         dustEBV50 = data['ebv50']
         sourceID = data['sourceID']
-        print 'dust file is: ', dustFile
+        print('dust file is: ', dustFile)
     except IOError:
-        print 'dust file does not exist: ', dustFile
-        print 'calculating dust corrections, this may take awhile'
+        print('dust file does not exist: ', dustFile)
+        print('calculating dust corrections, this may take awhile')
         distance = distanceQuantile(color, absMagKinda, color_err, absMagKinda_err, tgas, distanceFile=distanceFile, quantile=quantile)
         sourceID = tgas['source_id']
         l = tgas['l']*units.deg
@@ -707,7 +699,7 @@ def dustCorrection(tgas, color, color_err, absMagKinda, absMagKinda_err, xdgmm, 
         dustEBV = st.dust(l, b, distance*units.kpc, mode=mode)
         end = time.time()
         #print 'dust sampling ', str(nDistanceSamples), ' took ',str(end-start), ' seconds for index ', str(i)
-        print 'calculating dust took ', str(end - start), ' seconds'
+        print('calculating dust took ', str(end - start), ' seconds')
         assert np.sum(np.isnan(dustEBV)) == 0., 'some stars still have Nan for dust'
         np.savez(dustFile, ebv=dustEBV, sourceID=sourceID)
     if plot:
@@ -810,7 +802,7 @@ def posteriorParallaxAllStars(tgas, nPosteriorPoints, color, absMagKinda, color_
 def correctForDust(tgas, color, color_err, absMagKinda, absMagKinda_err, xdgmm, dustFile='dustCorrection', distanceFile = 'distanceQuantiles', xdgmmFilename='xdgmm'):
 
     dustEBV, sourceID = dustCorrection(tgas, color, color_err, absMagKinda, absMagKinda_err, xdgmm, quantile=0.05, nDistanceSamples=128, max_samples=1, mode='median', plot=True, distanceFile=distanceFile, dustFile=dustFile)
-    print 'dust attenuations calculated'
+    print('dust attenuations calculated')
     #make sure the dust array and tgas arrays are ordered the same
     assert np.sum(tgas['source_id'] - sourceID) == 0.0, 'dust and data arrays are sorted differently !!!'
 
@@ -891,7 +883,7 @@ def dataArrays(survey='2MASS'):
     nonzeroError = (bandDictionary[mag1]['array'][bandDictionary[mag1]['err_key']] != 0.0) & \
                    (bandDictionary[mag2]['array'][bandDictionary[mag2]['err_key']] != 0.0)
 
-    bayes = BayestarQuery(max_samples=1)
+    bayes = BayestarQuery(max_samples=1, version='bayestar2015')
     dust = bayes(SkyCoord(tgas['l']*units.deg, tgas['b']*units.deg, frame='galactic'), mode='median')
     nanDust = np.isnan(dust[:,0])
 
@@ -909,8 +901,8 @@ def dataArrays(survey='2MASS'):
         nonZeroColor = (bandDictionary[mag1]['array'][bandDictionary[mag1]['key']] -
                         bandDictionary[mag2]['array'][bandDictionary[mag2]['key']] != 0.0) & \
                        (bandDictionary[mag1]['array'][bandDictionary[mag1]['key']] != 0.0)
-        indices = twoMass['matched'] & nonzeroError & ~nanDust & nanPhot & nanPhotErr & nanGaia
-
+        #indices = twoMass['matched'] & nonzeroError & ~nanDust & nanPhot & nanPhotErr & nanGaia & nonZeroColor
+        indices = twoMass['matched'] & nonzeroError & ~nanDust & nanPhot & nanPhotErr
     else:
         indices = parallaxSNcut & lowPhotErrorcut & nonzeroError & ~nanDust & nanGaia
 
@@ -961,10 +953,10 @@ def iterateDust(mag1, mag2, absmag, bandDictionary, tgas, xlabel='X', ylabel='Y'
         try:
 
             xdgmm = XDGMM(filename=xdgmmFilename)
-            print 'dust corrected XD read in for iteration ', iter
+            print('dust corrected XD read in for iteration ', iter)
 
         except IOError:
-            print 'generating XD for iteration ', iter , ' filename= ', xdgmmFilename
+            print('generating XD for iteration ', iter , ' filename= ', xdgmmFilename)
             if subset:
                 X, Xerr = subset(color, absMagKinda, color_err, absMagKinda_err, nsamples=1024)
             else:
@@ -1114,7 +1106,7 @@ if __name__ == '__main__':
 
     #check it's working by inferring distances to M67
     distanceTest(tgas, xdgmm, nPosteriorPoints, color, absMagKinda, color_err, absMagKinda_err, xlim, ylim, plot2DPost=False, dataColor='black', truthColor='darkred', posteriorColor='royalblue', priorColor='darkgreen')
-    print 'distances plotted'
+    print('distances plotted')
     #calculate parallax-ish posterior for each star
     #set indexArray to boolean array of sources you want to calculate otherwise calculatese all stars
     xparallaxMAS = np.logspace(-2, 2, nPosteriorPoints)

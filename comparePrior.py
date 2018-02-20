@@ -111,23 +111,23 @@ def comparePrior():
     plt.tight_layout()
     fig.savefig('priorNgaussComparison.png')
 
-def dustViz(ngauss=128, quantile=0.5, iter='8th', survey='2MASS', dataFilename='All.npz', ax=None, tgas=None):
+def dustViz(ngauss=128, quantile=0.5, iter='8th', survey='2MASS', dataFilename='All.npz'):
 
-    if tgas is None: tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
+    tgas, twoMass, Apass, bandDictionary, indices = testXD.dataArrays()
     dustFile = dustFilename(ngauss, quantile, iter, survey, dataFilename)
     data = np.load(dustFile)
     dust = data['ebv']
-    if ax is None: fig, ax = plt.subplots(figsize=(12,7))
+    fig, ax = plt.subplots(figsize=(12,7))
     norm = mpl.colors.PowerNorm(gamma=1/2.)#(vmin=-0.5, vmax=1)
-    im = ax.scatter(tgas['l'], tgas['b'], c=dust, lw=0, cmap='Greys', s=1, vmin=0, vmax=1, norm=norm, rasterized=True)
+    im = ax.scatter(tgas['l'], tgas['b'], c=dust, lw=0, cmap='Greys', s=1, vmin=0, vmax=1, norm=norm)
     ax.set_xlim(0, 360)
     ax.set_ylim(-90, 90)
-    ax.set_xlabel(r'$\mathscr{l}$ [deg]')
-    ax.set_ylabel(r'$\mathscr{b}$ [deg]')
+    ax.set_xlabel('$\mathscr{l}$ [deg]')
+    ax.set_ylabel('$\mathscr{b}$ [deg]')
     cb = plt.colorbar(im, ax=ax)
     cb.set_clim(-0.1, 1)
     cb.set_label(r'E($B-V$ )')
-    if ax is None: fig.savefig('dustViz.dQ' + str(quantile) + '.png')
+    fig.savefig('dustViz.dQ' + str(quantile) + '.png')
 
 def dataViz(survey='2MASS', ngauss=128, quantile=0.05, dataFilename='All.npz', iter='10th', Nsamples=3e5, contourColor='k', dustFile='dust.npz', sdss5=False, whatsThatFeature=False):
 
@@ -386,7 +386,7 @@ def examplePosterior(nexamples=100, postFile='posteriorSimple.npz', dustFile='du
     mean = data['mean']
     var = data['var']
     notnans = ~np.isnan(var) & ~np.isnan(tgas['parallax_error'])
-    print 'The median of the differences of the logs: ', np.median(np.log(var[notnans]) - np.log(tgas['parallax_error'][notnans]**2.))
+    print('The median of the differences of the logs: ', np.median(np.log(var[notnans]) - np.log(tgas['parallax_error'][notnans]**2.)))
 
     varDiff = var - tgas['parallax_error']**2.
     ind = np.argsort(varDiff)[::-1]
@@ -472,7 +472,7 @@ def compareSimpleGaia(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
         ax[1].set_xlim(1e-1, 1e2)
         fig.savefig(file.split('.')[0] + '_Comparison2Gaia.png')
         notnans = ~np.isnan(var) & ~np.isnan(tgas['parallax_error'])
-        print 'The median of the differences of the logs: ', np.median(np.log(var[notnans]) - np.log(tgas['parallax_error'][notnans]**2.))
+        print('The median of the differences of the logs: ', np.median(np.log(var[notnans]) - np.log(tgas['parallax_error'][notnans]**2.)))
         cNorm  = plt.matplotlib.colors.Normalize(vmin=-6, vmax=6)
         fig, ax = plt.subplots(1, 2, figsize=(14, 7))
         x = color[notnans]
@@ -606,7 +606,8 @@ def paperComparePrior(ngauss=128, quantile=0.05, iter='10th', survey='2MASS', da
     fig.savefig('comparePriorPaper.png')
 
 
-
+def compareSimple():
+    return 0
 
 if __name__ == '__main__':
     #comparePrior()
