@@ -10,6 +10,7 @@ from xdgmm import XDGMM
 import drawEllipse
 import comparePrior
 import scipy.interpolate
+import astropy.visualization as av
 
 def figsize_and_margins(plotsize,subplots=(1,1),**absolute_margins):
     '''Determine figure size and margins from plot size and absolute margins
@@ -52,7 +53,7 @@ def figsize_and_margins(plotsize,subplots=(1,1),**absolute_margins):
     #height * (top - bottom)
     #    = nrows * plot_height + (nrows - 1) * hspace * plot_height
     #solve for width and height, using absolute margins as necessary:
-    print(nc, rmarg['wspace'], pw, amarg.get('lef', 0), amarg.get('right', 0), rmarg.get('right', 1), rmarg.get('left', 0))
+    #print(nc, rmarg['wspace'], pw, amarg.get('lef', 0), amarg.get('right', 0), rmarg.get('right', 1), rmarg.get('left', 0))
     width  = float((nc + (nc - 1) * rmarg['wspace']) * pw        \
                    + amarg.get('left',0) + amarg.get('right',0)) \
              / (rmarg.get('right',1) - rmarg.get('left',0))
@@ -85,10 +86,14 @@ def gaussian(mean, sigma, array, amplitude=1.0):
     return amplitude/np.sqrt(2.*np.pi*sigma**2.)*np.exp(-(array - mean)**2./(2.*sigma**2.))
 
 
-def plotPrior(xdgmm, ax, c='black', lw=1):
+def plotPrior(xdgmm, ax, c='black', lw=1, stretch=False):
     for gg in range(xdgmm.n_components):
         points = drawEllipse.plotvector(xdgmm.mu[gg], xdgmm.V[gg])
-        ax.plot(points[0,:],testXD.absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=xdgmm.weights[gg]/np.max(xdgmm.weights))
+        if stretch:
+            Stretch = av.PowerStretch(1./5)
+            alpha=np.power(xdgmm.weights[gg]/np.max(xdgmm.weights), 1./10)
+        else: alpha=xdgmm.weights[gg]/np.max(xdgmm.weights)
+        ax.plot(points[0,:],testXD.absMagKinda2absMag(points[1,:]), c, lw=lw, alpha=alpha)
 
 def makeFigureInstance(x=1, y=1, left=1.0, right=0.25, top=0.25, bottom=0.75, wspace=0.5, hspace=0.5, figureSize=(3,3)):#, figsize=None, fontsize=12):
     sz, rm = figsize_and_margins(figureSize, (y,x), left=left, right=right,
@@ -158,7 +163,7 @@ def sampleXDGMM(xdgmm, Nsamples):
     sampley = testXD.absMagKinda2absMag(sample[:,1])
     return samplex, sampley
 
-def likePriorPost(color, absMagKinda, color_err, absMagKinda_err, apparentMagnitude, xdgmm, ndim=2, nPosteriorPoints=1000, projectedDimension=1):
+def likePriorPost(color, absMagKinda, color_err, absMagKinda_err, apparentMagnitude, xdgmm, xparallaxMAS, ndim=2, nPosteriorPoints=1000, projectedDimension=1):
     meanData, covData = testXD.matrixize(color, absMagKinda, color_err, absMagKinda_err)
     meanPrior, covPrior = testXD.matrixize(color, absMagKinda, color_err, 1e5)
     meanData = meanData[0]
@@ -166,12 +171,14 @@ def likePriorPost(color, absMagKinda, color_err, absMagKinda_err, apparentMagnit
     meanPrior = meanPrior[0]
     covPrior = covPrior[0]
     xabsMagKinda = testXD.parallax2absMagKinda(xparallaxMAS, apparentMagnitude)
+    xColor = np.linspace(-2, 4, nPosteriorPoints)
     allMeans, allAmps, allCovs, summedPosteriorAbsmagKinda = testXD.absMagKindaPosterior(xdgmm, ndim, meanData, covData, xabsMagKinda, projectedDimension=1, nPosteriorPoints=nPosteriorPoints)
     allMeansPrior, allAmpsPrior, allCovsPrior, summedPriorAbsMagKinda = testXD.absMagKindaPosterior(xdgmm, ndim, meanPrior, covPrior, xabsMagKinda, projectedDimension=1, nPosteriorPoints=nPosteriorPoints)
+    allMeansColor, allAmpsColor, allCovsColor, summedPosteriorColor = testXD.absMagKindaPosterior(xdgmm, ndim, meanData, covData, xColor, projectedDimension=0, nPosteriorPoints=1000, prior=False)
     posteriorParallax = summedPosteriorAbsmagKinda*10.**(0.2*apparentMagnitude)
     priorParallax = summedPriorAbsMagKinda*10.**(0.2*apparentMagnitude)
     likeParallax = gaussian(absMagKinda/10.**(0.2*apparentMagnitude), absMagKinda_err/10.**(0.2*apparentMagnitude), xparallaxMAS)
-    return likeParallax, priorParallax, posteriorParallax
+    return likeParallax, priorParallax, posteriorParallax, summedPosteriorColor
 
 def main():
     #    for label, style in zip(['paper', 'talk'],['seaborn-paper', 'seaborn-talk']):
@@ -179,10 +186,10 @@ def main():
     plot_data = False
     plot_dust = False
     plot_prior = False
-    plot_m67 = True
+    plot_m67 = False
     plot_compare = False
     plot_expectation = False
-    plot_odd_examples = False
+    plot_odd_examples = True
     plot_examples = False
     plot_delta = False
     plot_deltacdf = False
@@ -423,7 +430,7 @@ def main():
                 ax[0].errorbar(color[index], absMag_dust[index], xerr=[[color_err[index], color_err[index]]], yerr=[[absMag_dust_err[0][index], absMag_dust_err[1][index]]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=dataColor, ecolor=dataColor)
                 ax[0].annotate(str(i+1), (color[index]+0.075, absMag_dust[index]+0.175))#, fontsize=annotateTextSize)
                 #print len(color), len(absMagKinda_dust), len(color_err), len(absMagKinda_dust_err), len(apparentMagnitude)
-                likeParallax, priorParallax, posteriorParallax = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
+                likeParallax, priorParallax, posteriorParallax, posteriorColor = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, xparallaxMAS, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
 
                 l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=1, color=dataColor, zorder=100)
                 l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
@@ -460,19 +467,20 @@ def main():
 
         #choose indices for odd plot_examples
         #odd colors and magnitudes
-        color > 0.5 & mag
-        colorBins = [0.0, 0.2, 0.4, 0.7, 1.0]
-        digit = np.digitize(color, colorBins)
+        #come back and do parallax negative
+        oddIndicesWD  = np.where(absMag_dust > 6.*color + 6.)[0]#3.6)[0]
+        oddIndicesSSG = np.where(np.logical_and((absMag_dust < 7.5*color - 1.5), (absMag_dust > -8.1*color + 7.8)))[0]
+        oddIndicesPN  = np.where(np.logical_and((absMag_dust < 7.5*color - 4.25),(absMag_dust < -4.75*color - 0.6)))[0]
 
         ndim = 2
         nPosteriorPoints = 1000 #number of elements in the posterior array
         projectedDimension = 1  #which dimension to project the prior onto
         xparallaxMAS = np.linspace(0, 10, nPosteriorPoints)
-
-
+        xarray = np.logspace(-2, 2, 1000)
+        xColor = np.linspace(-2, 4, nPosteriorPoints)
         #plot likelihood and posterior in each axes
-        for iteration in np.arange(20, 40):
-            fig, ax = makeFigureInstance(x=3, y=2, hspace=0.75, figureSize=(2,2)) #, figsize=figsize3x2)
+        for iteration in np.arange(0, 10):
+            fig, ax = makeFigureInstance(x=2, y=2, hspace=0.75, figureSize=(2,2)) #, figsize=figsize3x2)
             #fig, ax = plt.subplots(2, 3, figsize=figsize3x2)
             #ax = ax.flatten()
             #fig.subplots_adjust(left=0.1, right=0.9,
@@ -480,24 +488,53 @@ def main():
             #                        wspace=0.4, hspace=0.5)
 
 
-            plotPrior(xdgmm, ax[0], c=priorColor, lw=1)
-            ax[0].set_xlim(xlim_cmd)
-            ax[0].set_ylim(ylim_cmd)
+            samplex, sampley = sampleXDGMM(xdgmm, len(tgas)*10)
+            ax[0].hist2d(samplex, sampley, bins=100, norm=mpl.colors.LogNorm(), cmap=mpl.colors.Greens())
+            #plotPrior(xdgmm, ax[0], c=priorColor, lw=1, stretch=True)
+            ax[0].set_ylim(15, -10)
+            #ax[0].set_xlim(xlim_cmd)
+            #ax[0].set_ylim(ylim_cmd)
             ax[0].set_xlabel(xlabel_cmd)
             ax[0].set_ylabel(ylabel_cmd)
 
-            for i in range(np.max(digit)):
-                currentInd = np.where((digit == i))[0]
-                index = currentInd[np.random.randint(0, high=len(currentInd))]
+            for i, indices in enumerate([oddIndicesWD, oddIndicesSSG, oddIndicesPN]):
+                print(len(indices), indices)
+                if i == 0: index = indices[iteration]
+                else: index = indices[np.random.randint(0, high=len(indices))]
                 ax[0].scatter(color[index], absMag_dust[index], c=dataColor, s=20)
-                ax[0].errorbar(color[index], absMag_dust[index], xerr=[[color_err[index], color_err[index]]], yerr=[[absMag_dust_err[0][index], absMag_dust_err[1][index]]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=dataColor, ecolor=dataColor)
+                yplus = absMag_dust_err[0][index]
+                yminus = absMag_dust_err[1][index]
+                if np.isnan(yplus): yplus = 10.
+                if np.isnan(yminus): yminus = 10.
+                print(yplus, yminus)
+                ax[0].errorbar(color[index], absMag_dust[index], xerr=[[color_err[index]], [color_err[index]]], yerr=[[yplus], [yminus]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=dataColor, ecolor=dataColor)
                 ax[0].annotate(str(i+1), (color[index]+0.075, absMag_dust[index]+0.175))#, fontsize=annotateTextSize)
                 #print len(color), len(absMagKinda_dust), len(color_err), len(absMagKinda_dust_err), len(apparentMagnitude)
-                likeParallax, priorParallax, posteriorParallax = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
+                likeParallax, priorParallax, posteriorParallax, posteriorColorArray = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, xparallaxMAS, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
+
+                likeParallaxFull, priorParallaxFull, posteriorParallaxFull, posteriorColorFull = likePriorPost(color[index], absMagKinda_dust[index], color_err[index], absMagKinda_dust_err[index], apparentMagnitude[index], xdgmm, xarray, ndim=2, nPosteriorPoints=1000, projectedDimension=1)
+
+                meanPosteriorParallax = scipy.integrate.cumtrapz(posteriorParallaxFull*xarray, x=xarray)[-1]
+                x2PosteriorParallax = scipy.integrate.cumtrapz(posteriorParallaxFull*xarray**2., x=xarray)[-1]
+                varPosteriorParallax = x2PosteriorParallax - meanPosteriorParallax**2.
+                meanPosteriorColor = scipy.integrate.cumtrapz(posteriorColorFull*xColor, x=xColor)[-1]
+                x2PosteriorColor = scipy.integrate.cumtrapz(posteriorColorFull*xColor**2., x=xColor)[-1]
+                varPosteriorColor = x2PosteriorColor - meanPosteriorColor**2.
+
+                absMagPost = testXD.absMagKinda2absMag(meanPosteriorParallax*10.**(0.2*apparentMagnitude[index]))
+                absMag_errPost = absMagError(meanPosteriorParallax, np.sqrt(varPosteriorParallax), apparentMagnitude[index], absMagPost)
+                yplus = absMag_dust_err[0][index]
+                yminus = absMag_dust_err[1][index]
+
+                if np.isnan(yplus): yplus = 10.
+                if np.isnan(yminus): yminus = 10.
+
 
                 l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=1, color=dataColor, zorder=100)
                 l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
                 l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
+                ax[0].scatter(meanPosteriorColor, absMagPost, c=posteriorColor, s=20)
+                ax[0].errorbar(meanPosteriorColor, absMagPost, xerr=[[np.sqrt(varPosteriorColor)], [np.sqrt(varPosteriorColor)]], yerr=[[yplus], [yminus]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=posteriorColor, ecolor=posteriorColor)
                 maxInd = posteriorParallax == np.max(posteriorParallax)
                 maxPar = xparallaxMAS[maxInd]
                 maxY = posteriorParallax[maxInd]
@@ -517,10 +554,10 @@ def main():
                     leg = fig.legend((l1, l2, l3), ('likelihood', 'prior', 'posterior'), 'upper right') #, fontsize=legendTextSize)
                     leg.get_frame().set_alpha(1.0)
                 #plt.tight_layout()
-                if pdf: fig.savefig('posterior_' + str(iteration) + '.pdf', dpi=400)
-            fig.savefig('paper/posterior.pdf', dpi=400)
+                if pdf: fig.savefig('posterior_' + str(iteration) + '_odd.pdf', dpi=400)
+            fig.savefig('paper/posterior_odd.pdf', dpi=400)
             fig.tight_layout()
-            fig.savefig('posterior.png')
+            fig.savefig('posterior_odd.png')
             plt.close(fig)
     #-------------------------------------
 
