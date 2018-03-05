@@ -223,8 +223,9 @@ def main():
     np.random.seed(0)
 
     trueColor='darkred'
-    priorColor='darkgreen'
-    posteriorColor='royalblue'
+    priorColor= '#9ecae1' #'royalblue'
+    cmap_prior = 'Blues'
+    posteriorColor= '#3182bd' #'darkblue'
     dataColor='black'
     posteriorMapColor = 'Blues'
 
@@ -489,7 +490,7 @@ def main():
 
 
             samplex, sampley = sampleXDGMM(xdgmm, len(tgas)*10)
-            ax[0].hist2d(samplex, sampley, bins=100, norm=mpl.colors.LogNorm(), cmap=mpl.colors.Greens())
+            ax[0].hist2d(samplex, sampley, bins=500, norm=mpl.colors.LogNorm(), cmap=plt.get_cmap(cmap_prior))
             #plotPrior(xdgmm, ax[0], c=priorColor, lw=1, stretch=True)
             ax[0].set_ylim(15, -10)
             #ax[0].set_xlim(xlim_cmd)
@@ -530,8 +531,8 @@ def main():
                 if np.isnan(yminus): yminus = 10.
 
 
-                l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=1, color=dataColor, zorder=100)
-                l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=0.5, color=priorColor)
+                l1, = ax[i+1].plot(xparallaxMAS, likeParallax*np.max(posteriorParallax)/np.max(likeParallax), lw=2, color=dataColor, zorder=100)
+                l2, = ax[i+1].plot(xparallaxMAS, priorParallax*np.max(posteriorParallax)/np.max(priorParallax), lw=2, color=priorColor, linestyle='--')
                 l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
                 ax[0].scatter(meanPosteriorColor, absMagPost, c=posteriorColor, s=20)
                 ax[0].errorbar(meanPosteriorColor, absMagPost, xerr=[[np.sqrt(varPosteriorColor)], [np.sqrt(varPosteriorColor)]], yerr=[[yplus], [yminus]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=posteriorColor, ecolor=posteriorColor)
