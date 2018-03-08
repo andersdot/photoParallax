@@ -1,5 +1,5 @@
 % This project is part of the photoParallax project.
-% Copyright 2017 the authors.
+% Copyright 2017, 2018 the authors.
 
 %@arxiver{posteriorCMD.pdf}
 
@@ -110,9 +110,10 @@ million \tgas\ stars, are available in companion electronic tables.
 The \gaia\ Mission (\citealt{gaia16}) will soon deliver more than a billion
 stellar parallax measurements.
 Only a small fraction (but large number) of these
-measurements will be precise and purely astrometric.
-\gaia\ will use astrometric parallaxes to determine the distances of the more
-precise stars, and then calibrate spectrophotometric models (\citealt{apsis}).
+measurements will be precise and purely astrometric
+\added{The long-term complete distance information coming from \gaia\ will
+involve astrometric, photometric, and spectral information, and the balance
+of these contributions will be a strong function of stellar brightness (\citealt{apsis}).}
 These spectrophotometric models, along with \gaia's on-board
 low-resolution $BP/RP$ spectrophotometry, can be used to provide
 more precise parallax estimates for stars with poor astrometric parallax data.
@@ -193,7 +194,14 @@ perform quasar target selection
 in \project{Sloan Digital Sky Survey} data (\citealt{xdqso}; \citealt{xdqsoz}).
 Its advantage over other deconvolution methods is that it takes as input,
 and handles in a principled way, heteroskedastic data.
-Its disadvantage, for the present purposes, is that it requires
+\added{It also handles incomplete data, in the sense of there being missing
+data values (these are like data values with arbitrarily large uncertainties);
+this aspect of XD is not so relevant to this project,
+where we have an essentially complete catalog.
+(There is another sense for the word ``incomplete'' in this area, which has to do with
+the completeness or selection function of the survey as a whole. We address this
+kind of completeness in our assumption called ``selection'' above and in the Discussion.)}
+XD's disadvantage, for the present purposes, is that it requires
 or implies a strictly Gaussian noise model.
 As we show below, this requires us to transform the \cmd\ to a space in which
 the noise is approximately Gaussian.
@@ -232,7 +240,7 @@ these lines build in informative (and known-to-be-wrong) assumptions
 about the line-of-sight parallax distribution to \gaia\ stars.
 That is, they build in strong and informative assumptions about the Milky
 Way.
-The strongest new assumption made in this work is that for every star
+The \added{fundamental and critical} assumption made in this work is that for every star
 in \tgas, there are other, photometrically (and bolometrically)
 similar stars.
 That is a much weaker assumption than has been made in most other Bayesian

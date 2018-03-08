@@ -223,9 +223,9 @@ def main():
     np.random.seed(0)
 
     trueColor='darkred'
-    priorColor= '#9ecae1' #'royalblue'
+    priorColor= '#6baed6' #'#9ebcda' #'#9ecae1' #'royalblue'
     cmap_prior = 'Blues'
-    posteriorColor= '#3182bd' #'darkblue'
+    posteriorColor= '#984ea3' #'#7a0177' #'#8856a7' #'#810f7c' #'#08519c' #'darkblue'
     dataColor='black'
     posteriorMapColor = 'Blues'
 
@@ -469,9 +469,12 @@ def main():
         #choose indices for odd plot_examples
         #odd colors and magnitudes
         #come back and do parallax negative
-        oddIndicesWD  = np.where(absMag_dust > 6.*color + 6.)[0]#3.6)[0]
+        SN = tgas['parallax'][positive]/tgas['parallax_error'][positive]
+        oddIndicesWD_LowSN  = np.where(np.logical_and((absMag_dust > 6.*color + 5.), (SN <= 5)))[0]
+        oddIndicesWD_HighSN = np.where(np.logical_and((absMag_dust > 6.*color + 5.), (SN > 5)))[0]#3.6)[0]
         oddIndicesSSG = np.where(np.logical_and((absMag_dust < 7.5*color - 1.5), (absMag_dust > -8.1*color + 7.8)))[0]
-        oddIndicesPN  = np.where(np.logical_and((absMag_dust < 7.5*color - 4.25),(absMag_dust < -4.75*color - 0.6)))[0]
+        oddIndicesPN_LowSN   = np.where(np.logical_and(SN <= 5, np.logical_and((absMag_dust < 7.5*color - 4.25),(absMag_dust < -4.75*color - 0.6))))[0]
+        oddIndicesPN_HighSN  = np.where(np.logical_and(SN > 5, np.logical_and((absMag_dust < 7.5*color - 4.25),(absMag_dust < -4.75*color - 0.6))))[0]
 
         ndim = 2
         nPosteriorPoints = 1000 #number of elements in the posterior array
@@ -479,29 +482,28 @@ def main():
         xparallaxMAS = np.linspace(0, 10, nPosteriorPoints)
         xarray = np.logspace(-2, 2, 1000)
         xColor = np.linspace(-2, 4, nPosteriorPoints)
+        samplex, sampley = sampleXDGMM(xdgmm, len(tgas)*10)
         #plot likelihood and posterior in each axes
         for iteration in np.arange(0, 10):
-            fig, ax = makeFigureInstance(x=2, y=2, hspace=0.75, figureSize=(2,2)) #, figsize=figsize3x2)
+            fig, ax = makeFigureInstance(x=3, y=2, hspace=0.75, figureSize=(2,2)) #, figsize=figsize3x2)
             #fig, ax = plt.subplots(2, 3, figsize=figsize3x2)
             #ax = ax.flatten()
             #fig.subplots_adjust(left=0.1, right=0.9,
             #                        bottom=0.1, top=0.8,
             #                        wspace=0.4, hspace=0.5)
-
-
-            samplex, sampley = sampleXDGMM(xdgmm, len(tgas)*10)
-            ax[0].hist2d(samplex, sampley, bins=500, norm=mpl.colors.LogNorm(), cmap=plt.get_cmap(cmap_prior))
+            ax[0].hist2d(samplex, sampley, bins=500, norm=mpl.colors.LogNorm(), cmap=plt.get_cmap(cmap_prior), zorder=-1)
             #plotPrior(xdgmm, ax[0], c=priorColor, lw=1, stretch=True)
             ax[0].set_ylim(15, -10)
-            #ax[0].set_xlim(xlim_cmd)
-            #ax[0].set_ylim(ylim_cmd)
+            ax[0].set_xlim(-1.2, 2)
+            ax[0].set_ylim(ylim_cmd[0]+3, ylim_cmd[1]-3)
             ax[0].set_xlabel(xlabel_cmd)
             ax[0].set_ylabel(ylabel_cmd)
 
-            for i, indices in enumerate([oddIndicesWD, oddIndicesSSG, oddIndicesPN]):
+            for i, indices in enumerate([oddIndicesWD_LowSN, oddIndicesWD_HighSN, oddIndicesSSG, oddIndicesPN_LowSN, oddIndicesPN_HighSN]):
                 print(len(indices), indices)
-                if i == 0: index = indices[iteration]
-                else: index = indices[np.random.randint(0, high=len(indices))]
+                #if i == 0: index = indices[iteration]
+                #else: index = indices[np.random.randint(0, high=len(indices))]
+                index = indices[np.random.randint(0, high=len(indices))]
                 ax[0].scatter(color[index], absMag_dust[index], c=dataColor, s=20)
                 yplus = absMag_dust_err[0][index]
                 yminus = absMag_dust_err[1][index]
@@ -536,7 +538,7 @@ def main():
                 l3, = ax[i+1].plot(xparallaxMAS, posteriorParallax, lw=2, color=posteriorColor)
                 ax[0].scatter(meanPosteriorColor, absMagPost, c=posteriorColor, s=20)
                 ax[0].errorbar(meanPosteriorColor, absMagPost, xerr=[[np.sqrt(varPosteriorColor)], [np.sqrt(varPosteriorColor)]], yerr=[[yplus], [yminus]], fmt="none", zorder=0, lw=2.0, mew=0, alpha=1.0, color=posteriorColor, ecolor=posteriorColor)
-                maxInd = posteriorParallax == np.max(posteriorParallax)
+                maxInd = np.where(posteriorParallax == np.max(posteriorParallax))[0]
                 maxPar = xparallaxMAS[maxInd]
                 maxY = posteriorParallax[maxInd]
                 if maxPar < 5: annX = 9
