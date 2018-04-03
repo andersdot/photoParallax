@@ -13,6 +13,7 @@
 \newcommand{\foreign}[1]{\textsl{#1}}
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\project}[1]{\textsl{#1}}
+\newcommand{\apass}{\project{\acronym{APASS}}}
 \newcommand{\tgas}{\project{\acronym{TGAS}}}
 \newcommand{\tmass}{\project{\acronym{2MASS}}}
 \newcommand{\psone}{\project{\acronym{PS1}}}
@@ -653,21 +654,16 @@ Example 5 looks very similar to the prior PDF and exemplifies that our prior ten
 \label{fig:posterior}
 \end{figure}
 
-%\begin{figure}
-%\centering
-%  \includegraphics[width=\textwidth]{posterior_odd.pdf}
-%\caption{Five example posterior PDFs over parallax using our method for more odd objects.
-%The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented by a mixture of Gaussians in green. In blue, we show the posterior expectation value and $1 \sigma$ uncertainties. 
-%We chose example points that lie outside the well populated portions of the \cmd to illustrate how our method works for rare \tgas objects. 
-%The remaining panels show the posterior PDF in blue, the prior PDF in green, and likelihood of the data in black.
-
-
-%Most stars have posterior PDFs (blue) that are only slightly more precise than the data (black), which is well represented in this random sampling of points.
-%Examples 1, 3, and 4 are not very effected by the prior (green), where good data is good data.
-%Examples 2 and 5 show a more precise posterior PDF compared with the likelihood.
-%Example 5 looks very similar to the prior PDF and exemplifies that our prior tends to have the largest effect on stars in the red giant branch.}
-%\label{fig:posterior}
-%\end{figure}
+\begin{figure}
+\centering
+  \includegraphics[width=\textwidth]{posterior_odd.pdf}
+\caption{\added{Five example posterior PDFs over parallax using our method for more rare objects.
+The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented as a 2D histogram. In blue, we show the posterior expectation value and $1 \sigma$ uncertainties. 
+We chose example points that lie outside the well populated portions of the \cmd\ to illustrate how our method works for rare \tgas\ objects. 
+The remaining panels show the posterior PDF in blue, the prior PDF as shaded in green, and likelihood of the data in black. 
+XXX talk about specific examples}}
+\label{fig:posterior_odd}
+\end{figure}
 
 
 \begin{figure}
@@ -752,6 +748,17 @@ The posterior PDFs are much more narrow and clustered than the \tgas\ likelihood
 \end{figure}
 
 
+\subsection{Distances from Asteroseismology}
+\added{As a second test of accuracy of these photometric parallax inferences, we compared to the inferred distances to the stars from asteroseismology.  Asteroseimology can make much more precise distance, and therefore parallax, estimates to stars. There are about 2200 stars that overlap our data set here and the asteroseimic data from Huber at all. We compared the estimates in the parallax space (since the distance estimates are more precise, this is a safer/better comparison space) and show that our parallax estimates are unbiased relative to asteroseismic estimates, and are also more similar to the asteroseimic estimates than tgas parallax likelihoods. }
+\begin{figure}
+\centering
+  \includegraphics[width=\textwidth]{photoVSseismic.pdf}
+\caption{Proof of concept: parallax estimate comparisons.}
+
+\label{fig:seismic}
+\end{figure}
+
+
 \section{Discussion}
 
 We have shown that it is possible to obtain photometric parallaxes for
@@ -800,6 +807,8 @@ So, the generated model for the \cmd\ is representative for
 our subset of the \tgas\ Catalog.
 Because our model is representitive of our full subset catalog, we expect any (sensible) parallax estimates
 we generate from our parallax posterior PDFs to be only weakly biased.
+
+Our model has similarities in spirit to previous work we have done on modeling the \gaia\ color-magnitude diagram (\citealt{leistedtHogg2017}; LH17). In LH17, the motivation was---like ours---to de-noise the distance information coming from \gaia\ using a data-driven model of the absolute photometric properties of stars. The results of LH17 are similar to the results here in terms of the reduction in variance in the distance (or parallax) estimates. The principal differences between LH17 and this work are that LH17 uses \apass\ photometry rather than \tmass\ photometry, and LH17 does a full sampling and marginalization of the color-magnitude-diagram model, not an optimized point estimate as we obtain and use here. There are several comments to make about the comparison between this work and LH17: For one, the \tmass\ photometry is very well calibrated and consistent across the sky, which is part of the reason that our results show more clearly the narrowness of the lower main sequence and the red clump than the LH17 results, and probably part of the reason that we resolve better the binary sequence than LH17. For two, the LH17 model is more principled in that it involves a full marginalization over the color-magnitude-diagram parameters. That technical feat is accomplished in part by making use of a coarser and less flexible model for the color-magnitude-diagram morphology. That is, the probabilistic correctness comes at the expense of model flexibility and therefore resolution of fine color-magnitude details. Overall, results are similar, however, and these two projects jointly point at the great value of hierarchical modeling for de-noising \gaia\ data, and indeed any data from large astronomy projects; they also show that there are multiple different but reasonable options for setting trade-offs between probabilistic correctness and model flexibility.
 
 \subsection{Comparison with other priors}
 \begin{figure}
