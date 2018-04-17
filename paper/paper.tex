@@ -263,7 +263,7 @@ commitment to---or even use of---physical models of stars or the Milky Way.
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{toy.pdf}
-\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The red lines are the $1\sigma$ contours of the distribution, and the red points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the green lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The red points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value.}
+\caption{ {\bf Why does this work}: An example of generating posterior beliefs of true values from noisy data by using the noise-deconvolved distribution of data as a prior. The upper-left panel visualizes the simplified toy distribution. The orange lines are the $1\sigma$ contours of the distribution, and the orange points are 1024 samples from the distribution. These same $1\sigma$ contours are drawn in the bottom left panel. In the upper-right and lower-left panel, the grey points are these same 1024 samples of the distribution but with some measurement uncertainty added to them. The error bars show the $1\sigma$ measurement uncertainties. The black points are 5 randomly chosen data to highlight the method. In the lower-left panel, the teal lines represent the noise deconvolved, best estimate for the underlying distribution. The blue points represent the expectation value of the posterior belief of the true values of the noisy black points using the noise deconcolved distribution as the prior. The orange points represent the actual true values. The lower-right panel shows the expectation value, and $1\sigma$ uncertainties, of the posterior belief of the true value for all the points. They are colored by the measurement uncertainty, showing that data with larger measured variance are more influenced by the prior and lie towards the center of the noise deconvolved distribution, or prior. In contrast, more certain measurements tend to lie closer to their measured value.}
 \label{fig:toy}
 \end{figure}
 
@@ -274,7 +274,7 @@ simpler toy model with simulated data.
 Instead of inferring parallax PDFs using the 2D distribution of the \cmd\ as our prior, for this simpler model we will infer posterior PDFs of the value $y$.
 We perform this simpler inference using a prior that is also a 2D distribution: a 1D Gaussian in the $y$ direction, with a running mean $\mu = m\,x + b$ and some thickness $t$.
 Here the thickness of the toy distribution mimics the true thickness, or intrinsic scatter, of the \cmd\ due to age, mass, and metallicity.
-The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel in red.
+The $1\sigma$ contours as well as (noise free) samples from the toy model distribution are shown in \figurename~\ref{fig:toy}, upper-left panel in orange.
 Similarly, noisy samples from this distribution are shown in the upper-right panel in grey and black.
 Using a representation of the true distribution (which we learn from the noisy data) as our prior, we can infer some posterior belief over $y_{\true,n}$, a true sample from the distribution, from $y_n$, a sample from the noisy distribution.
 
@@ -307,7 +307,7 @@ Maximizing this joint likelihood of all the data is the same as minimizing
 \label{eq:chisq}
 \end{equation}
 
-The MMLE gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In \figurename~\ref{fig:toy}, lower-left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the red lines, and the best fit MMLE functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the green lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
+The MMLE gives us the best fit parameters $\hat{m}$, $\hat{b}$, and $\hat{t}$. In \figurename~\ref{fig:toy}, lower-left panel, the true functions $y_{\true} = m_{\true}\,x + b_{\true} \pm t_{\true}$ are shown as the orange lines, and the best fit MMLE functions $\hat{y}_{\true} = \hat{m}\, x + \hat{b} \pm \hat{t}$ are shown as the teal lines. Now that we have an estimate of the true underlying distribution $\hat{y}_{\true}$, we use this as a prior to infer a posterior belief of the true values for each datum $p(y_{\true,n} \given y_n, \tilde{\sigma}_n^2)$.
 
 Here is a good point to step back and acknowledge that our method is a
 bit strange. We are using the data to determine the
@@ -330,7 +330,7 @@ p(y_{\true,n} \given y_n, \tilde{\sigma}_n) &=& p(y_n \given y_{\true,n}, \sigma
 \mathrm{and}\;p(y_{\true,n}) &=& \mathcal{N}(y_{\true,n} \given \hat{m}\, x_n + \hat{b}, \hat{t})
 \label{eq:toyBayes}
 \end{eqnarray}
-In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs (visualized as the expectation value and $1\sigma$ uncertainties) of the true values $y_{\true,n}$ for the 5 highlighted (black) points from the upper-right panel. The red points are the associated true $y$ values.
+In \figurename~\ref{fig:toy} lower-left panel, the blue points represent the posterior beliefs (visualized as the expectation value and $1\sigma$ uncertainties) of the true values $y_{\true,n}$ for the 5 highlighted (black) points from the upper-right panel. The orange points are the associated true $y$ values.
 In the lower-right panel of \figurename~\ref{fig:toy}, the blue points represent the posterior beliefs, again visualized as the expectation value and $1\sigma$ uncertainty, for all 1024 $y_n$.
 When the true values are inferred in this way, the associated variance $\tilde{\sigma}_n^2$ is the convolution of the true distribution variance, $t^2$, and the measurement variance, $\sigma_n^2$.
 The points are colored by their measurement variance $\sigma_n^2$, which shows that noisier measurements are more influenced by the prior and get pulled closer to the center of the MMLE distribution, our prior. In contrast, more certain measurements remain closer to their measured values, $y_n$. We now have better estimates of each true $y$ value by inferring each true $y$ value from the measured $y$ value using an estimate of the true distribution the measured $y$ value was drawn from as the prior.
@@ -350,7 +350,7 @@ show a scatter like that in the upper-left (truth) panel.
 
 Bringing the toy model back to our original problem:
 We can get better estimates of the true parallax for each star by inferring the true parallax from the measured parallax and using the noise-deconvolved \cmd, an estimate of the true \cmd, as our prior.
-For the remainder of the paper, we will also maintain the color scheme presented here (where possible): truth will be red, data will be black, prior information will be green, and posterior information will be blue.
+For the remainder of the paper, we will also maintain the color scheme presented here (where possible): truth will be orange, data will be black, prior information will be teal, and posterior information will be blue.
 
 \section{Assumptions and methods}\label{sec:method}
 
@@ -389,7 +389,7 @@ method that flows from them---in the discussion section below.
   correctly known variances. In detail, we assume that the parallax uncertainty estimates,
   (the \texttt{parallax{\_}error} entry in the \tgas\ catalog), are correct.
   Here we are making use of the fact that when
-  de-noising data, under estimating measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than if we over-estimated the noise.
+  de-noising data, under estimating measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than if we over-estimated the noise. \added{We need to make these assumptions, that the noise model is Gaussian for both the parallaxes and the colors (including dust corrections), to be able to use the tool \xd, which requires Gaussian uncertainties, to deconvolve the data with it's noise for generating the prior. This also requires us to ignore the star to star covariances in the \gaia\ data.}
 \item[dust] We treat the \psone-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -607,7 +607,7 @@ We'll come back to more features in the data below, especially those seen in the
 
 \subsection{Shrinkage of parallax uncertainties}
 
-Figure~\ref{fig:posterior} shows the various probability distributions of our inference for a few randomly-chosen objects: the likelihood (black), prior (green), and posterior PDF (blue) on the true parallaxes.
+Figure~\ref{fig:posterior} shows the various probability distributions of our inference for a few randomly-chosen objects: the likelihood (black), prior (teal), and posterior PDF (blue) on the true parallaxes.
 For the majority of the \gaia\ stars, our prior slightly increases the precision of the posterior PDF compared with the \gaia\ likelihood. Our parallax posterior PDFs are more precise than the \tgas\ catalog entries by a median factor of $1.2$. Examples of these slight increases in precision are visualized in Examples 1, 3, and 4 in Figure~\ref{fig:posterior} which show slightly narrower posterior PDFs compared to the likelihoods.
 However, $14\%$ of our parallax posterior PDFs are more precise than the \tgas\ catalog by a factor of $>2$. This larger change in precision is visualized in Example 5, which shows a significantly narrower posterior PDF compared to the likelihood.
 The nature of our prior is also visible: it is apparent that it is made of a mixture of components, and that its impact, and shape, strongly depend on the location of each star in \cmd\ space.
@@ -644,11 +644,11 @@ bias into the \tgas\ parallax measurements.
 \centering
   \includegraphics[width=\textwidth]{posterior.pdf}
 \caption{Five example posterior PDFs over parallax using our method.
-The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented by a mixture of Gaussians in green.
+The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented by a mixture of Gaussians in teal.
 We chose example points that evenly spanned the color space, but within each color bin, we chose a point at random.
-The remaining panels show the posterior PDF in blue, the prior PDF in green, and likelihood of the data in black.
+The remaining panels show the posterior PDF in blue, the prior PDF in teal, and likelihood of the data in black.
 Most stars have posterior PDFs (blue) that are only slightly more precise than the data (black), which is well represented in this random sampling of points.
-Examples 1, 3, and 4 are not very effected by the prior (green), where good data is good data.
+Examples 1, 3, and 4 are not very effected by the prior (teal), where good data is good data.
 Examples 2 and 5 show a more precise posterior PDF compared with the likelihood.
 Example 5 looks very similar to the prior PDF and exemplifies that our prior tends to have the largest effect on stars in the red giant branch.}
 \label{fig:posterior}
@@ -660,7 +660,7 @@ Example 5 looks very similar to the prior PDF and exemplifies that our prior ten
 \caption{\added{Five example posterior PDFs over parallax using our method for more rare objects.
 The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented as a 2D histogram. In blue, we show the posterior expectation value and $1 \sigma$ uncertainties. 
 We chose example points that lie outside the well populated portions of the \cmd\ to illustrate how our method works for rare \tgas\ objects. 
-The remaining panels show the posterior PDF in blue, the prior PDF as shaded in green, and likelihood of the data in black. 
+The remaining panels show the posterior PDF in blue, the prior PDF as shaded in teal, and likelihood of the data in black. 
 XXX talk about specific examples}}
 \label{fig:posterior_odd}
 \end{figure}
@@ -728,7 +728,7 @@ To be clear, we do no prior selection on previously known members of M67, but in
 Keep in mind, the (low) number of M67 members seen here is constrained by the (unknown) selection effects of the \tgas\ dataset.
 With our converged dust values, and its associated prior, we calculate the posterior over $\varpi_{\true}$ for each star within this window on the sky around M67.
 \figurename~\ref{fig:m67} shows the comparison of the likelihoods and posteriors.
-The vertical red dotted lines bracket the previously measured parallaxes of, or distances to, the cluster.
+The vertical orange dotted lines bracket the previously measured parallaxes of, or distances to, the cluster.
 The likelihoods of the observed parallaxes, shown in the top row in black, are broad and the cluster is not at all obvious.
 The posterior PDFs, shown in the bottom row in blue, are more sharply peaked showing an increase in precision.
 The posterior PDFs also have modes that are more similar to the previously determined parallax of the cluster (vertical lines) for far more stars.
@@ -738,9 +738,9 @@ This shows that our prior is not only making parallaxes more precise but also (p
   \includegraphics[width=\textwidth]{m67.pdf}
 \caption{Proof of concept: parallax inference to the open cluster M67.
 The upper left panel visualizes the \gaia\ + \tmass\ likelihoods of the data, shown in black and projected onto the \cmd, for all the stars within our $0.75~{\rm deg}^2$ window centered on the position of M67.
-Our prior, visualized as a mixture of Gaussians, is shown in green.
-The upper right panel shows the \tgas\ parallax likelihoods in black, with the ``true" parallax to M67, determined by previous methods, bracketed by the red dotted lines.
-Similar to the upper left panel, the lower left panel shows the likelihoods of the data in black and our prior in green, as well as the posterior PDFs in blue.
+Our prior, visualized as a mixture of Gaussians, is shown in teal.
+The upper right panel shows the \tgas\ parallax likelihoods in black, with the ``true" parallax to M67, determined by previous methods, bracketed by the orange dotted lines.
+Similar to the upper left panel, the lower left panel shows the likelihoods of the data in black and our prior in teal, as well as the posterior PDFs in blue.
 The posterior PDFs are a mixture of Gaussians as well, each a product of the likelihood with a Gaussian in our prior.
 The lower right panel shows the projection of the 2D posterior PDF onto parallax space.
 The posterior PDFs are much more narrow and clustered than the \tgas\ likelihoods, showing that our prior generates posterior PDFs that are accurate and more precise than \gaia\ alone.}
@@ -749,11 +749,11 @@ The posterior PDFs are much more narrow and clustered than the \tgas\ likelihood
 
 
 \subsection{Distances from Asteroseismology}
-\added{As a second test of accuracy of these photometric parallax inferences, we compared to the inferred distances to the stars from asteroseismology.  Asteroseimology can make much more precise distance, and therefore parallax, estimates to stars. There are about 2200 stars that overlap our data set here and the asteroseimic data from Huber at all. We compared the estimates in the parallax space (since the distance estimates are more precise, this is a safer/better comparison space) and show that our parallax estimates are unbiased relative to asteroseismic estimates, and are also more similar to the asteroseimic estimates than tgas parallax likelihoods. }
+\added{As a second comparison of these photometric parallax inferences, we compare to the inferred distances to the stars from asteroseismology.  Asteroseimology can make much more precise distance, and therefore parallax, estimates to stars than the photometric parallax method. There are about $2200$ stars that overlap our data set here and the asteroseimic data from \citealt{huber17}. We compared the estimates in the parallax space (since the asteroseismic distance estimates are more precise, this is a safer comparison space since the inverted pdfs will be less skewed). We compare the cumulative difference in the parallax estimates in units of mas; the same units as the precision of \tgas. The comparison shows that our photo parallax estimates are more similar to the asteroseismic estimates than the \tgas\ likelihoods. The left panel and the middle panel show the one to one comparison of asteroseismic parallax estimates to the \tgas\ likelihoods and the photo parallax posterior pdf respectively for all $2200$ stars. The right panel shows the cumulative distribution function of the differences between the estimates for each star. The comparison to the photo parallax estimates, represented by the blue line, shows a distribution with smaller differences, and therefore more similar to the asteroseismic estimates.}
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{photoVSseismic.pdf}
-\caption{Proof of concept: parallax estimate comparisons.}
+\caption{\added{Proof of concept: parallax estimate comparisons. All quantified comparisons in this figure are made between a parallax estimate from asteroseismology and a parallax estimate from \gaia, either the \tgas\ estimate or our photo parallax estimate. And the figure is meant to guide visual comparisons between \tgas\ and photo parallax, and therefore highlight differences in the estimates. The first panel shows the one to one comparison of the \tgas\ parallax estimates and the inverted distance estimates from \citealt{huber17}, and the associated $1\sigma$ uncertainties. The orange line shows the one to one line. The second panel is similar, but instead of the \tgas\ parallax estimates, it visualizes our photo parallax estimates. This shows the shrinkage of the precision of the parallax estimates, and that the expectation values are more in agreement with the asteroseismic estimates. The third panel panel visualizes the difference between the asteroseismic estimate and a \gaia\ estimate, \tgas\ in grey and photo parallax in blue, as a cumulative distribution function of the difference in units of mas. The photo parallax estimates are more similar to the asteroseismic estimates than \tgas\ likelihoods alone.}}
 
 \label{fig:seismic}
 \end{figure}
@@ -808,7 +808,7 @@ our subset of the \tgas\ Catalog.
 Because our model is representitive of our full subset catalog, we expect any (sensible) parallax estimates
 we generate from our parallax posterior PDFs to be only weakly biased.
 
-Our model has similarities in spirit to previous work we have done on modeling the \gaia\ color-magnitude diagram (\citealt{leistedtHogg2017}; LH17). In LH17, the motivation was---like ours---to de-noise the distance information coming from \gaia\ using a data-driven model of the absolute photometric properties of stars. The results of LH17 are similar to the results here in terms of the reduction in variance in the distance (or parallax) estimates. The principal differences between LH17 and this work are that LH17 uses \apass\ photometry rather than \tmass\ photometry, and LH17 does a full sampling and marginalization of the color-magnitude-diagram model, not an optimized point estimate as we obtain and use here. There are several comments to make about the comparison between this work and LH17: For one, the \tmass\ photometry is very well calibrated and consistent across the sky, which is part of the reason that our results show more clearly the narrowness of the lower main sequence and the red clump than the LH17 results, and probably part of the reason that we resolve better the binary sequence than LH17. For two, the LH17 model is more principled in that it involves a full marginalization over the color-magnitude-diagram parameters. That technical feat is accomplished in part by making use of a coarser and less flexible model for the color-magnitude-diagram morphology. That is, the probabilistic correctness comes at the expense of model flexibility and therefore resolution of fine color-magnitude details. Overall, results are similar, however, and these two projects jointly point at the great value of hierarchical modeling for de-noising \gaia\ data, and indeed any data from large astronomy projects; they also show that there are multiple different but reasonable options for setting trade-offs between probabilistic correctness and model flexibility.
+\added{Our model has similarities in spirit to previous work we have done on modeling the \gaia\ color-magnitude diagram (\citealt{leistedtHogg2017}; LH17). In LH17, the motivation was---like ours---to de-noise the distance information coming from \gaia\ using a data-driven model of the absolute photometric properties of stars. The results of LH17 are similar to the results here in terms of the reduction in variance in the distance (or parallax) estimates. The principal differences between LH17 and this work are that LH17 uses \apass\ photometry rather than \tmass\ photometry, and LH17 does a full sampling and marginalization of the color-magnitude-diagram model, not an optimized point estimate as we obtain and use here. There are several comments to make about the comparison between this work and LH17: For one, the \tmass\ photometry is very well calibrated and consistent across the sky, which is part of the reason that our results show more clearly the narrowness of the lower main sequence and the red clump than the LH17 results, and probably part of the reason that we resolve better the binary sequence than LH17. For two, the LH17 model is more principled in that it involves a full marginalization over the color-magnitude-diagram parameters. That technical feat is accomplished in part by making use of a coarser and less flexible model for the color-magnitude-diagram morphology. That is, the probabilistic correctness comes at the expense of model flexibility and therefore resolution of fine color-magnitude details. Overall, results are similar, however, and these two projects jointly point at the great value of hierarchical modeling for de-noising \gaia\ data, and indeed any data from large astronomy projects; they also show that there are multiple different but reasonable options for setting trade-offs between probabilistic correctness and model flexibility.}
 
 \subsection{Comparison with other priors}
 \begin{figure}
