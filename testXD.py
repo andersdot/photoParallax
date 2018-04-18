@@ -402,12 +402,12 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
     np.save('summedPosteriorM67', summedPosterior)
 
 
-    axDist[0].set_xlabel(xlabel, fontsize=18)
-    axDist[0].set_ylabel(ylabel, fontsize=18)
+    axDist[0].set_xlabel(xlabel)
+    axDist[0].set_ylabel(ylabel)
     axDist[0].set_xlim(xlim)
     axDist[0].set_ylim(ylim)
-    axDist[2].set_xlabel(xlabel, fontsize=18)
-    axDist[2].set_ylabel(ylabel, fontsize=18)
+    axDist[2].set_xlabel(xlabel)
+    axDist[2].set_ylabel(ylabel)
     axDist[2].set_xlim(xlim)
     axDist[2].set_ylim(ylim)
 
@@ -420,10 +420,10 @@ def distanceTest(tgas, xdgmm, nPosteriorPoints, data1, data2, err1, err2, xlim, 
 
     axDist[1].set_xlabel('Parallax [mas]')
     axDist[3].set_xlabel('Parallax [mas]')
-    axDist[1].set_ylabel(ylabel_likelihood_parallax, fontsize=18)
-    axDist[3].set_ylabel(ylabel_posterior_parallax, fontsize=18)
-    axDist[1].set_xlim(-1, 3)
-    axDist[3].set_xlim(-1, 3)
+    axDist[1].set_ylabel(ylabel_likelihood_parallax)
+    axDist[3].set_ylabel(ylabel_posterior_parallax)
+    axDist[1].set_xlim(0, 2)
+    axDist[3].set_xlim(0, 2)
 
     axDist[0].legend(loc='best')
     axDist[2].legend(loc='best')

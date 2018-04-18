@@ -11,6 +11,7 @@ import drawEllipse
 import comparePrior
 import scipy.interpolate
 import astropy.visualization as av
+from matplotlib.colors import LinearSegmentedColormap
 
 def figsize_and_margins(plotsize,subplots=(1,1),**absolute_margins):
     '''Determine figure size and margins from plot size and absolute margins
@@ -183,13 +184,13 @@ def likePriorPost(color, absMagKinda, color_err, absMagKinda_err, apparentMagnit
 def main():
     #    for label, style in zip(['paper', 'talk'],['seaborn-paper', 'seaborn-talk']):
     pdf = True
-    plot_data = False
+    plot_data = True
     plot_dust = False
     plot_prior = False
-    plot_m67 = False
+    plot_m67 = True
     plot_compare = False
-    plot_expectation = False
-    plot_odd_examples = True
+    plot_expectation = True
+    plot_odd_examples = False
     plot_examples = False
     plot_delta = False
     plot_deltacdf = False
@@ -222,12 +223,24 @@ def main():
     nsubsamples = 1024
     np.random.seed(0)
 
-    trueColor='darkred'
-    priorColor= '#6baed6' #'#9ebcda' #'#9ecae1' #'royalblue'
+    trueColor='#FF8D28'
+    priorColor= '#7bccc4'#'#6baed6' #'#9ebcda' #'#9ecae1' #'royalblue'
+    priorColor = '#6FB8B0'
     cmap_prior = 'Blues'
-    posteriorColor= '#984ea3' #'#7a0177' #'#8856a7' #'#810f7c' #'#08519c' #'darkblue'
+    posteriorColor= '#0977C4' #'#0868ac' #'#984ea3' #'#7a0177' #'#8856a7' #'#810f7c' #'#08519c' #'darkblue'
     dataColor='black'
     posteriorMapColor = 'Blues'
+    annotationColor = '#FF2412'
+    color1 = np.array((240,249,232))/255.
+    color1 = np.array((255,255,255))/255.
+    #color2 = np.array((123,204,196))/255.
+    color2 = np.array((112, 186, 179))/255.
+    colors = [color1, color2]
+    cm = LinearSegmentedColormap.from_list('my_color', colors, N=100)
+    cmap_prior = LinearSegmentedColormap.from_list('my_color', colors, N=100)
+    color2 = np.array((6, 82, 135))/255.
+    colors = [color1, color2]
+    cmap_posterior = LinearSegmentedColormap.from_list('my_color', colors, N=100)
 
     mag1 = 'J'
     mag2 = 'K'
@@ -317,7 +330,7 @@ def main():
 
     #M67 plot
     if plot_m67:
-        fig, ax = makeFigureInstance(x=2, y=2, hspace=1.0, wspace=1.0)
+        fig, ax = makeFigureInstance(x=2, y=2, hspace=1.0, wspace=1.0, figureSize=(2.5, 2.5))
         #setup_text_plots(fontsize=fontsize, usetex=True)
         #fig, ax = plt.subplots(2,2, figsize=figsize2x2)
         #fig.subplots_adjust(left=0.1, right=0.95,

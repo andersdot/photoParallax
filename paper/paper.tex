@@ -66,7 +66,8 @@
 \affil{Alfred P. Sloan Fellow}
 
 \begin{abstract}\noindent % trust me
-{\bf \textcolor{red}{Stephen Feeeeeeeneeeeeey is the best.}} Converting a noisy parallax measurement into a posterior
+%{\bf \textcolor{red}{Stephen Feeeeeeeneeeeeey is the best.}} 
+Converting a noisy parallax measurement into a posterior
 belief over distance requires inference with a prior.
 Usually this prior represents beliefs about the stellar density distribution of
 the Milky Way.
@@ -389,7 +390,7 @@ method that flows from them---in the discussion section below.
   correctly known variances. In detail, we assume that the parallax uncertainty estimates,
   (the \texttt{parallax{\_}error} entry in the \tgas\ catalog), are correct.
   Here we are making use of the fact that when
-  de-noising data, under estimating measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than if we over-estimated the noise. \added{We need to make these assumptions, that the noise model is Gaussian for both the parallaxes and the colors (including dust corrections), to be able to use the tool \xd, which requires Gaussian uncertainties, to deconvolve the data with it's noise for generating the prior. This also requires us to ignore the star to star covariances in the \gaia\ data.}
+  de-noising data, under estimating measurement noise is conservative, and leads to under-deconvolution. In other words, the features of the inferred \cmd\ will typically be broader and more conservatively estimated than if we over-estimated the noise. \added{We need to make these assumptions, that the noise model is Gaussian for both the parallaxes and the colors (including dust corrections), to be able to use the tool \xd, which requires Gaussian uncertainties, to deconvolve the data with it's noise for generating the prior. We also ignore the star to star covariances because they are not available in the \tgas\ dataset.}
 \item[dust] We treat the \psone-based three-dimensional dust maps (\citealt{green15})
   as correct in their median dust estimates, and their
   effects on color and magnitude. As we optimize the empirical Bayes model, we iteratively update each star's
@@ -648,9 +649,8 @@ The upper left panel shows the position of each example data point in black, wit
 We chose example points that evenly spanned the color space, but within each color bin, we chose a point at random.
 The remaining panels show the posterior PDF in blue, the prior PDF in teal, and likelihood of the data in black.
 Most stars have posterior PDFs (blue) that are only slightly more precise than the data (black), which is well represented in this random sampling of points.
-Examples 1, 3, and 4 are not very effected by the prior (teal), where good data is good data.
-Examples 2 and 5 show a more precise posterior PDF compared with the likelihood.
-Example 5 looks very similar to the prior PDF and exemplifies that our prior tends to have the largest effect on stars in the red giant branch.}
+Examples 1, 2, and 3 are not very effected by the prior (teal), where good data is good data.
+Examples 4 and 5 show a more precise posterior PDF compared with the likelihood. For these examples, the posterior PDF is very similar to the prior PDF and exemplifies that our prior tends to have the largest effect on stars in the red giant branch.}
 \label{fig:posterior}
 \end{figure}
 
@@ -661,7 +661,8 @@ Example 5 looks very similar to the prior PDF and exemplifies that our prior ten
 The upper left panel shows the position of each example data point in black, with its observed uncertainties, plotted over our prior represented as a 2D histogram. In blue, we show the posterior expectation value and $1 \sigma$ uncertainties. 
 We chose example points that lie outside the well populated portions of the \cmd\ to illustrate how our method works for rare \tgas\ objects. 
 The remaining panels show the posterior PDF in blue, the prior PDF as shaded in teal, and likelihood of the data in black. 
-XXX talk about specific examples}}
+Examples 2 and 4 are not very affected by the prior (teal), where good data is good data.
+Examples 1, 3, and 5 show a more precise posterior PDF compared with the likelihood. For these examples, the posterior PDF is very similar to the prior PDF and might be biasing the posterior PDF estimate due to a lack of prior support at those values. These might be places where our stationarity assumption breaks down.}}
 \label{fig:posterior_odd}
 \end{figure}
 
@@ -749,11 +750,11 @@ The posterior PDFs are much more narrow and clustered than the \tgas\ likelihood
 
 
 \subsection{Distances from Asteroseismology}
-\added{As a second comparison of these photometric parallax inferences, we compare to the inferred distances to the stars from asteroseismology.  Asteroseimology can make much more precise distance, and therefore parallax, estimates to stars than the photometric parallax method. There are about $2200$ stars that overlap our data set here and the asteroseimic data from \citealt{huber17}. We compared the estimates in the parallax space (since the asteroseismic distance estimates are more precise, this is a safer comparison space since the inverted pdfs will be less skewed). We compare the cumulative difference in the parallax estimates in units of mas; the same units as the precision of \tgas. The comparison shows that our photo parallax estimates are more similar to the asteroseismic estimates than the \tgas\ likelihoods. The left panel and the middle panel show the one to one comparison of asteroseismic parallax estimates to the \tgas\ likelihoods and the photo parallax posterior pdf respectively for all $2200$ stars. The right panel shows the cumulative distribution function of the differences between the estimates for each star. The comparison to the photo parallax estimates, represented by the blue line, shows a distribution with smaller differences, and therefore more similar to the asteroseismic estimates.}
+\added{As a second comparison of these photometric parallax inferences, we compare to the inferred distances to the stars from asteroseismology.  Asteroseimology can make much more precise distance, and therefore parallax, estimates to stars than the photometric parallax method. There are about $2200$ stars that overlap our data set here and the asteroseimic data from \citealt{huber17}. In \figurename~\ref{fig:seismic} we compare the estimates in the parallax space. We chose the parallax space, rather than the distance space, since the asteroseismic distance estimates are more precise, making it a less skewed inverted pdf. We compare the cumulative difference in the parallax estimates in units of mas; the same units as the precision of \tgas. The comparison shows that our photo parallax estimates are more similar to the asteroseismic estimates than the \tgas\ likelihoods. The left panel and the middle panel show the one to one comparison of asteroseismic parallax estimates to the \tgas\ likelihoods (in black) and the photo parallax posterior pdf (in blue) respectively for all $2200$ stars. The right panel shows the cumulative distribution function of the differences between the asteroseismic estimates and the \tgas\ likelihoods (in black) or the photoparallax estimates (in blue) for each star. The comparison to the photo parallax estimates, represented by the blue line, shows a distribution with smaller differences, and therefore represents estimates that are more similar to the asteroseismic estimates.}
 \begin{figure}
 \centering
   \includegraphics[width=\textwidth]{photoVSseismic.pdf}
-\caption{\added{Proof of concept: parallax estimate comparisons. All quantified comparisons in this figure are made between a parallax estimate from asteroseismology and a parallax estimate from \gaia, either the \tgas\ estimate or our photo parallax estimate. And the figure is meant to guide visual comparisons between \tgas\ and photo parallax, and therefore highlight differences in the estimates. The first panel shows the one to one comparison of the \tgas\ parallax estimates and the inverted distance estimates from \citealt{huber17}, and the associated $1\sigma$ uncertainties. The orange line shows the one to one line. The second panel is similar, but instead of the \tgas\ parallax estimates, it visualizes our photo parallax estimates. This shows the shrinkage of the precision of the parallax estimates, and that the expectation values are more in agreement with the asteroseismic estimates. The third panel panel visualizes the difference between the asteroseismic estimate and a \gaia\ estimate, \tgas\ in grey and photo parallax in blue, as a cumulative distribution function of the difference in units of mas. The photo parallax estimates are more similar to the asteroseismic estimates than \tgas\ likelihoods alone.}}
+\caption{\added{Proof of concept: parallax estimate comparisons. All quantified comparisons in this figure are made between a parallax estimate from asteroseismology and a parallax estimate from \gaia, either the \tgas\ estimate (in black) or our photo parallax estimate (in blue). And the figure is meant to guide visual comparisons between \tgas\ and photo parallax, and therefore highlight differences in these estimates. The first panel shows the one to one comparison of the \tgas\ parallax estimates and the inverted distance estimates from \citealt{huber17} using asteroseismology, and the associated $1\sigma$ uncertainties. The orange line shows the one to one line. The second panel is similar, but instead of the \tgas\ parallax estimates, it visualizes our photo parallax estimates. This shows the shrinkage of the precision of the parallax estimates, and that the expectation values are more in agreement with the asteroseismic estimates. The third panel panel visualizes the difference between the asteroseismic estimate and a \gaia\ estimate, \tgas\ in grey and photo parallax in blue, as a cumulative distribution function of the difference in units of mas. The CDF of the photo parallax estimates is shifted to smaller differences, so the photoparallax estimates are therefore more similar to the asteroseismic estimates than \tgas\ likelihoods alone.}}
 
 \label{fig:seismic}
 \end{figure}

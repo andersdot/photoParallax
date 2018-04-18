@@ -48,37 +48,38 @@ def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mt
     alpha_chosen = 1.0
     xlim = (-1, 1)
     ylim = (-5, 5)
-
+    markersize = 8
+    size = 25
     for ax in axes[1:-1]:
-        ax.errorbar(xns, yns, yerr=sigmans, fmt="o", color=dataColor, alpha=alpha_all ,mew=0)
-        ax.errorbar(xns[0:nexamples], yns[0:nexamples], yerr=sigmans[0:nexamples], fmt="o", color=dataColor, zorder=37, alpha=alpha_chosen, mew=0)
+        ax.errorbar(xns, yns, yerr=sigmans, fmt="o", color=dataColor, alpha=alpha_all ,mew=0, zorder=0)
+        ax.errorbar(xns[0:nexamples], yns[0:nexamples], yerr=sigmans[0:nexamples], fmt="o", color=dataColor, zorder=7, alpha=alpha_chosen, mew=0, markersize=markersize)
 
     xp = np.array(xlim)
     axes[0].plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
     axes[0].plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, linewidth=2, alpha=0.75)
     axes[0].scatter(xns, yntrues, c=trueColor, lw=0, alpha=0.5, label=r'$y_{true,n}$')
-    axes[0].legend(loc='best', fontsize=15)
+    axes[0].legend(loc='best')#, fontsize=15)
 
-    axes[2].plot(xp, m * xp + b + t, color=priorColor)
-    axes[2].plot(xp, m * xp + b - t, color=priorColor)
-    axes[2].scatter(xns[0:nexamples], yntrues[0:nexamples], c=trueColor, lw=2, zorder=36, alpha=alpha_chosen, facecolors='None')
-    axes[2].plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, zorder=35)
-    axes[2].plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, zorder=34)
+    axes[2].plot(xp, m * xp + b + t, color=priorColor, lw=3, zorder=4)
+    axes[2].plot(xp, m * xp + b - t, color=priorColor, lw=3, zorder=5)
+    axes[2].scatter(xns[0:nexamples]-0.1, yntrues[0:nexamples], c=trueColor, lw=2, zorder=6, alpha=alpha_chosen, facecolors='None', s=size)
+    axes[2].plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, zorder=2, lw=2)
+    axes[2].plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, zorder=3, lw=2)
     r1 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=dataColor, alpha=alpha_chosen))
     r2 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=trueColor, alpha=alpha_chosen))
     r3 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=posteriorColor, alpha=alpha_chosen))
     r4 = axes[2].add_patch(mpl.patches.Rectangle((-10,-10), 0.1, 0.1, color=priorColor, alpha=alpha_chosen))
-    axes[2].legend((r2,r1,r4,r3), ('truth', 'data', 'prior',  'denoised'), loc='best', fontsize=12)
+    axes[2].legend((r2,r1,r4,r3), ('truth', 'data', 'prior',  'denoised'), loc='best')#, fontsize=12)
 
-    axes[2].errorbar(xns[0:nexamples], ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color=posteriorColor, zorder=37, alpha=alpha_chosen, mew=0)
+    axes[2].errorbar(xns[0:nexamples]+0.1, ydns[0:nexamples], yerr=sigmadns[0:nexamples], fmt="o", color=posteriorColor, zorder=9, alpha=alpha_chosen, mew=0, markersize=markersize)#, markerfacecolor='None')
 
     norm = mpl.colors.Normalize(vmin=0, vmax=9)
-    im = axes[3].scatter(xns,  ydns,  c=sigmans**2., cmap=posteriorMap, norm=norm, alpha=0.5, lw=0)
+    im = axes[3].scatter(xns,  ydns,  c=sigmans**2., cmap=posteriorMap, norm=norm, alpha=0.75, lw=0, s=size/2.)
     fig.subplots_adjust(left=0.1, right=0.89)
     cbar_ax = fig.add_axes([0.9, 0.1, 0.02, 0.35])
     cb = fig.colorbar(im, cax=cbar_ax)
     #cb = plt.colorbar(im, ax=axes[2])
-    cb.set_label(r'$\sigma_n^2$', fontsize=20)
+    cb.set_label(r'$\sigma_n^2$')#, fontsize=20)
     cb.set_clim(-4, 9)
 
 
@@ -94,19 +95,19 @@ def plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mt
     #plt.tight_layout()
 
     axesNoise[0].hist(sigmans, bins=20, histtype='step', normed=True, lw=2)
-    axesNoise[0].set_xlabel(r'$\sigma_n$', fontsize=15)
+    axesNoise[0].set_xlabel(r'$\sigma_n$')#, fontsize=15)
     axesNoise[1].hist(sigmadns, bins=20, histtype='step', normed=True, lw=2)
-    axesNoise[1].set_xlabel(r'$\tilde\sigma_n$', fontsize=15)
+    axesNoise[1].set_xlabel(r'$\tilde\sigma_n$')#, fontsize=15)
     for a in axesNoise[0:2]:
         a.axvline(t, label='$t$', color='black', lw=2)
-        a.legend(fontsize=15, loc='best')
+        a.legend(loc='best')#, fontsize=15)
     axesNoise[2].hist(yns-yntrues, bins=20, histtype='step', normed=True, lw=2)
-    axesNoise[2].set_xlabel(r'$y_n - y_{true,n}$', fontsize=15)
+    axesNoise[2].set_xlabel(r'$y_n - y_{true,n}$')#, fontsize=15)
     axesNoise[3].hist(ydns-yntrues, bins=20, histtype='step', normed=True, lw=2)
-    axesNoise[3].set_xlabel(r'$<p(y_{true,n})> - y_{true,n}$', fontsize=15)
+    axesNoise[3].set_xlabel(r'$<p(y_{true,n})> - y_{true,n}$')#, fontsize=15)
     #plt.tight_layout()
 
-    return fig, axes, figNoise, axesNoise
+    #return fig, axes, figNoise, axesNoise
 
 def gaussian(mean, sigma, array, amplitude=1.0):
     return amplitude/np.sqrt(2.*np.pi*sigma**2.)*np.exp(-(array - mean)**2./(2.*sigma**2.))
@@ -126,13 +127,13 @@ def exampleParallax():
         label = r'$\varpi/\sigma_{\varpi}=$' + '{0:.1f}'.format(parallax/sigma)
         ax[0].plot(x, likelihood, lw=2, label='likelihood', linestyle=ls)
         ax[1].plot(1./x[positive], likelihood[positive], lw=2, linestyle=ls, label=label)
-        ax[0].set_xlabel('parallax [mas]', fontsize=18)
-        ax[1].set_xlabel('distance [kpc]', fontsize=18)
-        ax[0].set_ylabel(labelParallax, fontsize=18)
-        ax[1].set_ylabel(labelDistance, fontsize=18)
+        ax[0].set_xlabel('parallax [mas]')#, fontsize=18)
+        ax[1].set_xlabel('distance [kpc]')#, fontsize=18)
+        ax[0].set_ylabel(labelParallax)#, fontsize=18)
+        ax[1].set_ylabel(labelDistance)#, fontsize=18)
         ax[0].set_xlim(-1, 3)
         ax[1].set_xlim(0, 8)
-        ax[1].legend(loc='best', fontsize=15)
+        ax[1].legend(loc='best')#, fontsize=15)
         #ax[0].legend(loc='best')
         fig.savefig('likelihoodExample' + str(i) + '.png')
 
@@ -147,7 +148,7 @@ def exampleParallax():
     ax[1].plot(1./x[positive], likelihood[positive], lw=2, label=label)
     ax[0].set_xlim(-1, 3)
     ax[1].set_xlim(0, 8)
-    ax[1].legend(loc='best', fontsize=15)
+    ax[1].legend(loc='best')#, fontsize=15)
     #ax[0].legend(loc='best')
     #ax[0].set_xlabel('parallax [mas]', fontsize=18)
     #ax[1].set_xlabel('distance [kpc]', fontsize=18)
@@ -155,8 +156,8 @@ def exampleParallax():
     fig.savefig('likelihoodExampleNegative.png')
     plt.close(fig)
 
-def makeplots(mtrue=-1.37, btrue=0.2, ttrue=0.8, nexamples=5, trueColor='darkred', priorColor='darkgreen', posteriorColor='royalblue', dataColor='black', posteriorMapColor='Blues'):
-    posteriorMap = mpl.cm.get_cmap(posteriorMapColor)
+def makeplots(mtrue=-1.37, btrue=0.2, ttrue=0.8, nexamples=5, trueColor='darkred', priorColor='darkgreen', posteriorColor='royalblue', dataColor='black', posteriorMap='Blues', fig=None, axes=None):
+    #posteriorMap = mpl.cm.get_cmap(posteriorMapColor)
     xlim = (-1, 1)
     ylim = (-5, 5)
     parsTrue = [mtrue, btrue, ttrue] #m, b, t
@@ -174,12 +175,13 @@ def makeplots(mtrue=-1.37, btrue=0.2, ttrue=0.8, nexamples=5, trueColor='darkred
     for label, style in zip(['paper', 'talk'],['seaborn-paper', 'seaborn-talk']):
 
         plt.style.use(style)
-        mpl.rcParams['xtick.labelsize'] = 18
-        mpl.rcParams['ytick.labelsize'] = 18
-        mpl.rcParams['axes.labelsize'] = 18
-        mpl.rcParams['font.size'] = 25
-        fig, axes = plt.subplots(2, 2, figsize=(15, 11))
-        axes = axes.flatten()
+        #mpl.rcParams['xtick.labelsize'] = 18
+        #mpl.rcParams['ytick.labelsize'] = 18
+        #mpl.rcParams['axes.labelsize'] = 18
+        #mpl.rcParams['font.size'] = 25
+        if fig is None:
+            fig, axes = plt.subplots(2, 2, figsize=(15, 11))
+            axes = axes.flatten()
         figNoise, axesNoise = plt.subplots(2,2, figsize=(8,8))
         axesNoise = axesNoise.flatten()
 
@@ -188,19 +190,19 @@ def makeplots(mtrue=-1.37, btrue=0.2, ttrue=0.8, nexamples=5, trueColor='darkred
         for ax in axesTrue:
             ax.plot(xp, mtrue*xp + btrue + ttrue, color=trueColor, linewidth=2, alpha=0.75, label=r'$y=m_{true}\,x+b_{true}\pm t$')
             ax.plot(xp, mtrue*xp + btrue - ttrue, color=trueColor, linewidth=2, alpha=0.75)
-            ax.set_xlabel('$x$', fontsize=18)
-            ax.set_ylabel('$y$', fontsize=18)
+            ax.set_xlabel('$x$') #, fontsize=18)
+            ax.set_ylabel('$y$') #, fontsize=18)
             ax.set_xlim(xlim)
             ax.set_ylim(ylim)
         axesTrue[0].scatter(xns, yntrues, c=trueColor, lw=0, alpha=0.5, label=r'$y_{true,n}$: true y values')
         axesTrue[1].scatter(xns, yns, c='black', lw=0, alpha=0.5, label=r'$y_n$: noisy y values')
         axesTrue[1].errorbar(xns, yns, yerr=sigmans, c='black', fmt='None', alpha=0.5)
-        axesTrue[0].legend(loc='best', fontsize=15)
-        axesTrue[1].legend(loc='best', fontsize=15)
+        axesTrue[0].legend(loc='best') #, fontsize=15)
+        axesTrue[1].legend(loc='best') #, fontsize=15)
         figTrue.tight_layout()
         figTrue.savefig('toyTrue.png')
         figTrue.savefig('toyTrue.pdf', rasterizee=True)
-        fig, axes, figNoise, axesNoise = plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=nexamples, dataColor=dataColor, priorColor=priorColor, posteriorColor=posteriorColor, trueColor=trueColor, posteriorMap=posteriorMap)
+        plot(fig, axes, figNoise, axesNoise, xns, yns, sigmans, yntrues, m, b, t, mtrue, btrue, ttrue, ydns, sigmadns, nexamples=nexamples, dataColor=dataColor, priorColor=priorColor, posteriorColor=posteriorColor, trueColor=trueColor, posteriorMap=posteriorMap)
         figNoise.tight_layout()
         figNoise.savefig('toyNoise.' + label + '.png')
         figNoise.savefig('toyNoise.' + label + '.pdf', rasterized=True)
